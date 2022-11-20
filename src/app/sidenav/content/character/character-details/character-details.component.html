@@ -1,0 +1,39 @@
+<mat-card>
+  <mat-card-title>{{ characterData.name }}</mat-card-title>
+  <mat-card-subtitle>Level {{ characterData.level}}</mat-card-subtitle>
+  <mat-card-subtitle>[{{ characterData.currentExperience }}/{{ characterData.maxExperience}}]</mat-card-subtitle>
+  <mat-card-content>
+    <mat-tab-group>
+      <mat-tab label="Main">
+        Health: {{characterData.stats.Health.totalValue}}<br>
+        {{characterData.stats.Power.label}}: {{characterData.stats.Power.totalValue}}<br>
+        Damage: {{characterData.stats.Min_Damage.totalValue}} - {{characterData.stats.Max_Damage.totalValue}}
+      </mat-tab>
+      <mat-tab label="Primary">
+        <cdk-virtual-scroll-viewport [itemSize]="1 * 1" class="character-stats">
+          <div *cdkVirtualFor="let stat of primaryStats">
+            <span>{{stat.label}}: {{stat.totalValue}}</span><span *ngIf="stat.percent">%</span>
+          </div>
+        </cdk-virtual-scroll-viewport>
+      </mat-tab>
+      <mat-tab label="Secondary">
+        <cdk-virtual-scroll-viewport [itemSize]="1 * 1" class="character-stats">
+          <div *cdkVirtualFor="let stat of secondaryStats">
+            <span>{{stat.label}}: {{stat.totalValue}}</span><span *ngIf="stat.percent">%</span>
+          </div>
+        </cdk-virtual-scroll-viewport>
+      </mat-tab>
+      <mat-tab label="Misc">
+        <cdk-virtual-scroll-viewport [itemSize]="1 * 1" class="character-stats">
+          <div *cdkVirtualFor="let stat of miscStats">
+            <span>{{stat.label}}: {{stat.totalValue}}</span><span *ngIf="stat.percent">%</span>
+          </div>
+        </cdk-virtual-scroll-viewport>
+      </mat-tab>
+      <mat-tab label="Currency">
+        Gold: {{characterData.currencies.gold}}<br>
+        CCurrency: {{characterData.currencies.cheating_currency}}
+      </mat-tab>
+    </mat-tab-group>
+  </mat-card-content>
+</mat-card>

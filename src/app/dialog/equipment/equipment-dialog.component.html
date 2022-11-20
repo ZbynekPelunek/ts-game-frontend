@@ -1,0 +1,20 @@
+<h1 mat-dialog-title>{{ data.name }}</h1>
+<div mat-dialog-content>
+  Quality: {{ data.quality }}<br>
+  Item Level: {{ data.itemLevel }}<br>
+  Slot: {{data.slot}}<br>
+  <span *ngFor="let stat of data.statsEffects.default">
+    +{{stat.statValue}} {{stat.statName}}<br *ngIf="data.statsEffects.default.length > 1">
+  </span><br>
+  <span *ngFor="let stat of data.statsEffects.rolledAffixes">
+    +{{stat.statValue}} {{stat.statName}}<br *ngIf="data.statsEffects.rolledAffixes.length > 1">
+  </span><br>
+  <span *ngIf="data.levelReq">Required Level: {{data.levelReq}}<br></span>
+  Sell: {{data.sellValue}} golds
+</div>
+<div mat-dialog-actions>
+  <button mat-button type="button" (click)="onEquipClick()" *ngIf="isItemEquipable && !data.equipped">Equip</button>
+  <button mat-button type="button" (click)="onUnequipClick()" *ngIf="data.equipped">Unequip</button>
+  <button mat-button type="button" (click)="onSellClick()">Sell</button>
+  <button mat-button type="button" (click)="onCloseClick()">Close</button>
+</div>

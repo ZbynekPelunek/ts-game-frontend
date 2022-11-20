@@ -1,0 +1,8 @@
+<h1>Predict your next drop</h1>
+<p>Select a mount which you would like to predict:</p>
+<select [(ngModel)]="selectedMount" required (change)="onSelectChange()">
+  <option *ngFor="let mount of mounts" [value]="mount.name">{{mount.name}}</option>
+</select>
+<hr>
+<button mat-raised-button color="primary" (click)="onPredict()">Predict</button>
+<p *ngIf="howManyTries > 0">Your next drop of {{ selectedMount }} will be in {{ howManyTries }} attempts</p>

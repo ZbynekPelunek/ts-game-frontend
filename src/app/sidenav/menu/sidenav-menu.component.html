@@ -1,0 +1,5 @@
+<ul>
+  <li *ngFor="let link of menuLinks">
+    <a mat-button [routerLink]="link.link" routerLinkActive="mat-accent">{{ link.label }}</a>
+  </li>
+</ul>

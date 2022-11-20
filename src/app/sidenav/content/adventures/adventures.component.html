@@ -1,0 +1,59 @@
+<div *ngIf="!areAdventuresLoading; else loadingDataSpinner">
+  <mat-card class="adventure-card" *ngFor="let adventure of adventures">
+    <mat-card-title>{{ adventure.name}}</mat-card-title>
+    <mat-card-subtitle>
+      Level: {{ adventure.level }}<br>
+      Time: {{ adventure.timeInSeconds }} seconds
+    </mat-card-subtitle>
+    <mat-card-content *ngIf="adventure.reward">
+      Reward:<br>
+      Experience: {{ adventure.reward.experience }}
+      <ng-container *ngIf="adventure.reward.currencies">
+        <div *ngFor="let currency of adventure.reward.currencies | keyvalue">
+          {{ currency.key }}: {{ currency.value }}
+        </div>
+      </ng-container>
+      <ng-container *ngFor="let item of adventure.reward.items">
+        {{ item.name }}<br *ngIf="adventure.reward.items.length > 1">
+      </ng-container>
+    </mat-card-content>
+    <ng-container *ngIf="!isCharacterLoading; else noCharData">
+      <mat-card-actions>
+        <button mat-button *ngIf="adventure.adventureState === adventureState_Idle; else cancelButtons"
+                [color]="playerCharacter.level >= adventure.requiredLevel ? 'primary' : 'warn'" type="button"
+                [disabled]="(playerCharacter.level < adventure.requiredLevel)" class="adventure-action-buttons"
+                (click)="onStartAdventure(adventure.adventureId)">Start
+          Adventure</button>
+        <ng-template #cancelButtons>
+          <button mat-button class="adventure-action-buttons" color="primary" type="button">Cancel</button>
+          <button mat-button class="adventure-action-buttons" color="primary" type="button">Skip</button>
+        </ng-template>
+      </mat-card-actions>
+      <div *ngIf="adventure.requiredLevel > 1">
+        Required level: {{ adventure.requiredLevel }}
+      </div>
+    </ng-container>
+
+    <mat-progress-bar *ngIf="adventure.adventureState === adventureState_InProgress" mode="determinate"
+                      [value]="adventure.timer.progressPercent" color="warn">
+    </mat-progress-bar>
+  </mat-card>
+  <!-- <ng-container *ngIf="adventure.adventureState === adventureState_Finished">
+    <mat-grid-list cols="2">
+      <mat-grid-tile>
+        Player HP: TBD<br>
+        Player Damage: TBD
+      </mat-grid-tile>
+      <mat-grid-tile>
+        Enemy HP: TBD<br>
+        Enemy Damage: TBD
+      </mat-grid-tile>
+    </mat-grid-list>
+  </ng-container> -->
+</div>
+<ng-template #loadingDataSpinner>
+  <h1>LOADING DATA...</h1>
+</ng-template>
+<ng-template #noCharData>
+  <h1>NO CHARACTER DATA</h1>
+</ng-template>

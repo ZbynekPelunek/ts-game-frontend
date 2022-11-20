@@ -1,14 +1,32 @@
+import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+import { AngularMaterialModule } from './angular-material.module';
+import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { AuthModule } from './auth/auth.module';
+import { HeaderComponent } from './header/header.component';
+import { SidenavMenuComponent } from './sidenav/menu/sidenav-menu.component';
+import { SidenavComponent } from './sidenav/sidenav.component';
+import { SidenavModule } from './sidenav/sidenav.module';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    HeaderComponent,
+    SidenavComponent,
+    SidenavMenuComponent
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    HttpClientModule,
+    BrowserAnimationsModule,
+    AngularMaterialModule,
+    AppRoutingModule,
+    AuthModule,
+    SidenavModule
   ],
   providers: [],
   bootstrap: [AppComponent]
