@@ -10,10 +10,10 @@ const routes: Routes = [
     component: StarterPageComponent
   },
   {
-    path: 'auth', loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule)
+    path: 'ui/auth', loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule)
   },
   {
-    path: 'menu', loadChildren: () => import('./sidenav/sidenav.module').then(m => m.SidenavModule), canActivate: [AuthGuard]
+    path: 'ui/menu', loadChildren: () => import('./sidenav/sidenav.module').then(m => m.SidenavModule), canActivate: [AuthGuard]
   }
 ];
 

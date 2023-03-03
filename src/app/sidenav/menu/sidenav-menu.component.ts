@@ -7,29 +7,17 @@ import { Component } from '@angular/core';
 })
 export class SidenavMenuComponent {
   menuLinks = [
-    // {
-    //   label: 'Dashboard',
-    //   link: '/menu/dashboard'
-    // },
     {
       label: 'Character',
-      link: '/menu/character'
+      link: '/ui/menu/character'
     },
-    // {
-    //   label: 'Fortune Teller',
-    //   link: '/menu/fortune'
-    // },
-    // {
-    //   label: 'Arena',
-    //   link: '/menu/arena'
-    // },
     {
       label: 'Adventures',
-      link: '/menu/adventures'
+      link: '/ui/menu/adventures'
     },
     {
       label: 'Shop',
-      link: '/menu/shop'
+      link: '/ui/menu/shop'
     }
   ]
 }

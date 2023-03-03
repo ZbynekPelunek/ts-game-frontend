@@ -26,7 +26,7 @@ export class AuthService {
     //console.log('LOGING IN');
     this.isAuthenticated = true;
     this.authStatusListener.next(true);
-    this.router.navigate(['/menu/character']);
+    this.router.navigate(['/ui/menu/character']);
   }
 
   logout(): void {
