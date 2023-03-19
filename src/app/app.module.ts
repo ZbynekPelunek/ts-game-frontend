@@ -7,6 +7,7 @@ import { AngularMaterialModule } from './angular-material.module';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthModule } from './auth/auth.module';
+import { CharacterCreateComponent } from './character-create/character-create.component';
 import { HeaderComponent } from './header/header.component';
 import { SidenavMenuComponent } from './sidenav/menu/sidenav-menu.component';
 import { SidenavComponent } from './sidenav/sidenav.component';
@@ -17,7 +18,8 @@ import { SidenavModule } from './sidenav/sidenav.module';
     AppComponent,
     HeaderComponent,
     SidenavComponent,
-    SidenavMenuComponent
+    SidenavMenuComponent,
+    CharacterCreateComponent
   ],
   imports: [
     BrowserModule,

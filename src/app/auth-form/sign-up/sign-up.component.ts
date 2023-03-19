@@ -1,8 +1,7 @@
-import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { environment } from 'src/environments/environment';
+import { AuthService } from 'src/app/auth/auth.service';
 
-const BACKEND_URL = `${environment.apiUrl}`;
+
 
 @Component({
   templateUrl: './sign-up.component.html',
@@ -11,14 +10,10 @@ const BACKEND_URL = `${environment.apiUrl}`;
 export class SignUpComponent {
   isLoading = false;
 
-  constructor(private http: HttpClient) { }
+  constructor(public authService: AuthService) { }
 
   onSignUp(event: Event): void {
     console.log('event: ', event)
-    this.http.post(`${BACKEND_URL}/accounts`, { username: 'test', email: 'test1@test.test', password: '123' }).subscribe({
-      next: (response) => {
-        console.log('signed up: ', response);
-      }
-    })
+    this.authService.signUp();
   }
 }

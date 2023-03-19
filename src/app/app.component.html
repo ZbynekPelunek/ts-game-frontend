@@ -2,4 +2,5 @@
 <ng-container *ngIf="!userIsAuthenticated">
   <router-outlet></router-outlet>
 </ng-container>
-<app-sidenav *ngIf="userIsAuthenticated"></app-sidenav>
+<app-sidenav *ngIf="userIsAuthenticated && !isCreatingCharacter"></app-sidenav>
+<app-character-create *ngIf="isCreatingCharacter"></app-character-create>

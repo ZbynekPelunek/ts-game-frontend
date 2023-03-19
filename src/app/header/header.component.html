@@ -1,5 +1,5 @@
 <mat-toolbar color="primary">
-  <span><a [routerLink]="userIsAuthenticated ? '/ui/menu/dashboard' : '/'">Game</a></span>
+  <span><a [routerLink]="userIsAuthenticated ? '/ui/menu/character' : '/'">Game</a></span>
   <span class="spacer"></span>
   <ul>
     <li *ngIf="!userIsAuthenticated">

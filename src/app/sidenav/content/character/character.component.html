@@ -1,7 +1,7 @@
 <mat-card *ngIf="!isLoading">
   <mat-grid-list cols="2" rowHeight="2:1">
     <mat-grid-tile [ngStyle]="{'background-color': 'red'}">
-      <app-character-details [characterData]="playerCharacter" style="height: 100%; width: 100%">
+      <app-character-details class="char-details" [characterData]="playerCharacter">
       </app-character-details>
     </mat-grid-tile>
     <mat-grid-tile [ngStyle]="{'background-color': 'green'}">
