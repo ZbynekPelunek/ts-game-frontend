@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
+import { Request_Account_POST, Response_Account_POST } from '../../../../shared/src';
 import { CharacterCreateService } from '../character-create/character-create.service';
 
 const BACKEND_URL = `${environment.apiUrl}`;
@@ -12,9 +13,9 @@ const BACKEND_URL = `${environment.apiUrl}`;
 export class AuthService {
   private isAuthenticated = false;
   private authStatusListener = new Subject<boolean>();
-  private characterId = '1';
+  private accountId: string;
 
-  constructor(private router: Router, private http: HttpClient, private charCreateService: CharacterCreateService) { }
+  constructor(private router: Router, private http: HttpClient) { }
 
   getIsAuth(): boolean {
     return this.isAuthenticated;
@@ -24,18 +25,18 @@ export class AuthService {
     return this.authStatusListener.asObservable();
   }
 
-  getCharacterId() {
-    return this.characterId;
+  getAccountId(): string {
+    return this.accountId;
   }
 
   signUp(): void {
-    this.http.post(`${BACKEND_URL}/accounts`, { username: 'test', email: 'test1@test.test', password: '123' }).subscribe({
+    this.http.post<Response_Account_POST>(`${BACKEND_URL}/accounts`, <Request_Account_POST>{ username: 'test', email: 'test1@test.test', password: '123' }).subscribe({
       next: (response) => {
         console.log('signed up: ', response);
+        this.accountId = response.accountId as unknown as string;
         this.isAuthenticated = true;
         this.authStatusListener.next(true);
-        this.charCreateService.setCharCreatingValue(true);
-        this.router.navigate(['ui/character-create'])
+        this.router.navigate(['ui/character-create']);
       }
     })
   }

@@ -49,7 +49,7 @@ export class AdventuresComponent implements OnInit, OnDestroy {
     this.charUpdateSub = this.sidenavService.getCharacterUpdateListener().subscribe({
       next: (response) => {
         this.playerCharacter = {
-          characterId: response.character.characterId,
+          characterId: response.character._id as string,
           level: response.character.level
         }
 

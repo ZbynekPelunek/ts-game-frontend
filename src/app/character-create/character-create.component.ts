@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 
+import { AuthService } from '../auth/auth.service';
 import { CharacterCreateService } from './character-create.service';
 
 @Component({
@@ -10,9 +11,9 @@ import { CharacterCreateService } from './character-create.service';
 export class CharacterCreateComponent {
   isLoading = false;
 
-  constructor(private characterCreateService: CharacterCreateService) { }
+  constructor(private characterCreateService: CharacterCreateService, private authService: AuthService) { }
 
   onCreate() {
-    this.characterCreateService.create();
+    this.characterCreateService.create(this.authService.getAccountId());
   }
 }

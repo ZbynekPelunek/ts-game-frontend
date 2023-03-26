@@ -21,7 +21,7 @@ import {
   POST_characterActions,
   PUT_characterByID,
 } from '../../../../shared/src';
-import { AuthService } from '../auth/auth.service';
+import { CharacterCreateService } from '../character-create/character-create.service';
 
 const BACKEND_URL = `${environment.apiUrl}`;
 
@@ -50,7 +50,7 @@ export class SidenavService {
   character: ICharacter;
   charAdventures: IAdventure[];
 
-  constructor(private http: HttpClient, private authService: AuthService) { }
+  constructor(private http: HttpClient, private characterCreateService: CharacterCreateService) { }
 
   getCharacterUpdateListener(): Observable<{ character: ICharacter }> {
     return this.characterUpdated.asObservable();
@@ -69,7 +69,7 @@ export class SidenavService {
   }
 
   getCharacter() {
-    this.http.get<GET_characterByID>(`${BACKEND_URL}/characters/${this.authService.getCharacterId()}`).subscribe({
+    this.http.get<GET_characterByID>(`${BACKEND_URL}/characters/${this.characterCreateService.getCharacterId()}`).subscribe({
       next: (response) => {
         this.character = response.character;
         this.characterUpdated.next({ character: { ...this.character } })
@@ -87,7 +87,7 @@ export class SidenavService {
   }
 
   equipCharacter(equipment: EquipableItem): void {
-    this.http.post<POST_characterActions>(`${BACKEND_URL}/characters/${this.authService.getCharacterId()}/actions/${CharacterActions.EQUIP_ITEM}`, { item: equipment }).subscribe({
+    this.http.post<POST_characterActions>(`${BACKEND_URL}/characters/${this.characterCreateService.getCharacterId()}/actions/${CharacterActions.EQUIP_ITEM}`, { item: equipment }).subscribe({
       next: (response) => {
         console.log('equipCharacter() response: ', response);
         this.character = response.character;
@@ -97,7 +97,7 @@ export class SidenavService {
   }
 
   unequipCharacter(equipment: EquipableItem): void {
-    this.http.post<POST_characterActions>(`${BACKEND_URL}/characters/${this.authService.getCharacterId()}/actions/${CharacterActions.UNEQUIP_ITEM}`, { item: equipment }).subscribe({
+    this.http.post<POST_characterActions>(`${BACKEND_URL}/characters/${this.characterCreateService.getCharacterId()}/actions/${CharacterActions.UNEQUIP_ITEM}`, { item: equipment }).subscribe({
       next: (response) => {
         console.log('unequipCharacter() response: ', response);
         this.character = response.character;
@@ -107,7 +107,7 @@ export class SidenavService {
   }
 
   sellItem(item: InventoryItem): void {
-    this.http.post<POST_characterActions>(`${BACKEND_URL}/characters/${this.authService.getCharacterId()}/actions/${CharacterActions.SELL}`, { item }).subscribe({
+    this.http.post<POST_characterActions>(`${BACKEND_URL}/characters/${this.characterCreateService.getCharacterId()}/actions/${CharacterActions.SELL}`, { item }).subscribe({
       next: (response) => {
         console.log('sellItem() response: ', response);
         this.character = response.character;
@@ -124,7 +124,7 @@ export class SidenavService {
   }
 
   getInventory(): Observable<Inventory[]> {
-    return this.http.get<Inventory[]>(`${BACKEND_URL}/characters/${this.authService.getCharacterId()}/inventory`);
+    return this.http.get<Inventory[]>(`${BACKEND_URL}/characters/${this.characterCreateService.getCharacterId()}/inventory`);
   }
 
   getEquipmentSlots(): EquipmentSlotsArr[] {
@@ -132,7 +132,7 @@ export class SidenavService {
   }
 
   getCharacterAdventures(): void {
-    this.http.get<GET_characterAdventuresAll>(`${BACKEND_URL}/characters/${this.authService.getCharacterId()}/adventures`).subscribe({
+    this.http.get<GET_characterAdventuresAll>(`${BACKEND_URL}/characters/${this.characterCreateService.getCharacterId()}/adventures`).subscribe({
       next: (response) => {
         console.log('getCharAdvs() response: ', response);
         this.charAdventures = response.adventures;
