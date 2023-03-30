@@ -71,6 +71,7 @@ export class SidenavService {
   getCharacter() {
     this.http.get<GET_characterByID>(`${BACKEND_URL}/characters/${this.characterCreateService.getCharacterId()}`).subscribe({
       next: (response) => {
+        console.log('getCharacter() response: ', response);
         this.character = response.character;
         this.characterUpdated.next({ character: { ...this.character } })
       }

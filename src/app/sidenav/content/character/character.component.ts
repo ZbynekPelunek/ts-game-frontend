@@ -31,7 +31,7 @@ export class CharacterComponent implements OnInit, OnDestroy {
     this.charSub = this.sidenavService.getCharacterUpdateListener().subscribe({
       next: (response) => {
         this.playerCharacter = { ...response.character };
-        this.inventory = [...response.character.inventory];
+        //this.inventory = [...response.character.inventory];
         this.equipmentSlots = [...response.character.equipmentSlots];
         this.isLoading = false;
         console.log('...character data fetched.: ', response);

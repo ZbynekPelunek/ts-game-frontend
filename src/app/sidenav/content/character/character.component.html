@@ -30,12 +30,12 @@
         <div id="inventory" cdkDropList [cdkDropListData]="inventory" cdkDropListOrientation="horizontal"
              class="inventory-list" (cdkDropListDropped)="dropInventory($event)"
              [cdkDropListConnectedTo]="['equip-slot']">
-          <span class="inventory-slot" *ngFor="let invSlot of inventory">
+          <!-- <span class="inventory-slot" *ngFor="let invSlot of inventory">
             <span class="inventory-slot-item" [cdkDragData]="invSlot.item" [cdkDragDisabled]="!invSlot.item" cdkDrag>
               <span *ngIf="invSlot.item" [matTooltip]="invSlot.item.name"
                     (click)="openItemDialog(invSlot.item)">{{invSlot.item.itemType}}</span>
             </span>
-          </span>
+          </span> -->
         </div>
       </div>
     </mat-grid-tile>
