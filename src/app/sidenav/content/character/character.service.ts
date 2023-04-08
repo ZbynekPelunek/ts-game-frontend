@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
 import { environment } from 'src/environments/environment';
 
-import { Attribute } from '../../../../../../shared/src';
+import { BasicAttribute, CharacterAttribute } from '../../../../../../shared/src';
 
 const BACKEND_URL = `${environment.apiUrl}`;
 
@@ -12,12 +12,15 @@ export class CharacterService {
 
   constructor(private http: HttpClient) { }
 
-  getAttributes(): Observable<{ success: boolean, attributes: Attribute[] }> {
-    return this.http.get<{ success: boolean, attributes: Attribute[] }>(`${BACKEND_URL}/attributes`);
+  getAttributes(): Observable<{ success: boolean, attributes: BasicAttribute[] }> {
+    return this.http.get<{ success: boolean, attributes: BasicAttribute[] }>(`${BACKEND_URL}/attributes`);
   }
 
-  getSingleAttribute(attributeId: string): Observable<{ success: boolean, attribute: Attribute }> {
-    return this.http.get<{ success: boolean, attribute: Attribute }>(`${BACKEND_URL}/attributes/${attributeId}`);
+  getSingleAttribute(attributeId: string): Observable<{ success: boolean, attribute: BasicAttribute }> {
+    return this.http.get<{ success: boolean, attribute: BasicAttribute }>(`${BACKEND_URL}/attributes/${attributeId}`);
   }
 
+  getCharacterAttributes(characterId: string) {
+    return this.http.get<{ success: true, characterAttributes: CharacterAttribute[] }>(`${BACKEND_URL}/character-attributes?characterId=${characterId}`);
+  }
 }

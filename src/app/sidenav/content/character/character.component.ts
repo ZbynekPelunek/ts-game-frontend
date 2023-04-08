@@ -4,7 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { EquipmentDialogComponent } from 'src/app/dialog/equipment/equipment-dialog.component';
 
-import { EquipmentSlotsArr, ICharacter, Inventory, InventoryItem, ItemType } from '../../../../../../shared/src';
+import { CharacterFrontend, EquipmentSlotsArr, Inventory, InventoryItem, ItemType } from '../../../../../../shared/src';
 import { SidenavService } from '../../sidenav.service';
 
 @Component({
@@ -20,7 +20,7 @@ export class CharacterComponent implements OnInit, OnDestroy {
   equipmentSlots: EquipmentSlotsArr;
 
   isLoading = false;
-  playerCharacter: ICharacter;
+  playerCharacter: CharacterFrontend;
 
   constructor(private sidenavService: SidenavService, public equipmentDialog: MatDialog) { }
 

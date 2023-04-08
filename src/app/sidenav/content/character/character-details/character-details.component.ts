@@ -2,10 +2,11 @@ import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 
 import {
-  Attribute,
   AttributeType,
+  BasicAttribute,
   CharacterAttribute,
-  ICharacter,
+  CharacterBackend,
+  CharacterFrontend,
   MiscAttributeId,
   PrimaryAttributeId,
   SecondaryAttributeId,
@@ -13,12 +14,12 @@ import {
 import { CharacterService } from '../character.service';
 
 interface FinalAttribute {
-  attributeId: PrimaryAttributeId | SecondaryAttributeId | MiscAttributeId;
+  attributeId: string;
   'base-value': number;
   'added-value': number;
   label: string;
-  type: AttributeType.PRIMARY | AttributeType.SECONDARY | AttributeType.MISC;
-  desc: string;
+  type: string;
+  desc?: string;
   percent?: boolean;
 }
 
@@ -30,11 +31,13 @@ interface FinalAttribute {
 export class CharacterDetailsComponent implements OnInit, OnChanges, OnDestroy {
   isLoading = true;
 
-  @Input() characterData: ICharacter;
+  @Input() characterData: CharacterFrontend;
 
-  allAttributes: Attribute[] = [];
-  allAttributesHealth: Attribute;
-  allAttributesPower: Attribute;
+  characterAttributes: CharacterAttribute[];
+
+  allAttributes: BasicAttribute[] = [];
+  allAttributesHealth: BasicAttribute;
+  allAttributesPower: BasicAttribute;
 
   primaryAttributes: FinalAttribute[];
   secondaryAttributes: FinalAttribute[];
@@ -59,17 +62,25 @@ export class CharacterDetailsComponent implements OnInit, OnChanges, OnDestroy {
   finalAttributes: FinalAttribute[] = [];
 
   getAllAttributesSub: Subscription;
+  getAllCharAttributesSub: Subscription;
 
   constructor(private characterService: CharacterService) { }
 
   ngOnInit(): void {
     this.getAllAttributesSub = this.characterService.getAttributes().subscribe({
       next: (response) => {
-        console.log('attributes response', response);
+        console.log('attributes response: ', response);
         this.allAttributes = response.attributes;
         this.allAttributesHealth = response.attributes.find(a => a.attributeId === PrimaryAttributeId.HEALTH);
         this.allAttributesPower = response.attributes.find(a => a.attributeId === PrimaryAttributeId.POWER);
         this.isLoading = false;
+      }
+    })
+
+    this.getAllCharAttributesSub = this.characterService.getCharacterAttributes(this.characterData.characterId).subscribe({
+      next: (response) => {
+        console.log('character attributes response: ', response);
+        this.characterAttributes = response.characterAttributes;
         this.filterStats();
       }
     })
@@ -80,8 +91,7 @@ export class CharacterDetailsComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private filterStats() {
-    const characterAttributes: CharacterAttribute[] = Object.values(this.characterData.attributes);
-    characterAttributes.forEach(ca => {
+    this.characterAttributes.forEach(ca => {
       const att = this.allAttributes.find(aa => aa.attributeId === ca.attributeId);
       this.finalAttributes.push({
         "added-value": ca['added-value'],

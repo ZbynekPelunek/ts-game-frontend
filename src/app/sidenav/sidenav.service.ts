@@ -9,17 +9,17 @@ import {
   AdventureResult,
   AdventureState,
   CharacterActions,
+  CharacterFrontend,
   EquipableItem,
   EquipmentSlotsArr,
   GET_characterAdventuresAll,
-  GET_characterByID,
   IAdventure,
-  ICharacter,
   Inventory,
   InventoryItem,
   ItemType,
   POST_characterActions,
   PUT_characterByID,
+  Response_Characters_GET_one,
 } from '../../../../shared/src';
 import { CharacterCreateService } from '../character-create/character-create.service';
 
@@ -41,18 +41,18 @@ interface CharacterAdventuresUpdateSubject {
 
 @Injectable({ providedIn: 'root' })
 export class SidenavService {
-  private characterUpdated = new Subject<{ character: ICharacter }>();
+  private characterUpdated = new Subject<{ character: CharacterFrontend }>();
   private inventoryUpdated = new Subject<({ inventory: Inventory[] })>();
   private equipmentSlotsUpdated = new Subject<({ equipmentSlots: EquipmentSlotsArr[] })>();
   private characterAdventuresUpdated = new Subject<(CharacterAdventuresUpdateSubject)>();
   equipmentSlots: EquipmentSlotsArr[] = [];
   inventory: Inventory[] = [];
-  character: ICharacter;
+  character: CharacterFrontend;
   charAdventures: IAdventure[];
 
   constructor(private http: HttpClient, private characterCreateService: CharacterCreateService) { }
 
-  getCharacterUpdateListener(): Observable<{ character: ICharacter }> {
+  getCharacterUpdateListener(): Observable<{ character: CharacterFrontend }> {
     return this.characterUpdated.asObservable();
   }
 
@@ -69,17 +69,20 @@ export class SidenavService {
   }
 
   getCharacter() {
-    this.http.get<GET_characterByID>(`${BACKEND_URL}/characters/${this.characterCreateService.getCharacterId()}`).subscribe({
+    this.http.get<Response_Characters_GET_one>(`${BACKEND_URL}/characters/${this.characterCreateService.getCharacterId()}`).subscribe({
       next: (response) => {
         console.log('getCharacter() response: ', response);
-        this.character = response.character;
-        this.characterUpdated.next({ character: { ...this.character } })
+        if (response.success) {
+          this.character = response.character;
+          this.characterUpdated.next({ character: { ...this.character } });
+        }
+
       }
     });
 
   }
 
-  updateCharacter(characterId: string, character: ICharacter): void {
+  updateCharacter(characterId: string, character: CharacterFrontend): void {
     this.http.put<PUT_characterByID>(`${BACKEND_URL}/characters/${characterId}`, { character: character }).subscribe({
       next: (response) => {
         console.log('update char response: ', response.character);

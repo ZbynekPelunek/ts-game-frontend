@@ -36,7 +36,7 @@
       <mat-tab label="Currency">
         <cdk-virtual-scroll-viewport [itemSize]="1 * 1" class="character-stats">
           <div *cdkVirtualFor="let currency of characterData.currencies">
-            <span>{{currency.label}}: {{currency.amount}}<span *ngIf="currency.cap">/{{currency.cap}}</span></span>
+            <span>{{currency.label}}: {{currency.amount}}<span *ngIf="currency.cap"> / {{currency.cap}}</span></span>
           </div>
         </cdk-virtual-scroll-viewport>
       </mat-tab>
