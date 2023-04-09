@@ -8,11 +8,11 @@
     <mat-card-content *ngIf="adventure.reward">
       Reward:<br>
       Experience: {{ adventure.reward.experience }}
-      <ng-container *ngIf="adventure.reward.currencies">
+      <!-- <ng-container *ngIf="adventure.reward.currencies">
         <div *ngFor="let currency of adventure.reward.currencies | keyvalue">
           {{ currency.key }}: {{ currency.value }}
         </div>
-      </ng-container>
+      </ng-container> -->
       <ng-container *ngFor="let item of adventure.reward.items">
         {{ item.name }}<br *ngIf="adventure.reward.items.length > 1">
       </ng-container>

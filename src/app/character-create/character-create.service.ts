@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
-import { AuthService } from '../auth/auth.service';
+import { Response_Characters_POST } from '../../../../shared/src';
 
 const BACKEND_URL = `${environment.apiUrl}`;
 
@@ -26,10 +26,12 @@ export class CharacterCreateService {
   }
 
   create(accountId: string): void {
-    this.http.post<{ characterId: string }>(`${BACKEND_URL}/characters`, { accountId, name: 'TESTNAME' }).subscribe({
+    this.http.post<Response_Characters_POST>(`${BACKEND_URL}/characters`, { accountId, name: 'TESTNAME' }).subscribe({
       next: (response) => {
         console.log('character created: ', response);
-        this.characterId = response.characterId as unknown as string;
+        if (response.success) {
+          this.characterId = response.character.characterId;
+        }
         this.setCharCreatingValue(false);
         this.router.navigate(['/ui/menu/character']);
       }

@@ -5,7 +5,6 @@ import { Subject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 import { Request_Account_POST, Response_Account_POST } from '../../../../shared/src';
-import { CharacterCreateService } from '../character-create/character-create.service';
 
 const BACKEND_URL = `${environment.apiUrl}`;
 
@@ -33,7 +32,9 @@ export class AuthService {
     this.http.post<Response_Account_POST>(`${BACKEND_URL}/accounts`, <Request_Account_POST>{ username: 'test', email: 'test1@test.test', password: '123' }).subscribe({
       next: (response) => {
         console.log('signed up: ', response);
-        this.accountId = response.accountId as unknown as string;
+        if (response.success) {
+          this.accountId = response.account.accountId;
+        }
         this.isAuthenticated = true;
         this.authStatusListener.next(true);
         this.router.navigate(['ui/character-create']);

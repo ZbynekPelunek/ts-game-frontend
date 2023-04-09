@@ -1,10 +1,9 @@
-import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { EquipmentDialogComponent } from 'src/app/dialog/equipment/equipment-dialog.component';
 
-import { CharacterFrontend, EquipmentSlotsArr, Inventory, InventoryItem, ItemType } from '../../../../../../shared/src';
+import { CharacterFrontend, EquipmentSlotsArr, InventoryItem, ItemType } from '../../../../../../shared/src';
 import { InventoryFrontend } from '../../../../../../shared/src/interface/character/inventory.interface';
 import { SidenavService } from '../../sidenav.service';
 import { CharacterService } from './character.service';
@@ -42,8 +41,10 @@ export class CharacterComponent implements OnInit, OnDestroy {
 
         this.inventorySub = this.characterService.getInventory(this.playerCharacter.inventoryId).subscribe({
           next: (response) => {
-            console.log('inventory response: ', this.inventory);
-            this.inventory = response.inventory;
+            if (response.success) {
+              console.log('inventory response: ', response.inventory);
+              this.inventory = response.inventory;
+            }
             this.isInventoryLoading = false;
           }
         })
@@ -58,18 +59,6 @@ export class CharacterComponent implements OnInit, OnDestroy {
         width: '250px',
         data: item
       });
-    }
-  }
-
-  dropEquipment(_event: CdkDragDrop<EquipmentSlotsArr>): void {
-    if (!this.dragAndDropAllowed) {
-      return;
-    }
-  }
-
-  dropInventory(_event: CdkDragDrop<Inventory[]>): void {
-    if (!this.dragAndDropAllowed) {
-      return;
     }
   }
 

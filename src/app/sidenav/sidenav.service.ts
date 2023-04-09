@@ -14,7 +14,6 @@ import {
   EquipmentSlotsArr,
   GET_characterAdventuresAll,
   IAdventure,
-  Inventory,
   InventoryItem,
   ItemType,
   POST_characterActions,
@@ -42,11 +41,11 @@ interface CharacterAdventuresUpdateSubject {
 @Injectable({ providedIn: 'root' })
 export class SidenavService {
   private characterUpdated = new Subject<{ character: CharacterFrontend }>();
-  private inventoryUpdated = new Subject<({ inventory: Inventory[] })>();
+  //private inventoryUpdated = new Subject<({ inventory: Inventory[] })>();
   private equipmentSlotsUpdated = new Subject<({ equipmentSlots: EquipmentSlotsArr[] })>();
   private characterAdventuresUpdated = new Subject<(CharacterAdventuresUpdateSubject)>();
   equipmentSlots: EquipmentSlotsArr[] = [];
-  inventory: Inventory[] = [];
+  //inventory: Inventory[] = [];
   character: CharacterFrontend;
   charAdventures: IAdventure[];
 
@@ -56,9 +55,9 @@ export class SidenavService {
     return this.characterUpdated.asObservable();
   }
 
-  getInvetoryUpdateListener(): Observable<{ inventory: Inventory[] }> {
-    return this.inventoryUpdated.asObservable();
-  }
+  // getInvetoryUpdateListener(): Observable<{ inventory: Inventory[] }> {
+  //   return this.inventoryUpdated.asObservable();
+  // }
 
   getEquipmentSlotsUpdateListener(): Observable<{ equipmentSlots: EquipmentSlotsArr[] }> {
     return this.equipmentSlotsUpdated.asObservable();
@@ -127,9 +126,9 @@ export class SidenavService {
     return false;
   }
 
-  getInventory(): Observable<Inventory[]> {
-    return this.http.get<Inventory[]>(`${BACKEND_URL}/characters/${this.characterCreateService.getCharacterId()}/inventory`);
-  }
+  // getInventory(): Observable<Inventory[]> {
+  //   return this.http.get<Inventory[]>(`${BACKEND_URL}/characters/${this.characterCreateService.getCharacterId()}/inventory`);
+  // }
 
   getEquipmentSlots(): EquipmentSlotsArr[] {
     return this.equipmentSlots;
