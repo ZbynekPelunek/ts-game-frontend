@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/internal/Observable';
 import { environment } from 'src/environments/environment';
 
 import { BasicAttribute, CharacterAttribute } from '../../../../../../shared/src';
+import { InventoryFrontend } from '../../../../../../shared/src/interface/character/inventory.interface';
 
 const BACKEND_URL = `${environment.apiUrl}`;
 
@@ -22,5 +23,9 @@ export class CharacterService {
 
   getCharacterAttributes(characterId: string) {
     return this.http.get<{ success: true, characterAttributes: CharacterAttribute[] }>(`${BACKEND_URL}/character-attributes?characterId=${characterId}`);
+  }
+
+  getInventory(inventoryId: string) {
+    return this.http.get<{ succes: boolean; inventory: InventoryFrontend }>(`${BACKEND_URL}/inventories/${inventoryId}`);
   }
 }

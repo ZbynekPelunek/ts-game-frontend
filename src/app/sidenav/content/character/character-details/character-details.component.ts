@@ -2,10 +2,8 @@ import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 
 import {
-  AttributeType,
   BasicAttribute,
   CharacterAttribute,
-  CharacterBackend,
   CharacterFrontend,
   MiscAttributeId,
   PrimaryAttributeId,
@@ -17,6 +15,7 @@ interface FinalAttribute {
   attributeId: string;
   'base-value': number;
   'added-value': number;
+  'stats-value': number;
   label: string;
   type: string;
   desc?: string;
@@ -29,9 +28,13 @@ interface FinalAttribute {
   styleUrls: ['./character-details.component.css']
 })
 export class CharacterDetailsComponent implements OnInit, OnChanges, OnDestroy {
-  isLoading = true;
-
   @Input() characterData: CharacterFrontend;
+
+  isLoading = true;
+  private isAllStatsLoading = true;
+  private isCharStatsLoading = true;
+
+  private interval: NodeJS.Timer | undefined;
 
   characterAttributes: CharacterAttribute[];
 
@@ -73,7 +76,7 @@ export class CharacterDetailsComponent implements OnInit, OnChanges, OnDestroy {
         this.allAttributes = response.attributes;
         this.allAttributesHealth = response.attributes.find(a => a.attributeId === PrimaryAttributeId.HEALTH);
         this.allAttributesPower = response.attributes.find(a => a.attributeId === PrimaryAttributeId.POWER);
-        this.isLoading = false;
+        this.isAllStatsLoading = false;
       }
     })
 
@@ -81,9 +84,18 @@ export class CharacterDetailsComponent implements OnInit, OnChanges, OnDestroy {
       next: (response) => {
         console.log('character attributes response: ', response);
         this.characterAttributes = response.characterAttributes;
-        this.filterStats();
+        this.isCharStatsLoading = false;
       }
     })
+
+    this.interval = setInterval(() => {
+      if (!this.isAllStatsLoading && !this.isCharStatsLoading) {
+        this.filterStats();
+        this.isLoading = false;
+        clearInterval(this.interval);
+      }
+    }, 1000);
+
   }
 
   ngOnChanges(): void {
@@ -96,6 +108,7 @@ export class CharacterDetailsComponent implements OnInit, OnChanges, OnDestroy {
       this.finalAttributes.push({
         "added-value": ca['added-value'],
         "base-value": ca['base-value'],
+        "stats-value": ca['stats-value'],
         attributeId: att.attributeId,
         desc: att.desc,
         label: att.label,
@@ -108,23 +121,30 @@ export class CharacterDetailsComponent implements OnInit, OnChanges, OnDestroy {
     this.miscAttributes = this.finalAttributes.filter(s => s.attributeId in MiscAttributeId);
 
     this.characterHealthBase = this.primaryAttributes.find(pa => pa.attributeId === PrimaryAttributeId.HEALTH)['base-value'];
-    this.characterHealthAdded = this.primaryAttributes.find(pa => pa.attributeId === PrimaryAttributeId.HEALTH)['added-value'] ?? 0;
-    this.characterHealthTotal = this.characterHealthBase + this.characterHealthAdded;
+    this.characterHealthAdded = this.primaryAttributes.find(pa => pa.attributeId === PrimaryAttributeId.HEALTH)['added-value'];
+    const charHealthStatsValue = this.primaryAttributes.find(pa => pa.attributeId === PrimaryAttributeId.HEALTH)['stats-value'];
+    this.characterHealthTotal = this.characterHealthBase + this.characterHealthAdded + charHealthStatsValue;
+    this.primaryAttributes = this.primaryAttributes.filter(pa => pa.attributeId !== PrimaryAttributeId.HEALTH);
 
     this.characterPowerBase = this.primaryAttributes.find(pa => pa.attributeId === PrimaryAttributeId.POWER)['base-value'];
     this.characterPowerAdded = this.primaryAttributes.find(pa => pa.attributeId === PrimaryAttributeId.POWER)['added-value'] ?? 0;
     this.characterPowerTotal = this.characterPowerBase + this.characterPowerAdded;
+    this.primaryAttributes = this.primaryAttributes.filter(pa => pa.attributeId !== PrimaryAttributeId.POWER);
 
     this.characterMinDamageBase = this.primaryAttributes.find(pa => pa.attributeId === PrimaryAttributeId.MIN_DAMAGE)['base-value'];
     this.characterMinDamageAdded = this.primaryAttributes.find(pa => pa.attributeId === PrimaryAttributeId.MIN_DAMAGE)['added-value'] ?? 0;
     this.characterMinDamageTotal = this.characterMinDamageBase + this.characterMinDamageAdded;
+    this.primaryAttributes = this.primaryAttributes.filter(pa => pa.attributeId !== PrimaryAttributeId.MIN_DAMAGE);
 
     this.characterMaxDamageBase = this.primaryAttributes.find(pa => pa.attributeId === PrimaryAttributeId.MAX_DAMAGE)['base-value'];
     this.characterMaxDamageAdded = this.primaryAttributes.find(pa => pa.attributeId === PrimaryAttributeId.MAX_DAMAGE)['added-value'] ?? 0;
     this.characterMaxDamageTotal = this.characterMaxDamageBase + this.characterMaxDamageAdded;
+    this.primaryAttributes = this.primaryAttributes.filter(pa => pa.attributeId !== PrimaryAttributeId.MAX_DAMAGE);
   }
 
   ngOnDestroy(): void {
     this.getAllAttributesSub.unsubscribe();
+    this.getAllCharAttributesSub.unsubscribe();
+    this.interval ?? clearInterval(this.interval);
   }
 }

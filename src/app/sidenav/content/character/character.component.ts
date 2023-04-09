@@ -5,7 +5,9 @@ import { Subscription } from 'rxjs';
 import { EquipmentDialogComponent } from 'src/app/dialog/equipment/equipment-dialog.component';
 
 import { CharacterFrontend, EquipmentSlotsArr, Inventory, InventoryItem, ItemType } from '../../../../../../shared/src';
+import { InventoryFrontend } from '../../../../../../shared/src/interface/character/inventory.interface';
 import { SidenavService } from '../../sidenav.service';
+import { CharacterService } from './character.service';
 
 @Component({
   selector: 'app-character',
@@ -14,15 +16,17 @@ import { SidenavService } from '../../sidenav.service';
 })
 export class CharacterComponent implements OnInit, OnDestroy {
   private charSub: Subscription;
+  private inventorySub: Subscription;
   dragAndDropAllowed = false;
 
-  inventory: Inventory[];
+  inventory: InventoryFrontend;
   equipmentSlots: EquipmentSlotsArr;
 
-  isLoading = false;
+  isLoading = true;
+  isInventoryLoading = true;
   playerCharacter: CharacterFrontend;
 
-  constructor(private sidenavService: SidenavService, public equipmentDialog: MatDialog) { }
+  constructor(private sidenavService: SidenavService, public equipmentDialog: MatDialog, private characterService: CharacterService) { }
 
   ngOnInit(): void {
     this.isLoading = true;
@@ -35,6 +39,14 @@ export class CharacterComponent implements OnInit, OnDestroy {
         this.equipmentSlots = [...response.character.equipmentSlots];
         this.isLoading = false;
         console.log('...character data fetched.: ', response);
+
+        this.inventorySub = this.characterService.getInventory(this.playerCharacter.inventoryId).subscribe({
+          next: (response) => {
+            console.log('inventory response: ', this.inventory);
+            this.inventory = response.inventory;
+            this.isInventoryLoading = false;
+          }
+        })
       }
     });
   }
@@ -62,9 +74,8 @@ export class CharacterComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.charSub) {
-      this.charSub.unsubscribe();
-    }
+    this.charSub?.unsubscribe();
+    this.inventorySub?.unsubscribe();
   }
 
   // DRAG AND DROP TEST

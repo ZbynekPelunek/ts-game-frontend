@@ -1,3 +1,4 @@
+<mat-spinner *ngIf="isLoading"></mat-spinner>
 <mat-card *ngIf="!isLoading">
   <mat-grid-list cols="2" rowHeight="2:1">
     <mat-grid-tile [ngStyle]="{'background-color': 'red'}">
@@ -8,13 +9,11 @@
       <div class="character-equipment">
         <h2>Equipment</h2>
         <div class="character-equipment-slots">
-          <div id="equip-slot" cdkDropList [cdkDropListData]="equipmentSlots" class="equipment-slot-list"
-               cdkDropListOrientation="horizontal" (cdkDropListDropped)="dropEquipment($event)"
-               [cdkDropListConnectedTo]="['inventory']">
+          <div id="equip-slot" class="equipment-slot-list">
             <span class="equipment-slot" *ngFor="let eSlot of equipmentSlots">
               <span *ngIf="!eSlot.equipment">{{eSlot.slot}}</span>
-              <span class="equipment-slot-item" [cdkDragData]="eSlot.equipment" [cdkDragDisabled]="!eSlot.equipment"
-                    cdkDrag><span *ngIf="eSlot.equipment" (click)="openItemDialog(eSlot.equipment)">{{
+              <span class="equipment-slot-item"><span *ngIf="eSlot.equipment"
+                      (click)="openItemDialog(eSlot.equipment)">{{
                   eSlot.equipment.name }}</span>
               </span>
             </span>
@@ -24,18 +23,18 @@
 
     </mat-grid-tile>
     <mat-grid-tile [ngStyle]="{'background-color': 'blue'}" [colspan]="2">
-      <div class="character-inventory">
+      <mat-spinner *ngIf="isInventoryLoading"></mat-spinner>
+      <div class="character-inventory" *ngIf="!isInventoryLoading">
         <h2>Inventory</h2>
 
-        <div id="inventory" cdkDropList [cdkDropListData]="inventory" cdkDropListOrientation="horizontal"
-             class="inventory-list" (cdkDropListDropped)="dropInventory($event)"
-             [cdkDropListConnectedTo]="['equip-slot']">
-          <!-- <span class="inventory-slot" *ngFor="let invSlot of inventory">
-            <span class="inventory-slot-item" [cdkDragData]="invSlot.item" [cdkDragDisabled]="!invSlot.item" cdkDrag>
+        <div id="inventory" class="inventory-list">
+          <span class="inventory-slot" *ngFor="let invSlot of inventory.slots">
+            {{invSlot.slot}}
+            <!-- <span class="inventory-slot-item">
               <span *ngIf="invSlot.item" [matTooltip]="invSlot.item.name"
                     (click)="openItemDialog(invSlot.item)">{{invSlot.item.itemType}}</span>
-            </span>
-          </span> -->
+            </span> -->
+          </span>
         </div>
       </div>
     </mat-grid-tile>
