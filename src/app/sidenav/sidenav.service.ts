@@ -67,8 +67,14 @@ export class SidenavService {
     return this.characterAdventuresUpdated.asObservable();
   }
 
-  getCharacter() {
-    this.http.get<Response_Characters_GET_one>(`${BACKEND_URL}/characters/${this.characterCreateService.getCharacterId()}`).subscribe({
+  getCharacter(characterId: string, populateInventory: boolean = false) {
+    let queryString = '';
+    if (populateInventory) {
+      queryString += 'populateInventory=true'
+    }
+    const isQueryString = queryString === '' ? '' : '?';
+
+    this.http.get<Response_Characters_GET_one>(`${BACKEND_URL}/characters/${characterId}${isQueryString}${queryString}`).subscribe({
       next: (response) => {
         console.log('getCharacter() response: ', response);
         if (response.success) {
@@ -152,52 +158,52 @@ export class SidenavService {
     return this.http.get<IAdventure>(`${BACKEND_URL}/adventures/${adventureId}`);
   }
 
-  startAdventure(adventureId: string, characterId: string) {
-    this.http.post<AdventureStartResponse>(`${BACKEND_URL}/adventures/${adventureId}/actions/${AdventureActions.START}`, { character: { characterId } }).subscribe({
-      next: (response) => {
-        console.log('startAdventure2() response: ', response);
-        const adventure = response.result.adventure;
+  // startAdventure(adventureId: string, characterId: string) {
+  //   this.http.post<AdventureStartResponse>(`${BACKEND_URL}/adventures/${adventureId}/actions/${AdventureActions.START}`, { character: { characterId } }).subscribe({
+  //     next: (response) => {
+  //       console.log('startAdventure2() response: ', response);
+  //       const adventure = response.result.adventure;
 
-        adventure.timer = {
-          ...adventure.timer,
-          progressPercent: 100,
-          timeLeft: adventure.timeInSeconds,
-          intervalId: this.startTimer(adventure)
-        }
+  //       adventure.timer = {
+  //         ...adventure.timer,
+  //         progressPercent: 100,
+  //         timeLeft: adventure.timeInSeconds,
+  //         intervalId: this.startTimer(adventure)
+  //       }
 
-        this.charAdventures[this.charAdventures.findIndex(a => a.adventureId === adventureId)] = { ...adventure };
+  //       this.charAdventures[this.charAdventures.findIndex(a => a.adventureId === adventureId)] = { ...adventure };
 
-        this.characterAdventuresUpdated.next({ adventures: [...this.charAdventures] });
-      }
-    });
-  }
+  //       this.characterAdventuresUpdated.next({ adventures: [...this.charAdventures] });
+  //     }
+  //   });
+  // }
 
-  startTimer(adventure: IAdventure) {
-    return setInterval(() => {
-      adventure.timer.timeLeft = new Date(adventure.timer.timeFinished).getTime() - new Date().getTime();
-      console.log(adventure.timer.timeLeft, 'ms');
-      adventure.timer.progressPercent = Math.floor((100 * adventure.timer.timeLeft) / (adventure.timeInSeconds * 1000));
-      console.log(adventure.timer.progressPercent, '%');
-      if (adventure.timer.timeLeft <= 0) {
-        console.log('adventure done');
-        this.getAdventureResult(adventure.resultId);
-        clearInterval(adventure.timer.intervalId as NodeJS.Timer);
+  // startTimer(adventure: IAdventure) {
+  //   return setInterval(() => {
+  //     adventure.timer.timeLeft = new Date(adventure.timer.timeFinished).getTime() - new Date().getTime();
+  //     console.log(adventure.timer.timeLeft, 'ms');
+  //     adventure.timer.progressPercent = Math.floor((100 * adventure.timer.timeLeft) / (adventure.timeInSeconds * 1000));
+  //     console.log(adventure.timer.progressPercent, '%');
+  //     if (adventure.timer.timeLeft <= 0) {
+  //       console.log('adventure done');
+  //       this.getAdventureResult(adventure.resultId);
+  //       clearInterval(adventure.timer.intervalId as NodeJS.Timer);
 
-        // SHOW isAttacking TEMPLATE WITH PLAYER VS ENEMY
-        // AdventureState.FINISHED -> AdventureState.IDLE
-      }
-    }, 1000);
-  }
+  //       // SHOW isAttacking TEMPLATE WITH PLAYER VS ENEMY
+  //       // AdventureState.FINISHED -> AdventureState.IDLE
+  //     }
+  //   }, 1000);
+  // }
 
-  getAdventureResult(resultId: string) {
-    this.http.get<{ result: AdventureResult }>(`${BACKEND_URL}/results/${resultId}`).subscribe({
-      next: (response) => {
-        const adventureIndex = this.charAdventures.findIndex(a => a.adventureId === response.result.adventureId);
-        this.charAdventures[adventureIndex] = { ...this.charAdventures[adventureIndex], adventureState: AdventureState.IDLE };
+  // getAdventureResult(resultId: string) {
+  //   this.http.get<{ result: AdventureResult }>(`${BACKEND_URL}/results/${resultId}`).subscribe({
+  //     next: (response) => {
+  //       const adventureIndex = this.charAdventures.findIndex(a => a.adventureId === response.result.adventureId);
+  //       this.charAdventures[adventureIndex] = { ...this.charAdventures[adventureIndex], adventureState: AdventureState.IDLE };
 
-        this.characterAdventuresUpdated.next({ adventures: [...this.charAdventures] });
-        this.getCharacter();
-      }
-    });
-  }
+  //       this.characterAdventuresUpdated.next({ adventures: [...this.charAdventures] });
+  //       this.getCharacter();
+  //     }
+  //   });
+  // }
 }

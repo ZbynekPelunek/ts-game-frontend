@@ -1,7 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 
-import { AdventureState, IAdventure } from '../../../../../../shared/src/interface/adventures.interface';
+import {
+  AdventureState,
+  IAdventure,
+} from '../../../../../../shared/src/interface/adventures.interface';
 import { SidenavService } from '../../sidenav.service';
 
 interface AdventureCard extends IAdventure {
@@ -45,7 +48,7 @@ export class AdventuresComponent implements OnInit, OnDestroy {
       }
     })
     this.isCharacterLoading = true;
-    this.sidenavService.getCharacter();
+    //this.sidenavService.getCharacter();
     this.charUpdateSub = this.sidenavService.getCharacterUpdateListener().subscribe({
       next: (response) => {
         this.playerCharacter = {
@@ -59,7 +62,7 @@ export class AdventuresComponent implements OnInit, OnDestroy {
   }
 
   onStartAdventure(adventureId: string) {
-    this.sidenavService.startAdventure(adventureId, this.playerCharacter.characterId);
+    //this.sidenavService.startAdventure(adventureId, this.playerCharacter.characterId);
     // this.adventureStartSub = this.sidenavService.startAdventure(adventureId, this.playerCharacter.characterId).subscribe({
     //   next: (response) => {
     //     console.log(response.message);

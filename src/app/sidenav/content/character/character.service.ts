@@ -3,7 +3,11 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
 import { environment } from 'src/environments/environment';
 
-import { BasicAttribute, CharacterAttributeFrontend, Response_Inventories_GET_one } from '../../../../../../shared/src';
+import {
+  BasicAttribute,
+  Response_CharacterAttributes_GET_all,
+  Response_Inventories_GET_one,
+} from '../../../../../../shared/src';
 
 const BACKEND_URL = `${environment.apiUrl}`;
 
@@ -20,8 +24,19 @@ export class CharacterService {
     return this.http.get<{ success: boolean, attribute: BasicAttribute }>(`${BACKEND_URL}/attributes/${attributeId}`);
   }
 
-  getCharacterAttributes(characterId: string) {
-    return this.http.get<{ success: true, characterAttributes: CharacterAttributeFrontend[] }>(`${BACKEND_URL}/character-attributes?characterId=${characterId}`);
+  getCharacterAttributes(characterId: string, populateAttribute: boolean = false) {
+    const queryString = [];
+    if (populateAttribute) {
+      queryString.push('populateAttribute=true');
+    }
+    if (characterId !== '') {
+      queryString.push(`characterId=${characterId}`);
+    }
+
+    const isQueryString = queryString.length < 0 ? '' : '?';
+    const finalQueryString = queryString.join('&&')
+
+    return this.http.get<Response_CharacterAttributes_GET_all>(`${BACKEND_URL}/character-attributes${isQueryString}${finalQueryString}`);
   }
 
   getInventory(inventoryId: string) {

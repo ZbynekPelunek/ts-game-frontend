@@ -23,11 +23,12 @@
 
     </mat-grid-tile>
     <mat-grid-tile [ngStyle]="{'background-color': 'blue'}" [colspan]="2">
-      <mat-spinner *ngIf="isInventoryLoading"></mat-spinner>
-      <div class="character-inventory" *ngIf="!isInventoryLoading">
+      <div class="character-inventory">
         <h2>Inventory</h2>
-
-        <div id="inventory" class="inventory-list">
+        <div *ngIf="!inventory">
+          <h1>NO INVENTORY DATA</h1>
+        </div>
+        <div id="inventory" class="inventory-list" *ngIf="inventory">
           <span class="inventory-slot" *ngFor="let invSlot of inventory.slots">
             {{invSlot.slot}}
             <!-- <span class="inventory-slot-item">

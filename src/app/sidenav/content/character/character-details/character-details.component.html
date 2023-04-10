@@ -1,19 +1,23 @@
 <mat-card style="height: inherit;">
-  <!-- <mat-card-title>{{ characterData.name }}</mat-card-title>
+  <mat-card-title>{{ characterData.name }}</mat-card-title>
   <mat-card-subtitle>Level {{ characterData.level}}</mat-card-subtitle>
-  <mat-card-subtitle>[{{ characterData.currentExperience }}/{{ characterData.maxExperience}}]</mat-card-subtitle> -->
+  <mat-card-subtitle>[{{ characterData.currentExperience }}/{{ characterData.maxExperience}}]</mat-card-subtitle>
   <mat-card-content>
     <mat-spinner *ngIf="isLoading"></mat-spinner>
     <mat-tab-group *ngIf="!isLoading">
-      <!-- <mat-tab label="Main">
-        {{allAttributesHealth.label}}: {{characterHealthTotal}}<br>
-        {{allAttributesPower.label}}: {{characterPowerTotal}}<br>
-        Damage: {{characterMinDamageTotal}} - {{characterMaxDamageTotal}}
+      <mat-tab label="Main">
+        <cdk-virtual-scroll-viewport [itemSize]="1 * 1" class="character-stats">
+          <div *cdkVirtualFor="let attribute of mainAttributes">
+            <span>{{attribute.attribute.label}}: {{attribute['base-value'] + attribute['added-value']}} <span
+                    *ngIf="attribute.percent">%</span></span>
+          </div>
+        </cdk-virtual-scroll-viewport>
       </mat-tab>
+
       <mat-tab label="Primary">
         <cdk-virtual-scroll-viewport [itemSize]="1 * 1" class="character-stats">
           <div *cdkVirtualFor="let attribute of primaryAttributes">
-            <span>{{attribute.label}} {{attribute['base-value'] + attribute['added-value']}} <span
+            <span>{{attribute.attribute.label}} {{attribute['base-value'] + attribute['added-value']}} <span
                     *ngIf="attribute.percent">%</span></span>
           </div>
         </cdk-virtual-scroll-viewport>
@@ -21,7 +25,7 @@
       <mat-tab label="Secondary">
         <cdk-virtual-scroll-viewport [itemSize]="1 * 1" class="character-stats">
           <div *cdkVirtualFor="let attribute of secondaryAttributes">
-            <span>{{attribute.label}}: {{attribute['base-value'] + attribute['added-value']}} <span
+            <span>{{attribute.attribute.label}}: {{attribute['base-value'] + attribute['added-value']}} <span
                     *ngIf="attribute.percent">%</span></span>
           </div>
         </cdk-virtual-scroll-viewport>
@@ -29,7 +33,7 @@
       <mat-tab label="Misc">
         <cdk-virtual-scroll-viewport [itemSize]="1 * 1" class="character-stats">
           <div *cdkVirtualFor="let attribute of miscAttributes">
-            <span>{{attribute.label}}: {{attribute['base-value'] + attribute['added-value']}} <span
+            <span>{{attribute.attribute.label}}: {{attribute['base-value'] + attribute['added-value']}} <span
                     *ngIf="attribute.percent">%</span></span>
           </div>
         </cdk-virtual-scroll-viewport>
@@ -40,7 +44,7 @@
             <span>{{currency.label}}: {{currency.amount}}<span *ngIf="currency.cap"> / {{currency.cap}}</span></span>
           </div>
         </cdk-virtual-scroll-viewport>
-      </mat-tab> -->
+      </mat-tab>
     </mat-tab-group>
   </mat-card-content>
 </mat-card>
