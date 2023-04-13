@@ -4,15 +4,10 @@ import { Subscription } from 'rxjs';
 import { CharacterCreateService } from 'src/app/character-create/character-create.service';
 import { EquipmentDialogComponent } from 'src/app/dialog/equipment/equipment-dialog.component';
 
-import {
-  CharacterFrontend,
-  EquipmentSlotsArr,
-  InventoryItem,
-  ItemType,
-} from '../../../../../../shared/src';
+import { CharacterFrontend } from '../../../../../../shared/src';
 import {
   InventoryFrontend,
-} from '../../../../../../shared/src/interface/character/inventory.interface';
+} from '../../../../../../shared/src/interface/character/inventories.interface';
 import { SidenavService } from '../../sidenav.service';
 
 @Component({
@@ -25,7 +20,6 @@ export class CharacterComponent implements OnInit, OnDestroy {
   characterId: string;
 
   inventory: InventoryFrontend;
-  equipmentSlots: EquipmentSlotsArr;
 
   isLoading = true;
   playerCharacter: CharacterFrontend;
@@ -40,23 +34,22 @@ export class CharacterComponent implements OnInit, OnDestroy {
     this.charSub = this.sidenavService.getCharacterUpdateListener().subscribe({
       next: (response) => {
         this.playerCharacter = { ...response.character };
-        this.inventory = typeof response.character.inventoryId === 'string' ? undefined : response.character.inventoryId;
-        this.equipmentSlots = [...response.character.equipmentSlots];
+        //this.inventory = response.character.inventory;
         this.isLoading = false;
         console.log('...character data fetched.: ', response);
       }
     });
   }
 
-  openItemDialog(item: InventoryItem): void {
-    console.log('item clicked', item);
-    if (item.itemType === ItemType.EQUIPMENT) {
-      this.equipmentDialog.open(EquipmentDialogComponent, {
-        width: '250px',
-        data: item
-      });
-    }
-  }
+  // openItemDialog(item: InventoryItem): void {
+  //   console.log('item clicked', item);
+  //   if (item.itemType === ItemType.EQUIPMENT) {
+  //     this.equipmentDialog.open(EquipmentDialogComponent, {
+  //       width: '250px',
+  //       data: item
+  //     });
+  //   }
+  // }
 
   ngOnDestroy(): void {
     this.charSub?.unsubscribe();

@@ -55,6 +55,7 @@ export class CharacterDetailsComponent implements OnInit, OnChanges, OnDestroy {
   constructor(private characterService: CharacterService) { }
 
   ngOnInit(): void {
+    console.log('character-details characterData: ', this.characterData);
     this.getAllCharAttributesSub = this.characterService.getCharacterAttributes(this.characterData.characterId, true).subscribe({
       next: (response) => {
         console.log('character attributes response: ', response);

@@ -13,9 +13,9 @@
           {{ currency.key }}: {{ currency.value }}
         </div>
       </ng-container> -->
-      <ng-container *ngFor="let item of adventure.reward.items">
+      <!-- <ng-container *ngFor="let item of adventure.reward.items">
         {{ item.name }}<br *ngIf="adventure.reward.items.length > 1">
-      </ng-container>
+      </ng-container> -->
     </mat-card-content>
     <ng-container *ngIf="!isCharacterLoading; else noCharData">
       <mat-card-actions>

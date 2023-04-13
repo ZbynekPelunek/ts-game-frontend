@@ -31,6 +31,7 @@ export class CharacterCreateService {
         console.log('character created: ', response);
         if (response.success) {
           this.characterId = response.character.characterId;
+          console.log('created character ID: ', this.characterId);
         }
         this.setCharCreatingValue(false);
         this.router.navigate(['/ui/menu/character']);

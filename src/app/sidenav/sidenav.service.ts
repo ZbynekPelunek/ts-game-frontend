@@ -5,17 +5,10 @@ import { Subject } from 'rxjs/internal/Subject';
 import { environment } from 'src/environments/environment';
 
 import {
-  AdventureActions,
-  AdventureResult,
-  AdventureState,
   CharacterActions,
   CharacterFrontend,
-  EquipableItem,
-  EquipmentSlotsArr,
   GET_characterAdventuresAll,
   IAdventure,
-  InventoryItem,
-  ItemType,
   POST_characterActions,
   PUT_characterByID,
   Response_Characters_GET_one,
@@ -42,9 +35,9 @@ interface CharacterAdventuresUpdateSubject {
 export class SidenavService {
   private characterUpdated = new Subject<{ character: CharacterFrontend }>();
   //private inventoryUpdated = new Subject<({ inventory: Inventory[] })>();
-  private equipmentSlotsUpdated = new Subject<({ equipmentSlots: EquipmentSlotsArr[] })>();
+  //private equipmentSlotsUpdated = new Subject<({ equipmentSlots: EquipmentSlotsArr[] })>();
   private characterAdventuresUpdated = new Subject<(CharacterAdventuresUpdateSubject)>();
-  equipmentSlots: EquipmentSlotsArr[] = [];
+  //equipmentSlots: EquipmentSlotsArr[] = [];
   //inventory: Inventory[] = [];
   character: CharacterFrontend;
   charAdventures: IAdventure[];
@@ -59,9 +52,9 @@ export class SidenavService {
   //   return this.inventoryUpdated.asObservable();
   // }
 
-  getEquipmentSlotsUpdateListener(): Observable<{ equipmentSlots: EquipmentSlotsArr[] }> {
-    return this.equipmentSlotsUpdated.asObservable();
-  }
+  // getEquipmentSlotsUpdateListener(): Observable<{ equipmentSlots: EquipmentSlotsArr[] }> {
+  //   return this.equipmentSlotsUpdated.asObservable();
+  // }
 
   getCharacterAdventuresUpdateListener(): Observable<CharacterAdventuresUpdateSubject> {
     return this.characterAdventuresUpdated.asObservable();
@@ -73,6 +66,8 @@ export class SidenavService {
       queryString += 'populateInventory=true'
     }
     const isQueryString = queryString === '' ? '' : '?';
+
+    console.log('getCharacter() characterID: ', characterId);
 
     this.http.get<Response_Characters_GET_one>(`${BACKEND_URL}/characters/${characterId}${isQueryString}${queryString}`).subscribe({
       next: (response) => {
@@ -95,50 +90,43 @@ export class SidenavService {
     })
   }
 
-  equipCharacter(equipment: EquipableItem): void {
-    this.http.post<POST_characterActions>(`${BACKEND_URL}/characters/${this.characterCreateService.getCharacterId()}/actions/${CharacterActions.EQUIP_ITEM}`, { item: equipment }).subscribe({
-      next: (response) => {
-        console.log('equipCharacter() response: ', response);
-        this.character = response.character;
-        this.characterUpdated.next({ character: { ...this.character } });
-      }
-    });
-  }
+  // equipCharacter(equipment: EquipableItem): void {
+  //   this.http.post<POST_characterActions>(`${BACKEND_URL}/characters/${this.characterCreateService.getCharacterId()}/actions/${CharacterActions.EQUIP_ITEM}`, { item: equipment }).subscribe({
+  //     next: (response) => {
+  //       console.log('equipCharacter() response: ', response);
+  //       this.character = response.character;
+  //       this.characterUpdated.next({ character: { ...this.character } });
+  //     }
+  //   });
+  // }
 
-  unequipCharacter(equipment: EquipableItem): void {
-    this.http.post<POST_characterActions>(`${BACKEND_URL}/characters/${this.characterCreateService.getCharacterId()}/actions/${CharacterActions.UNEQUIP_ITEM}`, { item: equipment }).subscribe({
-      next: (response) => {
-        console.log('unequipCharacter() response: ', response);
-        this.character = response.character;
-        this.characterUpdated.next({ character: { ...this.character } });
-      }
-    });
-  }
 
-  sellItem(item: InventoryItem): void {
-    this.http.post<POST_characterActions>(`${BACKEND_URL}/characters/${this.characterCreateService.getCharacterId()}/actions/${CharacterActions.SELL}`, { item }).subscribe({
-      next: (response) => {
-        console.log('sellItem() response: ', response);
-        this.character = response.character;
-        this.characterUpdated.next({ character: { ...this.character } });
-      }
-    });
-  }
 
-  checkEquipableStatus(equipment: EquipableItem): boolean {
-    if (equipment.itemType === ItemType.EQUIPMENT) {
-      return true;
-    }
-    return false;
-  }
+
+  // sellItem(item: InventoryItem): void {
+  //   this.http.post<POST_characterActions>(`${BACKEND_URL}/characters/${this.characterCreateService.getCharacterId()}/actions/${CharacterActions.SELL}`, { item }).subscribe({
+  //     next: (response) => {
+  //       console.log('sellItem() response: ', response);
+  //       this.character = response.character;
+  //       this.characterUpdated.next({ character: { ...this.character } });
+  //     }
+  //   });
+  // }
+
+  // checkEquipableStatus(equipment: EquipableItem): boolean {
+  //   if (equipment.itemType === ItemType.EQUIPMENT) {
+  //     return true;
+  //   }
+  //   return false;
+  // }
 
   // getInventory(): Observable<Inventory[]> {
   //   return this.http.get<Inventory[]>(`${BACKEND_URL}/characters/${this.characterCreateService.getCharacterId()}/inventory`);
   // }
 
-  getEquipmentSlots(): EquipmentSlotsArr[] {
-    return this.equipmentSlots;
-  }
+  // getEquipmentSlots(): EquipmentSlotsArr[] {
+  //   return this.equipmentSlots;
+  // }
 
   getCharacterAdventures(): void {
     this.http.get<GET_characterAdventuresAll>(`${BACKEND_URL}/characters/${this.characterCreateService.getCharacterId()}/adventures`).subscribe({
