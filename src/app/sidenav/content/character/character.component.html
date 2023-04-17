@@ -29,8 +29,8 @@
           <h1>NO INVENTORY DATA</h1>
         </div>
         <div id="inventory" class="inventory-list" *ngIf="inventory">
-          <span class="inventory-slot" *ngFor="let invSlot of inventory.slots">
-            {{invSlot.slot}}
+          <span class="inventory-slot" *ngFor="let invSlot of inventory">
+            {{invSlot}}
             <!-- <span class="inventory-slot-item">
               <span *ngIf="invSlot.item" [matTooltip]="invSlot.item.name"
                     (click)="openItemDialog(invSlot.item)">{{invSlot.item.itemType}}</span>

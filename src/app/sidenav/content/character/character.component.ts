@@ -4,10 +4,7 @@ import { Subscription } from 'rxjs';
 import { CharacterCreateService } from 'src/app/character-create/character-create.service';
 import { EquipmentDialogComponent } from 'src/app/dialog/equipment/equipment-dialog.component';
 
-import { CharacterFrontend } from '../../../../../../shared/src';
-import {
-  InventoryFrontend,
-} from '../../../../../../shared/src/interface/character/inventories.interface';
+import { CharacterFrontend, InventoryItemFrontend } from '../../../../../../shared/src';
 import { SidenavService } from '../../sidenav.service';
 
 @Component({
@@ -19,7 +16,7 @@ export class CharacterComponent implements OnInit, OnDestroy {
   private charSub: Subscription;
   characterId: string;
 
-  inventory: InventoryFrontend;
+  inventory: string[] | null[];
 
   isLoading = true;
   playerCharacter: CharacterFrontend;
@@ -34,7 +31,7 @@ export class CharacterComponent implements OnInit, OnDestroy {
     this.charSub = this.sidenavService.getCharacterUpdateListener().subscribe({
       next: (response) => {
         this.playerCharacter = { ...response.character };
-        //this.inventory = response.character.inventory;
+        this.inventory = response.character.inventory;
         this.isLoading = false;
         console.log('...character data fetched.: ', response);
       }
