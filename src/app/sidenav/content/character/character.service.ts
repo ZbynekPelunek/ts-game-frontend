@@ -5,6 +5,7 @@ import { environment } from 'src/environments/environment';
 
 import {
   BasicAttribute,
+  CharacterCurrencyFrontend,
   Response_CharacterAttributes_GET_all,
   Response_Inventories_GET_one,
 } from '../../../../../../shared/src';
@@ -39,7 +40,18 @@ export class CharacterService {
     return this.http.get<Response_CharacterAttributes_GET_all>(`${BACKEND_URL}/character-attributes${isQueryString}${finalQueryString}`);
   }
 
-  getInventory(inventoryId: string) {
-    return this.http.get<Response_Inventories_GET_one>(`${BACKEND_URL}/inventories/${inventoryId}`);
+  getCharacterCurrencies(characterId: string, populateCurrencies: boolean = false) {
+    const queryString = [];
+    if (populateCurrencies) {
+      queryString.push('populateCurrencies=true');
+    }
+    if (characterId !== '') {
+      queryString.push(`characterId=${characterId}`);
+    }
+
+    const isQueryString = queryString.length < 0 ? '' : '?';
+    const finalQueryString = queryString.join('&&')
+
+    return this.http.get<{ success: boolean, characterCurrencies: CharacterCurrencyFrontend[] }>(`${BACKEND_URL}/character-currencies${isQueryString}${finalQueryString}`);
   }
 }

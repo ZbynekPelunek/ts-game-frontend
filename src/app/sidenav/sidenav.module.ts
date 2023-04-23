@@ -8,8 +8,13 @@ import { AngularMaterialModule } from '../angular-material.module';
 import { CharDialogModule } from '../dialog/char-dialog.module';
 import { AdventuresComponent } from './content/adventures/adventures.component';
 import { ArenaComponent } from './content/arena/arena.component';
-import { CharacterDetailsComponent } from './content/character/character-details/character-details.component';
+import {
+  CharacterDetailsComponent,
+} from './content/character/character-details/character-details.component';
 import { CharacterComponent } from './content/character/character.component';
+import {
+  CharacterCurrenciesComponent,
+} from './content/character/currencies/character-currencies.component';
 import { DashboardComponent } from './content/dashboard/dashboard.component';
 import { FortuneComponent } from './content/fortune/fortune.component';
 import { SidenavRoutingModule } from './sidenav-routing.module';
@@ -21,7 +26,8 @@ import { SidenavRoutingModule } from './sidenav-routing.module';
     FortuneComponent,
     ArenaComponent,
     AdventuresComponent,
-    CharacterDetailsComponent
+    CharacterDetailsComponent,
+    CharacterCurrenciesComponent
   ],
   imports: [
     CommonModule,

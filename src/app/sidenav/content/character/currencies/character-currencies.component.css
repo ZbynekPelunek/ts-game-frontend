@@ -1,0 +1,9 @@
+.currency-card {
+  height: 100%;
+  width: 100%;
+}
+
+.currency{
+  height: 140px;
+  width: inherit;
+}

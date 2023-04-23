@@ -1,13 +1,31 @@
 <mat-spinner *ngIf="isLoading"></mat-spinner>
 <mat-card *ngIf="!isLoading">
-  <mat-grid-list cols="2" rowHeight="2:1">
-    <mat-grid-tile [ngStyle]="{'background-color': 'red'}">
-      <app-character-details class="char-details" [characterData]="playerCharacter">
-      </app-character-details>
+  <mat-grid-list cols="5" rowHeight="2:3">
+    <mat-grid-tile [style.background]="characterTile.color" [colspan]="characterTile.cols"
+                   [rowspan]="characterTile.rows">
+      <mat-grid-tile-header>{{characterTile.text}}</mat-grid-tile-header>
+      <mat-card class="char-details">
+        <mat-card-title>{{ playerCharacter.name }}</mat-card-title>
+        <mat-card-subtitle>Level {{ playerCharacter.level}}</mat-card-subtitle>
+        <mat-card-subtitle>[{{ playerCharacter.currentExperience }}/{{
+          playerCharacter.maxExperience}}]</mat-card-subtitle>
+        <mat-card-content>
+          <app-character-details [characterId]="playerCharacter.characterId">
+          </app-character-details>
+        </mat-card-content>
+      </mat-card>
+
     </mat-grid-tile>
-    <mat-grid-tile [ngStyle]="{'background-color': 'green'}">
+    <mat-grid-tile [style.background]="currencyTile.color" [colspan]="currencyTile.cols" [rowspan]="currencyTile.rows">
+      <div class="character-currency">
+        <mat-grid-tile-header>{{currencyTile.text}}</mat-grid-tile-header>
+        <app-character-currencies [characterId]="playerCharacter.characterId"></app-character-currencies>
+      </div>
+    </mat-grid-tile>
+    <mat-grid-tile [style.background]="equipmentTile.color" [colspan]="equipmentTile.cols"
+                   [rowspan]="equipmentTile.rows">
       <div class="character-equipment">
-        <h2>Equipment</h2>
+        <mat-grid-tile-header>{{equipmentTile.text}}</mat-grid-tile-header>
         <div class="character-equipment-slots">
           <div id="equip-slot" class="equipment-slot-list">
             <!-- <span class="equipment-slot" *ngFor="let eSlot of equipmentSlots">
@@ -20,11 +38,11 @@
           </div>
         </div>
       </div>
-
     </mat-grid-tile>
-    <mat-grid-tile [ngStyle]="{'background-color': 'blue'}" [colspan]="2">
+    <mat-grid-tile [style.background]="inventoryTile.color" [colspan]="inventoryTile.cols"
+                   [rowspan]="inventoryTile.rows">
       <div class="character-inventory">
-        <h2>Inventory</h2>
+        <mat-grid-tile-header>{{inventoryTile.text}}</mat-grid-tile-header>
         <div *ngIf="!inventory">
           <h1>NO INVENTORY DATA</h1>
         </div>

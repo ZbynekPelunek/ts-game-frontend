@@ -7,12 +7,24 @@ import { EquipmentDialogComponent } from 'src/app/dialog/equipment/equipment-dia
 import { CharacterFrontend, InventoryItemFrontend } from '../../../../../../shared/src';
 import { SidenavService } from '../../sidenav.service';
 
+interface Tile {
+  color: string;
+  cols: number;
+  rows: number;
+  text: string;
+}
+
 @Component({
   selector: 'app-character',
   templateUrl: './character.component.html',
   styleUrls: ['./character.component.css']
 })
 export class CharacterComponent implements OnInit, OnDestroy {
+  characterTile: Tile = { text: 'Character', cols: 2, rows: 1, color: 'lightblue' };
+  currencyTile: Tile = { text: 'Currencies', cols: 1, rows: 1, color: 'lightgreen' };
+  equipmentTile: Tile = { text: 'Equipment', cols: 2, rows: 1, color: 'lightpink' };
+  inventoryTile: Tile = { text: 'Inventory', cols: 5, rows: 1, color: '#DDBDF1' };
+
   private charSub: Subscription;
   characterId: string;
 

@@ -4,6 +4,12 @@
   width: 100%;
 }
 
+/* CURRENCY TILE */
+.character-currency {
+  height: 100%;
+  width: 100%;
+}
+
 /* EQUIPMENT TILE */
 .character-equipment {
   text-align: center;
@@ -53,7 +59,7 @@
 }
 
 .inventory-list {
-  height: calc(100% - 32px);
+  height: inherit;
   width: inherit;
   background-color: brown;
   display: inline-flex;
@@ -63,7 +69,7 @@
   display: inline-block;
   height: 72px;
   width: 72px;
-  margin: 2px;
+  margin: 50px 2px 2px 2px;
   border: solid 4px #ccc;
   color: rgba(0, 0, 0, 0.87);
   box-sizing: border-box;

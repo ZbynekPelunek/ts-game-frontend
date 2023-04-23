@@ -4,7 +4,6 @@ import { Subscription } from 'rxjs';
 import {
   BasicAttribute,
   CharacterAttributeFrontend,
-  CharacterFrontend,
   MainAttributeNames,
   MiscAttributeNames,
   PrimaryAttributeNames,
@@ -18,7 +17,7 @@ import { CharacterService } from '../character.service';
   styleUrls: ['./character-details.component.css']
 })
 export class CharacterDetailsComponent implements OnInit, OnDestroy {
-  @Input() characterData: CharacterFrontend;
+  @Input() characterId: string;
 
   isLoading = true;
 
@@ -49,14 +48,12 @@ export class CharacterDetailsComponent implements OnInit, OnDestroy {
   characterMaxDamageAdded: number;
   characterMaxDamageTotal: number;
 
-  getAllAttributesSub: Subscription;
   getAllCharAttributesSub: Subscription;
 
   constructor(private characterService: CharacterService) { }
 
   ngOnInit(): void {
-    console.log('character-details characterData: ', this.characterData);
-    this.getAllCharAttributesSub = this.characterService.getCharacterAttributes(this.characterData.characterId, true).subscribe({
+    this.getAllCharAttributesSub = this.characterService.getCharacterAttributes(this.characterId, true).subscribe({
       next: (response) => {
         console.log('character attributes response: ', response);
         if (response.success) {
