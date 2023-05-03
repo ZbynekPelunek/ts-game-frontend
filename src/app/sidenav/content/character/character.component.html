@@ -26,17 +26,7 @@
                    [rowspan]="equipmentTile.rows">
       <div class="character-equipment">
         <mat-grid-tile-header>{{equipmentTile.text}}</mat-grid-tile-header>
-        <div class="character-equipment-slots">
-          <div id="equip-slot" class="equipment-slot-list">
-            <!-- <span class="equipment-slot" *ngFor="let eSlot of equipmentSlots">
-              <span *ngIf="!eSlot.equipment">{{eSlot.slot}}</span>
-              <span class="equipment-slot-item"><span *ngIf="eSlot.equipment"
-                      (click)="openItemDialog(eSlot.equipment)">{{
-                  eSlot.equipment.name }}</span>
-              </span>
-            </span> -->
-          </div>
-        </div>
+        <app-character-equipment [characterId]="playerCharacter.characterId"></app-character-equipment>
       </div>
     </mat-grid-tile>
     <mat-grid-tile [style.background]="inventoryTile.color" [colspan]="inventoryTile.cols"

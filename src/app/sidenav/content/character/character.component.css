@@ -17,39 +17,6 @@
   width: 100%
 }
 
-.equipment-slot-list {
-  height: calc(100% - 32px);
-  width: inherit;
-  display: inline-flex;
-}
-
-.equipment-slot {
-  display: inline-block;
-  height: 72px;
-  width: 72px;
-  margin: 2px;
-  border: solid 4px #ccc;
-  color: rgba(0, 0, 0, 0.87);
-  box-sizing: border-box;
-  background: white;
-  font-size: 14px;
-}
-
-.equipment-slot-item {
-  display: inline-flex;
-  height: 64px;
-  width: 64px;
-  border: solid 2px lightblue;
-  box-sizing: border-box;
-  background: white;
-  font-size: 14px;
-  cursor: grab;
-}
-.equipment-slot-item.cdk-drag-disabled {
-  cursor: default;
-  visibility: hidden;
-}
-
 /* INVENTORY TILE */
 
 .character-inventory {

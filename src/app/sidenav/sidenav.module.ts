@@ -15,6 +15,9 @@ import { CharacterComponent } from './content/character/character.component';
 import {
   CharacterCurrenciesComponent,
 } from './content/character/currencies/character-currencies.component';
+import {
+  CharacterEquipmentComponent,
+} from './content/character/equipment/character-equipment.component';
 import { DashboardComponent } from './content/dashboard/dashboard.component';
 import { FortuneComponent } from './content/fortune/fortune.component';
 import { SidenavRoutingModule } from './sidenav-routing.module';
@@ -27,7 +30,8 @@ import { SidenavRoutingModule } from './sidenav-routing.module';
     ArenaComponent,
     AdventuresComponent,
     CharacterDetailsComponent,
-    CharacterCurrenciesComponent
+    CharacterCurrenciesComponent,
+    CharacterEquipmentComponent
   ],
   imports: [
     CommonModule,

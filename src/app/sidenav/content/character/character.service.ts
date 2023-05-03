@@ -6,11 +6,17 @@ import { environment } from 'src/environments/environment';
 import {
   BasicAttribute,
   CharacterCurrencyFrontend,
+  EquipmentItemFrontend,
   Response_CharacterAttributes_GET_all,
   Response_Inventories_GET_one,
 } from '../../../../../../shared/src';
 
 const BACKEND_URL = `${environment.apiUrl}`;
+
+interface CharacterEquipmentResponse {
+  characterId: string;
+  equipment: EquipmentItemFrontend[];
+}
 
 @Injectable({ providedIn: 'root' })
 export class CharacterService {
@@ -53,5 +59,9 @@ export class CharacterService {
     const finalQueryString = queryString.join('&&')
 
     return this.http.get<{ success: boolean, characterCurrencies: CharacterCurrencyFrontend[] }>(`${BACKEND_URL}/character-currencies${isQueryString}${finalQueryString}`);
+  }
+
+  getCharacterEquipment(characterId: string) {
+    return this.http.get<{ success: boolean; character: CharacterEquipmentResponse; }>(`${BACKEND_URL}/characters/${characterId}/equipment`);
   }
 }
