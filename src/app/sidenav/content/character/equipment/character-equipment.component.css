@@ -1,13 +1,31 @@
-.equipment-slot-list {
-  height: calc(100% - 32px);
-  width: inherit;
-  display: inline-flex;
+#equipment-card {
+  height: 100%;
+  width: 100%;
 }
 
-.equipment-left,
-.equipment-right,
-.equipment-bottom {
-  display: inline-block;
+#equipment-all-container {
+  height: inherit;
+  display: flex;
+  justify-content: space-between;
+}
+
+.equipment-left-container,
+.equipment-right-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+.equipment-bottom-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.equipment-slot-left,
+.equipment-slot-right,
+.equipment-slot-bottom {
+  display: inline-flex;
   height: 72px;
   width: 72px;
   margin: 2px;
@@ -18,13 +36,3 @@
   font-size: 14px;
 }
 
-.equipment-slot-item {
-  display: inline-flex;
-  height: 64px;
-  width: 64px;
-  border: solid 2px lightblue;
-  box-sizing: border-box;
-  background: white;
-  font-size: 14px;
-  cursor: grab;
-}

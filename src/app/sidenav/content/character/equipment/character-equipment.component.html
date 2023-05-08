@@ -2,15 +2,23 @@
   <h1>NO EQUIPMENT DATA</h1>
 </div>
 <mat-spinner *ngIf="isLoading"></mat-spinner>
-<h1>EQUIPMENT</h1>
-<div class="equipment-slot-list">
-  <span class="equipment-left" *ngFor="let leftSlot of leftEquipment">
-    {{leftSlot.equipmentItemId}}
-  </span>
-  <span class="equipment-right" *ngFor="let rightSlot of rightEquipment">
-    {{rightSlot.equipmentItemId}}
-  </span>
-  <span class="equipment-bottom" *ngFor="let bottomSlot of bottomEquipment">
-    {{bottomSlot.equipmentItemId}}
-  </span>
-</div>
+<mat-card id="equipment-card">
+  <mat-card-title>EQUIPMENT</mat-card-title>
+  <mat-card-content id="equipment-all-container" *ngIf="!isLoading">
+    <span class="equipment-left-container">
+      <span class="equipment-slot-left" *ngFor="let leftSlot of leftEquipment">
+        {{leftSlot.equipmentItemId}}
+      </span>
+    </span>
+    <span class="equipment-bottom-container">
+      <span class="equipment-slot-bottom" *ngFor="let bottomSlot of bottomEquipment">
+        {{bottomSlot.equipmentItemId}}
+      </span>
+    </span>
+    <span class="equipment-right-container">
+      <span class="equipment-slot-right" *ngFor="let rightSlot of rightEquipment">
+        {{rightSlot.equipmentItemId}}
+      </span>
+    </span>
+  </mat-card-content>
+</mat-card>
