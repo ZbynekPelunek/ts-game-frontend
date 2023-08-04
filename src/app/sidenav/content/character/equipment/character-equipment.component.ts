@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs/internal/Subscription';
 
-import { EquipmentItemFrontend } from '../../../../../../../shared/src';
+import { CharacterEquipmentFrontend, EquipmentItemFrontend } from '../../../../../../../shared/src';
 import { CharacterService } from '../character.service';
 
 @Component({
@@ -14,10 +14,10 @@ export class CharacterEquipmentComponent implements OnInit, OnDestroy {
 
   isLoading = true;
 
-  characterEquipment: EquipmentItemFrontend[] = [];
-  leftEquipment: EquipmentItemFrontend[] = [];
-  rightEquipment: EquipmentItemFrontend[] = [];
-  bottomEquipment: EquipmentItemFrontend[] = [];
+  characterEquipment: CharacterEquipmentFrontend[] = [];
+  leftEquipment: CharacterEquipmentFrontend[] = [];
+  rightEquipment: CharacterEquipmentFrontend[] = [];
+  bottomEquipment: CharacterEquipmentFrontend[] = [];
 
   getAllCharEquipmentSub: Subscription;
 

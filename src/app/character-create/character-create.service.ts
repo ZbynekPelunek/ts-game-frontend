@@ -22,6 +22,7 @@ export class CharacterCreateService {
   }
 
   getCharacterId(): string {
+    console.log('character-create getCharacterId() characterId: ', this.characterId);
     return this.characterId;
   }
 

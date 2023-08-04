@@ -6,6 +6,7 @@ import { environment } from 'src/environments/environment';
 import {
   BasicAttribute,
   CharacterCurrencyFrontend,
+  CharacterEquipmentFrontend,
   EquipmentItemFrontend,
   Response_CharacterAttributes_GET_all,
   Response_Inventories_GET_one,
@@ -15,7 +16,7 @@ const BACKEND_URL = `${environment.apiUrl}`;
 
 interface CharacterEquipmentResponse {
   characterId: string;
-  equipment: EquipmentItemFrontend[];
+  equipment: CharacterEquipmentFrontend[];
 }
 
 @Injectable({ providedIn: 'root' })
