@@ -63,3 +63,11 @@
 .cdk-drag-placeholder {
   opacity: 0;
 }
+
+.button {
+  text-align: center;
+  text-decoration: none;
+  position: fixed;
+  top: 84%;
+  left: 93%;
+}

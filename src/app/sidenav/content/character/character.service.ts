@@ -7,7 +7,6 @@ import {
   BasicAttribute,
   CharacterCurrencyFrontend,
   CharacterEquipmentFrontend,
-  EquipmentItemFrontend,
   Response_CharacterAttributes_GET_all,
   Response_Inventories_GET_one,
 } from '../../../../../../shared/src';

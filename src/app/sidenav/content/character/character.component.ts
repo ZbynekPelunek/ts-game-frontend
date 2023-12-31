@@ -28,7 +28,7 @@ export class CharacterComponent implements OnInit, OnDestroy {
   private charSub: Subscription;
   characterId: string;
 
-  inventory: string[] | null[];
+  inventory = [];
 
   isLoading = true;
   playerCharacter: CharacterFrontend;

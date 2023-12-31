@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs/internal/Subscription';
 
-import { CharacterEquipmentFrontend, EquipmentItemFrontend } from '../../../../../../../shared/src';
+import { CharacterEquipmentFrontend } from '../../../../../../../shared/src';
 import { CharacterService } from '../character.service';
 
 @Component({
