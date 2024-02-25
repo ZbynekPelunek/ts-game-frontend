@@ -1,27 +1,64 @@
-# Frontend
+# Typescript Game - Frontend
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.2.6.
+Frontend part for a typescript game. The other parts are Backend and Shared (interfaces).
 
-## Development server
+## Table of contents
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+- [Typescript Game - Frontend](#typescript-game---frontend)
+  - [Table of contents](#table-of-contents)
+  - [Overview](#overview)
+  - [Technologies](#technologies)
+  - [Features](#features)
+  - [Instalation](#instalation)
+  - [Status](#status)
+  - [Inspiration](#inspiration)
 
-## Code scaffolding
+## Overview
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+A game inspired by Shakes & Fidget. You have a hero, that you send to adventures to get better items to do harder adventures...
+This project also contains a lot of commented code for now because at first, I tried to make the game without using database to see if it is even possible using only REST API. It did work as I imaginated so now I am in middle of adding MongoDB database.
 
-## Build
+## Technologies
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+* Angular
 
-## Running unit tests
+## Features
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+* Starter Page (in progress)
+* Sign In/Sign Up Page (in progress)
+* Character Creation Page (Placeholder)
+* Character Page (in progress)
+* Adventures Page (Placeholder)
+* Shop Page (Placeholder)
 
-## Running end-to-end tests
+## Instalation
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+To be able to make it run, you need to
+- Have running Backend in the background
+- Have Shared folder in the same folder as Backend and Frontend
 
-## Further help
+1. Clone this repository
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+```bash
+git clone https://github.com/zbynekpelunek/ts-game-frontend
+```
+
+2. Install packages
+
+```bash
+npm install
+```
+
+3. Start the project, make sure you have running Backend in the background
+
+```bash
+npm start
+```
+
+## Status
+
+Project is: _in progress_
+
+## Inspiration
+
+Shakes & Fidget (main gameplay loop), various RPG games for itemization and combat

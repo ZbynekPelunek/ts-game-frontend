@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
-import { Request_Account_POST, Response_Account_POST } from '../../../../shared/src';
+import { Request_Account_POST_body, Response_Account_POST } from '../../../../shared/src';
 
 const BACKEND_URL = `${environment.apiUrl}`;
 
@@ -29,7 +29,7 @@ export class AuthService {
   }
 
   signUp(): void {
-    this.http.post<Response_Account_POST>(`${BACKEND_URL}/accounts`, <Request_Account_POST>{ username: 'test', email: 'test1@test.test', password: '123' }).subscribe({
+    this.http.post<Response_Account_POST>(`${BACKEND_URL}/accounts`, <Request_Account_POST_body>{ username: 'test', email: 'test1@test.test', password: '123' }).subscribe({
       next: (response) => {
         console.log('signed up: ', response);
         if (response.success) {

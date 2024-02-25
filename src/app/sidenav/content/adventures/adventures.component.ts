@@ -38,27 +38,27 @@ export class AdventuresComponent implements OnInit, OnDestroy {
   constructor(private sidenavService: SidenavService) { }
 
   ngOnInit(): void {
-    this.areAdventuresLoading = true;
-    this.sidenavService.getCharacterAdventures();
-    this.charAdvsSub = this.sidenavService.getCharacterAdventuresUpdateListener().subscribe({
-      next: (response) => {
-        this.adventures = [...response.adventures.filter(a => a.adventureState !== AdventureState.FINISHED)];
+    // this.areAdventuresLoading = true;
+    // this.sidenavService.getCharacterAdventures();
+    // this.charAdvsSub = this.sidenavService.getCharacterAdventuresUpdateListener().subscribe({
+    //   next: (response) => {
+    //     this.adventures = [...response.adventures.filter(a => a.adventureState !== AdventureState.FINISHED)];
 
-        this.areAdventuresLoading = false;
-      }
-    })
-    this.isCharacterLoading = true;
-    //this.sidenavService.getCharacter();
-    this.charUpdateSub = this.sidenavService.getCharacterUpdateListener().subscribe({
-      next: (response) => {
-        this.playerCharacter = {
-          characterId: response.character.characterId,
-          level: response.character.level
-        }
+    //     this.areAdventuresLoading = false;
+    //   }
+    // })
+    // this.isCharacterLoading = true;
+    // //this.sidenavService.getCharacter();
+    // this.charUpdateSub = this.sidenavService.getCharacterUpdateListener().subscribe({
+    //   next: (response) => {
+    //     this.playerCharacter = {
+    //       characterId: response.character.characterId,
+    //       level: response.character.level
+    //     }
 
-        this.isCharacterLoading = false;
-      }
-    })
+    //     this.isCharacterLoading = false;
+    //   }
+    // })
   }
 
   onStartAdventure(adventureId: string) {
