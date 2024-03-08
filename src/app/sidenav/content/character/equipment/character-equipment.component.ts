@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs/internal/Subscription';
 
-import { CharacterEquipmentFrontend } from '../../../../../../../shared/src';
+import { CharacterEquipmentFrontend, UiPosition } from '../../../../../../../shared/src';
 import { CharacterService } from '../character.service';
 
 @Component({
@@ -27,17 +27,19 @@ export class CharacterEquipmentComponent implements OnInit, OnDestroy {
     this.getAllCharEquipmentSub = this.characterService.getCharacterEquipment(this.characterId).subscribe({
       next: (response) => {
         console.log('character equipment response: ', response);
-        this.characterEquipment = response.character.equipment;
-        this.filterUiPosition();
-        this.isLoading = false;
+        if (response.success) {
+          this.characterEquipment = response.characterEquipment;
+          this.filterUiPosition();
+          this.isLoading = false;
+        }
       }
     })
   }
 
   filterUiPosition() {
-    this.leftEquipment = this.characterEquipment.filter(e => e.uiPosition === 'left');
-    this.rightEquipment = this.characterEquipment.filter(e => e.uiPosition === 'right');
-    this.bottomEquipment = this.characterEquipment.filter(e => e.uiPosition === 'bottom');
+    this.leftEquipment = this.characterEquipment.filter(e => e.uiPosition === UiPosition.LEFT);
+    this.rightEquipment = this.characterEquipment.filter(e => e.uiPosition === UiPosition.RIGHT);
+    this.bottomEquipment = this.characterEquipment.filter(e => e.uiPosition === UiPosition.BOTTOM);
   }
 
   ngOnDestroy(): void {

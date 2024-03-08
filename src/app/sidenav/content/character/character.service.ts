@@ -1,35 +1,29 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/internal/Observable';
 import { environment } from 'src/environments/environment';
 
 import {
-  BasicAttribute,
   CharacterCurrencyFrontend,
-  CharacterEquipmentFrontend,
   Response_CharacterAttributes_GET_all,
-  Response_Inventories_GET_one,
+  Response_CharacterCurrencies_GET_all,
+  Response_CharacterEquipment_GET_all,
+
 } from '../../../../../../shared/src';
 
 const BACKEND_URL = `${environment.apiUrl}`;
-
-interface CharacterEquipmentResponse {
-  characterId: string;
-  equipment: CharacterEquipmentFrontend[];
-}
 
 @Injectable({ providedIn: 'root' })
 export class CharacterService {
 
   constructor(private http: HttpClient) { }
 
-  getAttributes(): Observable<{ success: boolean, attributes: BasicAttribute[] }> {
-    return this.http.get<{ success: boolean, attributes: BasicAttribute[] }>(`${BACKEND_URL}/attributes`);
-  }
+  // getAttributes(): Observable<{ success: boolean, attributes: BasicAttribute[] }> {
+  //   return this.http.get<{ success: boolean, attributes: BasicAttribute[] }>(`${BACKEND_URL}/attributes`);
+  // }
 
-  getSingleAttribute(attributeId: string): Observable<{ success: boolean, attribute: BasicAttribute }> {
-    return this.http.get<{ success: boolean, attribute: BasicAttribute }>(`${BACKEND_URL}/attributes/${attributeId}`);
-  }
+  // getSingleAttribute(attributeId: string): Observable<{ success: boolean, attribute: BasicAttribute }> {
+  //   return this.http.get<{ success: boolean, attribute: BasicAttribute }>(`${BACKEND_URL}/attributes/${attributeId}`);
+  // }
 
   getCharacterAttributes(characterId: string, populateAttribute: boolean = false) {
     const queryString = [];
@@ -49,7 +43,7 @@ export class CharacterService {
   getCharacterCurrencies(characterId: string, populateCurrencies: boolean = false) {
     const queryString = [];
     if (populateCurrencies) {
-      queryString.push('populateCurrencies=true');
+      queryString.push('populateCurrency=true');
     }
     if (characterId !== '') {
       queryString.push(`characterId=${characterId}`);
@@ -58,10 +52,10 @@ export class CharacterService {
     const isQueryString = queryString.length < 0 ? '' : '?';
     const finalQueryString = queryString.join('&&')
 
-    return this.http.get<{ success: boolean, characterCurrencies: CharacterCurrencyFrontend[] }>(`${BACKEND_URL}/character-currencies${isQueryString}${finalQueryString}`);
+    return this.http.get<Response_CharacterCurrencies_GET_all>(`${BACKEND_URL}/character-currencies${isQueryString}${finalQueryString}`);
   }
 
   getCharacterEquipment(characterId: string) {
-    return this.http.get<{ success: boolean; character: CharacterEquipmentResponse; }>(`${BACKEND_URL}/characters/${characterId}/equipment`);
+    return this.http.get<Response_CharacterEquipment_GET_all>(`${BACKEND_URL}/character-equipment?characterId=${characterId}`);
   }
 }
