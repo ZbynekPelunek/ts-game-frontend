@@ -1,0 +1,12 @@
+<div *ngIf="isLoading">
+  <h1>NO INVENTORY DATA</h1>
+</div>
+<div id="inventory" class="inventory-list" *ngIf="!isLoading">
+  <span class="inventory-slot" *ngFor="let invSlot of inventorySlots">
+    <span class="inventory-slot-item">
+      <span *ngIf="invSlot.item"></span>
+      <!-- (click)="openItemDialog(invSlot.item)">{{invSlot.item.itemType}} -->
+    </span>
+  </span>
+  <button mat-raised-button color="accent" type="button" class="button">Add ITEM</button>
+</div>

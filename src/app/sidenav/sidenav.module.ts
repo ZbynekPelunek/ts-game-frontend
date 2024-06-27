@@ -19,19 +19,19 @@ import {
   CharacterEquipmentComponent,
 } from './content/character/equipment/character-equipment.component';
 import { DashboardComponent } from './content/dashboard/dashboard.component';
-import { FortuneComponent } from './content/fortune/fortune.component';
 import { SidenavRoutingModule } from './sidenav-routing.module';
+import { CharacterInventoryComponent } from './content/character/inventory/character-inventory.component';
 
 @NgModule({
   declarations: [
     DashboardComponent,
     CharacterComponent,
-    FortuneComponent,
     ArenaComponent,
     AdventuresComponent,
     CharacterDetailsComponent,
     CharacterCurrenciesComponent,
-    CharacterEquipmentComponent
+    CharacterEquipmentComponent,
+    CharacterInventoryComponent
   ],
   imports: [
     CommonModule,

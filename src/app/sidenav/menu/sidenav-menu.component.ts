@@ -11,10 +11,10 @@ export class SidenavMenuComponent {
       label: 'Character',
       link: '/ui/menu/character'
     },
-    // {
-    //   label: 'Adventures',
-    //   link: '/ui/menu/adventures'
-    // },
+    {
+      label: 'Adventures',
+      link: '/ui/menu/adventures'
+    },
     // {
     //   label: 'Shop',
     //   link: '/ui/menu/shop'

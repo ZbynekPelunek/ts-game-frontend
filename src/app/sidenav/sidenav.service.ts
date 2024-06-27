@@ -5,42 +5,21 @@ import { Subject } from 'rxjs/internal/Subject';
 import { environment } from 'src/environments/environment';
 
 import {
-  CharacterActions,
   CharacterFrontend,
-  GET_characterAdventuresAll,
-  IAdventure,
-  POST_characterActions,
-  PUT_characterByID,
-  Response_Characters_GET_one,
+  Response_Character_GET_one,
 } from '../../../../shared/src';
 import { CharacterCreateService } from '../character-create/character-create.service';
 
 const BACKEND_URL = `${environment.apiUrl}`;
-
-interface AdventureStartResponse {
-  message: string;
-  result: {
-    resultId: string;
-    timeStarted: string;
-    timeFinished: string;
-    adventure: IAdventure;
-  }
-}
-
-interface CharacterAdventuresUpdateSubject {
-  adventures: IAdventure[]
-}
 
 @Injectable({ providedIn: 'root' })
 export class SidenavService {
   private characterUpdated = new Subject<{ character: CharacterFrontend }>();
   //private inventoryUpdated = new Subject<({ inventory: Inventory[] })>();
   //private equipmentSlotsUpdated = new Subject<({ equipmentSlots: EquipmentSlotsArr[] })>();
-  private characterAdventuresUpdated = new Subject<(CharacterAdventuresUpdateSubject)>();
   //equipmentSlots: EquipmentSlotsArr[] = [];
   //inventory: Inventory[] = [];
   character: CharacterFrontend;
-  charAdventures: IAdventure[];
 
   constructor(private http: HttpClient, private characterCreateService: CharacterCreateService) { }
 
@@ -56,10 +35,6 @@ export class SidenavService {
   //   return this.equipmentSlotsUpdated.asObservable();
   // }
 
-  getCharacterAdventuresUpdateListener(): Observable<CharacterAdventuresUpdateSubject> {
-    return this.characterAdventuresUpdated.asObservable();
-  }
-
   getCharacter(characterId: string, populateInventory: boolean = false) {
     let queryString = '';
     if (populateInventory) {
@@ -69,7 +44,7 @@ export class SidenavService {
 
     console.log('getCharacter() characterID: ', characterId);
 
-    this.http.get<Response_Characters_GET_one>(`${BACKEND_URL}/characters/${characterId}${isQueryString}${queryString}`).subscribe({
+    this.http.get<Response_Character_GET_one>(`${BACKEND_URL}/characters/${characterId}${isQueryString}${queryString}`).subscribe({
       next: (response) => {
         console.log('getCharacter() response: ', response);
         if (response.success) {
@@ -79,15 +54,6 @@ export class SidenavService {
 
       }
     });
-
-  }
-
-  updateCharacter(characterId: string, character: CharacterFrontend): void {
-    this.http.put<PUT_characterByID>(`${BACKEND_URL}/characters/${characterId}`, { character: character }).subscribe({
-      next: (response) => {
-        console.log('update char response: ', response.character);
-      }
-    })
   }
 
   // equipCharacter(equipment: EquipableItem): void {
@@ -127,24 +93,6 @@ export class SidenavService {
   // getEquipmentSlots(): EquipmentSlotsArr[] {
   //   return this.equipmentSlots;
   // }
-
-  getCharacterAdventures(): void {
-    this.http.get<GET_characterAdventuresAll>(`${BACKEND_URL}/characters/${this.characterCreateService.getCharacterId()}/adventures`).subscribe({
-      next: (response) => {
-        console.log('getCharAdvs() response: ', response);
-        this.charAdventures = response.adventures;
-        this.characterAdventuresUpdated.next({ adventures: [...this.charAdventures] });
-      }
-    })
-  }
-
-  getAdventures(): Observable<IAdventure[]> {
-    return this.http.get<IAdventure[]>(`${BACKEND_URL}/adventures`);
-  }
-
-  getAdventureById(adventureId: string): Observable<IAdventure> {
-    return this.http.get<IAdventure>(`${BACKEND_URL}/adventures/${adventureId}`);
-  }
 
   // startAdventure(adventureId: string, characterId: string) {
   //   this.http.post<AdventureStartResponse>(`${BACKEND_URL}/adventures/${adventureId}/actions/${AdventureActions.START}`, { character: { characterId } }).subscribe({

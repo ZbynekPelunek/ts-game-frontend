@@ -33,7 +33,7 @@ export class AuthService {
       next: (response) => {
         console.log('signed up: ', response);
         if (response.success) {
-          this.accountId = response.account.accountId;
+          this.accountId = response.account.id;
         }
         this.isAuthenticated = true;
         this.authStatusListener.next(true);

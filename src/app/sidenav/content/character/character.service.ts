@@ -1,11 +1,11 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 
 import {
-  CharacterCurrencyFrontend,
-  Response_CharacterAttributes_GET_all,
-  Response_CharacterCurrencies_GET_all,
+  Request_CharacterCurrency_GET_all_query,
+  Response_CharacterAttribute_GET_all,
+  Response_CharacterCurrency_GET_all,
   Response_CharacterEquipment_GET_all,
 
 } from '../../../../../../shared/src';
@@ -37,22 +37,20 @@ export class CharacterService {
     const isQueryString = queryString.length < 0 ? '' : '?';
     const finalQueryString = queryString.join('&&')
 
-    return this.http.get<Response_CharacterAttributes_GET_all>(`${BACKEND_URL}/character-attributes${isQueryString}${finalQueryString}`);
+    return this.http.get<Response_CharacterAttribute_GET_all>(`${BACKEND_URL}/character-attributes${isQueryString}${finalQueryString}`);
   }
 
   getCharacterCurrencies(characterId: string, populateCurrencies: boolean = false) {
-    const queryString = [];
+    const queryString: Request_CharacterCurrency_GET_all_query = {};
+
     if (populateCurrencies) {
-      queryString.push('populateCurrency=true');
+      queryString.populateCurrency = true;
     }
-    if (characterId !== '') {
-      queryString.push(`characterId=${characterId}`);
+    if (characterId) {
+      queryString.characterId=characterId;
     }
 
-    const isQueryString = queryString.length < 0 ? '' : '?';
-    const finalQueryString = queryString.join('&&')
-
-    return this.http.get<Response_CharacterCurrencies_GET_all>(`${BACKEND_URL}/character-currencies${isQueryString}${finalQueryString}`);
+    return this.http.get<Response_CharacterCurrency_GET_all>(`${BACKEND_URL}/character-currencies`, {params: queryString as HttpParams});
   }
 
   getCharacterEquipment(characterId: string) {

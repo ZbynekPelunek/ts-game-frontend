@@ -33,18 +33,7 @@
                    [rowspan]="inventoryTile.rows">
       <div class="character-inventory">
         <mat-grid-tile-header>{{inventoryTile.text}}</mat-grid-tile-header>
-        <div *ngIf="!inventory">
-          <h1>NO INVENTORY DATA</h1>
-        </div>
-        <div id="inventory" class="inventory-list" *ngIf="inventory">
-          <span class="inventory-slot" *ngFor="let invSlot of inventory">
-            <!-- <span class="inventory-slot-item">
-              <span *ngIf="invSlot.item" [matTooltip]="invSlot.item.name"
-                    (click)="openItemDialog(invSlot.item)">{{invSlot.item.itemType}}</span>
-            </span> -->
-          </span>
-          <button mat-raised-button color="accent" type="button" class="button">Add ITEM</button>
-        </div>
+        <app-character-inventory [characterId]="playerCharacter.characterId"></app-character-inventory>
       </div>
     </mat-grid-tile>
   </mat-grid-list>

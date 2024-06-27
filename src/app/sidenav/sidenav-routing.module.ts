@@ -17,11 +17,11 @@ const routes: Routes = [
     component: AdventuresComponent,
     canActivate: [AuthGuard]
   },
-  {
-    path: 'ui/menu/shop',
-    component: ShopComponent,
-    canActivate: [AuthGuard]
-  }
+  // {
+  //   path: 'ui/menu/shop',
+  //   component: ShopComponent,
+  //   canActivate: [AuthGuard]
+  // }
 ];
 
 @NgModule({

@@ -2,12 +2,14 @@
   <mat-card class="adventure-card" *ngFor="let adventure of adventures">
     <mat-card-title>{{ adventure.name}}</mat-card-title>
     <mat-card-subtitle>
-      Level: {{ adventure.level }}<br>
+      Level: {{ adventure.adventureLevel }}<br>
       Time: {{ adventure.timeInSeconds }} seconds
     </mat-card-subtitle>
-    <mat-card-content *ngIf="adventure.reward">
-      Reward:<br>
-      Experience: {{ adventure.reward.experience }}
+    <mat-card-content>
+      <div *ngFor="let reward of adventure.rewards">
+        Reward:<br>
+        {{ reward.rewardId }}: {{ reward.amount}}
+      </div>
       <!-- <ng-container *ngIf="adventure.reward.currencies">
         <div *ngFor="let currency of adventure.reward.currencies | keyvalue">
           {{ currency.key }}: {{ currency.value }}
@@ -17,7 +19,7 @@
         {{ item.name }}<br *ngIf="adventure.reward.items.length > 1">
       </ng-container> -->
     </mat-card-content>
-    <ng-container *ngIf="!isCharacterLoading; else noCharData">
+    <!-- <ng-container *ngIf="!isCharacterLoading; else noCharData">
       <mat-card-actions>
         <button mat-button *ngIf="adventure.adventureState === adventureState_Idle; else cancelButtons"
                 [color]="playerCharacter.level >= adventure.requiredLevel ? 'primary' : 'warn'" type="button"
@@ -28,15 +30,16 @@
           <button mat-button class="adventure-action-buttons" color="primary" type="button">Cancel</button>
           <button mat-button class="adventure-action-buttons" color="primary" type="button">Skip</button>
         </ng-template>
-      </mat-card-actions>
+      </mat-card-actions> -->
+    <ng-container>
       <div *ngIf="adventure.requiredLevel > 1">
         Required level: {{ adventure.requiredLevel }}
       </div>
     </ng-container>
 
-    <mat-progress-bar *ngIf="adventure.adventureState === adventureState_InProgress" mode="determinate"
+    <!-- <mat-progress-bar *ngIf="adventure.adventureState === adventureState_InProgress" mode="determinate"
                       [value]="adventure.timer.progressPercent" color="warn">
-    </mat-progress-bar>
+    </mat-progress-bar> -->
   </mat-card>
   <!-- <ng-container *ngIf="adventure.adventureState === adventureState_Finished">
     <mat-grid-list cols="2">

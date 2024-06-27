@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
-import { Response_Characters_POST } from '../../../../shared/src';
+import { Response_Character_POST } from '../../../../shared/src';
 
 const BACKEND_URL = `${environment.apiUrl}`;
 
@@ -27,7 +27,8 @@ export class CharacterCreateService {
   }
 
   create(accountId: string): void {
-    this.http.post<Response_Characters_POST>(`${BACKEND_URL}/characters`, { accountId, name: 'TESTNAME' }).subscribe({
+    const generateRandomInt = Math.floor(Math.random() * 10000000) + 1;
+    this.http.post<Response_Character_POST>(`${BACKEND_URL}/characters`, { accountId, name: `TESTNAME${generateRandomInt}` }).subscribe({
       next: (response) => {
         console.log('character created: ', response);
         if (response.success) {

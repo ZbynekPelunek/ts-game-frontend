@@ -7,17 +7,17 @@
   <mat-card-content id="equipment-all-container" *ngIf="!isLoading">
     <span class="equipment-left-container">
       <span class="equipment-slot-left" *ngFor="let leftSlot of leftEquipment">
-        {{leftSlot.itemId}}
+        <!-- {{leftSlot.item.itemId}} -->
       </span>
     </span>
     <span class="equipment-bottom-container">
       <span class="equipment-slot-bottom" *ngFor="let bottomSlot of bottomEquipment">
-        {{bottomSlot.itemId}}
+        <!-- {{bottomSlot.item.itemId}} -->
       </span>
     </span>
     <span class="equipment-right-container">
       <span class="equipment-slot-right" *ngFor="let rightSlot of rightEquipment">
-        {{rightSlot.itemId}}
+        <!-- {{rightSlot.item.itemId}} -->
       </span>
     </span>
   </mat-card-content>

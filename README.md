@@ -9,7 +9,7 @@ Frontend part for a typescript game. The other parts are Backend and Shared (int
   - [Overview](#overview)
   - [Technologies](#technologies)
   - [Features](#features)
-  - [Instalation](#instalation)
+  - [Installation](#installation)
   - [Status](#status)
   - [Inspiration](#inspiration)
 
@@ -31,7 +31,7 @@ This project also contains a lot of commented code for now because at first, I t
 * Adventures Page (Placeholder)
 * Shop Page (Placeholder)
 
-## Instalation
+## Installation
 
 To be able to make it run, you need to
 - Have running Backend in the background

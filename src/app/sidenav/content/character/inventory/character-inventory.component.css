@@ -1,0 +1,33 @@
+h1 {
+  text-align: center;
+}
+
+.inventory-list {
+  height: 100%;
+  width: 100%;
+  background-color: brown;
+  display: inline-flex;
+}
+
+.inventory-slot {
+  display: inline-block;
+  height: 72px;
+  width: 72px;
+  margin: 50px 2px 2px 2px;
+  border: solid 4px #ccc;
+  color: rgba(0, 0, 0, 0.87);
+  box-sizing: border-box;
+  background: white;
+  font-size: 14px;
+}
+
+.inventory-slot-item {
+  display: inline-flex;
+  height: 64px;
+  width: 64px;
+  border: solid 2px lightblue;
+  box-sizing: border-box;
+  background: white;
+  font-size: 14px;
+  cursor: grab;
+}

@@ -1,44 +1,45 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+
+import { AdventuresService } from './adventures.service';
+import { Adventure } from '../../../../../../shared/src';
 import { Subscription } from 'rxjs';
-
-import {
-  AdventureState,
-  IAdventure,
-} from '../../../../../../shared/src/interface/adventures.interface';
-import { SidenavService } from '../../sidenav.service';
-
-interface AdventureCard extends IAdventure {
-  intervalId?: NodeJS.Timer;
-}
 
 @Component({
   templateUrl: './adventures.component.html',
   styleUrls: ['./adventures.component.css']
 })
 export class AdventuresComponent implements OnInit, OnDestroy {
-  private adventureStartSub: Subscription;
-  private adventureResultSub: Subscription;
-  private charAdvsSub: Subscription;
-  private charUpdateSub: Subscription;
+  private adventuresSub: Subscription;
+  // private adventureResultSub: Subscription;
+  // private charAdvsSub: Subscription;
+  // private charUpdateSub: Subscription;
 
-  areAdventuresLoading: boolean = true;
-  isCharacterLoading: boolean = true;
+  areAdventuresLoading: boolean;
 
-  adventureState_Idle = AdventureState.IDLE
-  adventureState_InProgress = AdventureState.IN_PROGRESS;
-  adventureState_Finished = AdventureState.FINISHED;
-  adventureState = this.adventureState_Idle;
+  // adventureState_Idle = AdventureState.IDLE
+  // adventureState_InProgress = AdventureState.IN_PROGRESS;
+  // adventureState_Finished = AdventureState.FINISHED;
+  // adventureState = this.adventureState_Idle;
 
-  adventures: AdventureCard[] = [];
+  adventures: Adventure[] = [];
 
-  playerCharacter: { characterId: string; level: number };
+  // playerCharacter: { characterId: string; level: number };
 
-  displayedColumns: string[] = ['statName', 'statValue'];
+  // displayedColumns: string[] = ['statName', 'statValue'];
 
-  constructor(private sidenavService: SidenavService) { }
+  constructor(private adventuresService: AdventuresService) { }
 
   ngOnInit(): void {
-    // this.areAdventuresLoading = true;
+    this.areAdventuresLoading = true;
+    this.adventuresSub = this.adventuresService.listAdventures().subscribe({
+      next: (response) => {
+        console.log('Called adventures: ', response);
+        if (response.success) {
+          this.adventures = response.adventures;
+          this.areAdventuresLoading = false;
+        }
+      }
+    })
     // this.sidenavService.getCharacterAdventures();
     // this.charAdvsSub = this.sidenavService.getCharacterAdventuresUpdateListener().subscribe({
     //   next: (response) => {
@@ -98,15 +99,15 @@ export class AdventuresComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.charAdvsSub.unsubscribe();
-    if (this.adventureStartSub) {
-      this.adventureStartSub.unsubscribe();
-    };
-    if (this.adventureResultSub) {
-      this.adventureResultSub.unsubscribe();
-    };
-    if (this.charUpdateSub) {
-      this.charUpdateSub.unsubscribe();
-    };
+    // this.charAdvsSub.unsubscribe();
+    // if (this.adventureStartSub) {
+    //   this.adventureStartSub.unsubscribe();
+    // };
+    // if (this.adventureResultSub) {
+    //   this.adventureResultSub.unsubscribe();
+    // };
+    // if (this.charUpdateSub) {
+    //   this.charUpdateSub.unsubscribe();
+    // };
   }
 }
