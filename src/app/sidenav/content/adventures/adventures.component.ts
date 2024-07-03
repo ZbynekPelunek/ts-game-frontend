@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { AdventuresService } from './adventures.service';
-import { Adventure } from '../../../../../../shared/src';
+import { Adventure, CommonItemsEquipmenParams, Currency, Reward } from '../../../../../../shared/src';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -31,7 +31,7 @@ export class AdventuresComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.areAdventuresLoading = true;
-    this.adventuresSub = this.adventuresService.listAdventures().subscribe({
+    this.adventuresSub = this.adventuresService.listAdventures(true).subscribe({
       next: (response) => {
         console.log('Called adventures: ', response);
         if (response.success) {
@@ -60,6 +60,18 @@ export class AdventuresComponent implements OnInit, OnDestroy {
     //     this.isCharacterLoading = false;
     //   }
     // })
+  }
+
+  isReward(rewardId: number | Reward): rewardId is Reward {
+    return (rewardId as Reward)._id !== undefined;
+  }
+
+  isCurrency(currencyId: number | Currency): currencyId is Currency {
+    return (currencyId as Currency)._id !== undefined;
+  }
+
+  isItem(itemId: number | CommonItemsEquipmenParams): itemId is CommonItemsEquipmenParams {
+    return (itemId as CommonItemsEquipmenParams).itemId !== undefined;
   }
 
   onStartAdventure(adventureId: string) {
@@ -99,6 +111,7 @@ export class AdventuresComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.adventuresSub ?? this.adventuresSub.unsubscribe();
     // this.charAdvsSub.unsubscribe();
     // if (this.adventureStartSub) {
     //   this.adventureStartSub.unsubscribe();
