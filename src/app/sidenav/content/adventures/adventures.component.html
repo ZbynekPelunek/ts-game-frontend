@@ -25,27 +25,16 @@
           </span>
         </span>
       </div>
-      <!-- <ng-container *ngIf="adventure.reward.currencies">
-        <div *ngFor="let currency of adventure.reward.currencies | keyvalue">
-          {{ currency.key }}: {{ currency.value }}
-        </div>
-      </ng-container> -->
-      <!-- <ng-container *ngFor="let item of adventure.reward.items">
-        {{ item.name }}<br *ngIf="adventure.reward.items.length > 1">
-      </ng-container> -->
     </mat-card-content>
-    <!-- <ng-container *ngIf="!isCharacterLoading; else noCharData">
-      <mat-card-actions>
-        <button mat-button *ngIf="adventure.adventureState === adventureState_Idle; else cancelButtons"
-                [color]="playerCharacter.level >= adventure.requiredLevel ? 'primary' : 'warn'" type="button"
-                [disabled]="(playerCharacter.level < adventure.requiredLevel)" class="adventure-action-buttons"
-                (click)="onStartAdventure(adventure.adventureId)">Start
-          Adventure</button>
-        <ng-template #cancelButtons>
-          <button mat-button class="adventure-action-buttons" color="primary" type="button">Cancel</button>
-          <button mat-button class="adventure-action-buttons" color="primary" type="button">Skip</button>
-        </ng-template>
-      </mat-card-actions> -->
+    <mat-card-actions>
+      <button mat-button color="primary" type="button" class="adventure-action-buttons"
+              (click)="onStartAdventure(adventure._id)">Start
+        Adventure</button>
+      <ng-template #cancelButtons>
+        <button mat-button class="adventure-action-buttons" color="primary" type="button">Cancel</button>
+        <button mat-button class="adventure-action-buttons" color="primary" type="button">Skip</button>
+      </ng-template>
+    </mat-card-actions>
     <ng-container>
       <div *ngIf="adventure.requiredLevel > 1">
         Required level: {{ adventure.requiredLevel }}

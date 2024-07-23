@@ -1,12 +1,18 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { AdventuresService } from './adventures.service';
-import { Adventure, CommonItemsEquipmenParams, Currency, Reward } from '../../../../../../shared/src';
+import {
+  Adventure,
+  CommonItemsEquipmenParams,
+  Currency,
+  Reward,
+} from '../../../../../../shared/src';
 import { Subscription } from 'rxjs';
+import { CharacterCreateService } from 'src/app/character-create/character-create.service';
 
 @Component({
   templateUrl: './adventures.component.html',
-  styleUrls: ['./adventures.component.css']
+  styleUrls: ['./adventures.component.css'],
 })
 export class AdventuresComponent implements OnInit, OnDestroy {
   private adventuresSub: Subscription;
@@ -23,13 +29,18 @@ export class AdventuresComponent implements OnInit, OnDestroy {
 
   adventures: Adventure[] = [];
 
+  characterId: string;
   // playerCharacter: { characterId: string; level: number };
 
   // displayedColumns: string[] = ['statName', 'statValue'];
 
-  constructor(private adventuresService: AdventuresService) { }
+  constructor(
+    private adventuresService: AdventuresService,
+    private characterCreateService: CharacterCreateService
+  ) {}
 
   ngOnInit(): void {
+    this.characterId = this.characterCreateService.getCharacterId();
     this.areAdventuresLoading = true;
     this.adventuresSub = this.adventuresService.listAdventures(true).subscribe({
       next: (response) => {
@@ -38,8 +49,8 @@ export class AdventuresComponent implements OnInit, OnDestroy {
           this.adventures = response.adventures;
           this.areAdventuresLoading = false;
         }
-      }
-    })
+      },
+    });
     // this.sidenavService.getCharacterAdventures();
     // this.charAdvsSub = this.sidenavService.getCharacterAdventuresUpdateListener().subscribe({
     //   next: (response) => {
@@ -70,12 +81,17 @@ export class AdventuresComponent implements OnInit, OnDestroy {
     return (currencyId as Currency)._id !== undefined;
   }
 
-  isItem(itemId: number | CommonItemsEquipmenParams): itemId is CommonItemsEquipmenParams {
+  isItem(
+    itemId: number | CommonItemsEquipmenParams
+  ): itemId is CommonItemsEquipmenParams {
     return (itemId as CommonItemsEquipmenParams).itemId !== undefined;
   }
 
-  onStartAdventure(adventureId: string) {
-    //this.sidenavService.startAdventure(adventureId, this.playerCharacter.characterId);
+  onStartAdventure(adventureId: number) {
+    console.log(
+      `Starting adventure: ${adventureId} with character: ${this.characterId}`
+    );
+    this.adventuresService.postResult(adventureId, this.characterId);
     // this.adventureStartSub = this.sidenavService.startAdventure(adventureId, this.playerCharacter.characterId).subscribe({
     //   next: (response) => {
     //     console.log(response.message);

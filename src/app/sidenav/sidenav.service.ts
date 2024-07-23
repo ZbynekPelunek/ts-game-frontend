@@ -21,7 +21,10 @@ export class SidenavService {
   //inventory: Inventory[] = [];
   character: CharacterFrontend;
 
-  constructor(private http: HttpClient, private characterCreateService: CharacterCreateService) { }
+  constructor(
+    private http: HttpClient,
+    private characterCreateService: CharacterCreateService
+  ) {}
 
   getCharacterUpdateListener(): Observable<{ character: CharacterFrontend }> {
     return this.characterUpdated.asObservable();
@@ -38,22 +41,25 @@ export class SidenavService {
   getCharacter(characterId: string, populateInventory: boolean = false) {
     let queryString = '';
     if (populateInventory) {
-      queryString += 'populateInventory=true'
+      queryString += 'populateInventory=true';
     }
     const isQueryString = queryString === '' ? '' : '?';
 
     console.log('getCharacter() characterID: ', characterId);
 
-    this.http.get<Response_Character_GET_one>(`${BACKEND_URL}/characters/${characterId}${isQueryString}${queryString}`).subscribe({
-      next: (response) => {
-        console.log('getCharacter() response: ', response);
-        if (response.success) {
-          this.character = response.character;
-          this.characterUpdated.next({ character: { ...this.character } });
-        }
-
-      }
-    });
+    this.http
+      .get<Response_Character_GET_one>(
+        `${BACKEND_URL}/characters/${characterId}${isQueryString}${queryString}`
+      )
+      .subscribe({
+        next: (response) => {
+          console.log('getCharacter() response: ', response);
+          if (response.success) {
+            this.character = response.character;
+            this.characterUpdated.next({ character: { ...this.character } });
+          }
+        },
+      });
   }
 
   // equipCharacter(equipment: EquipableItem): void {
@@ -65,9 +71,6 @@ export class SidenavService {
   //     }
   //   });
   // }
-
-
-
 
   // sellItem(item: InventoryItem): void {
   //   this.http.post<POST_characterActions>(`${BACKEND_URL}/characters/${this.characterCreateService.getCharacterId()}/actions/${CharacterActions.SELL}`, { item }).subscribe({
