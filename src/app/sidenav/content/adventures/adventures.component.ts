@@ -1,13 +1,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subject, takeUntil } from 'rxjs';
 
 import { AdventuresService } from './adventures.service';
 import {
   Adventure,
   CommonItemsEquipmenParams,
   Currency,
+  ResultFrontend,
   Reward,
 } from '../../../../../../shared/src';
-import { Subscription } from 'rxjs';
 import { CharacterCreateService } from 'src/app/character-create/character-create.service';
 
 @Component({
@@ -15,24 +16,16 @@ import { CharacterCreateService } from 'src/app/character-create/character-creat
   styleUrls: ['./adventures.component.css'],
 })
 export class AdventuresComponent implements OnInit, OnDestroy {
-  private adventuresSub: Subscription;
-  // private adventureResultSub: Subscription;
-  // private charAdvsSub: Subscription;
-  // private charUpdateSub: Subscription;
+  private destroy$ = new Subject<void>();
+  private adventureCheckInterval: any;
 
   areAdventuresLoading: boolean;
 
-  // adventureState_Idle = AdventureState.IDLE
-  // adventureState_InProgress = AdventureState.IN_PROGRESS;
-  // adventureState_Finished = AdventureState.FINISHED;
-  // adventureState = this.adventureState_Idle;
-
   adventures: Adventure[] = [];
+  adventuresInProgress: ResultFrontend[] = [];
+  adventureResultsWithoutCollectedRewards: ResultFrontend[] = [];
 
   characterId: string;
-  // playerCharacter: { characterId: string; level: number };
-
-  // displayedColumns: string[] = ['statName', 'statValue'];
 
   constructor(
     private adventuresService: AdventuresService,
@@ -42,35 +35,69 @@ export class AdventuresComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.characterId = this.characterCreateService.getCharacterId();
     this.areAdventuresLoading = true;
-    this.adventuresSub = this.adventuresService.listAdventures(true).subscribe({
-      next: (response) => {
-        console.log('Called adventures: ', response);
-        if (response.success) {
-          this.adventures = response.adventures;
-          this.areAdventuresLoading = false;
-        }
-      },
-    });
-    // this.sidenavService.getCharacterAdventures();
-    // this.charAdvsSub = this.sidenavService.getCharacterAdventuresUpdateListener().subscribe({
-    //   next: (response) => {
-    //     this.adventures = [...response.adventures.filter(a => a.adventureState !== AdventureState.FINISHED)];
 
-    //     this.areAdventuresLoading = false;
-    //   }
-    // })
-    // this.isCharacterLoading = true;
-    // //this.sidenavService.getCharacter();
-    // this.charUpdateSub = this.sidenavService.getCharacterUpdateListener().subscribe({
-    //   next: (response) => {
-    //     this.playerCharacter = {
-    //       characterId: response.character.characterId,
-    //       level: response.character.level
-    //     }
+    this.loadAdventures();
 
-    //     this.isCharacterLoading = false;
-    //   }
-    // })
+    this.loadAdventuresInProgress();
+    this.loadAdventuresRewardNotCollected();
+
+    this.adventureCheckInterval = setInterval(() => {
+      this.adventuresService
+        .checkResults()
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: (response) => {
+            console.log('Check results response: ', response);
+            if (response.success) {
+              this.loadAdventuresInProgress();
+              this.loadAdventuresRewardNotCollected();
+            }
+          },
+        });
+    }, 5000);
+  }
+
+  private loadAdventures(): void {
+    this.adventuresService
+      .listAdventures(true)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          console.log('Called adventures: ', response);
+          if (response.success) {
+            this.adventures = response.adventures;
+            this.areAdventuresLoading = false;
+          }
+        },
+      });
+  }
+
+  private loadAdventuresInProgress(): void {
+    this.adventuresService
+      .listResults(this.characterId, true)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          console.log('List Results response: ', response);
+          if (response.success) {
+            this.adventuresInProgress = response.results;
+          }
+        },
+      });
+  }
+
+  private loadAdventuresRewardNotCollected(): void {
+    this.adventuresService
+      .listResults(this.characterId, undefined, false)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          console.log('loadAdventuresRewardNotCollected response: ', response);
+          if (response.success) {
+            this.adventureResultsWithoutCollectedRewards = response.results;
+          }
+        },
+      });
   }
 
   isReward(rewardId: number | Reward): rewardId is Reward {
@@ -88,55 +115,53 @@ export class AdventuresComponent implements OnInit, OnDestroy {
   }
 
   onStartAdventure(adventureId: number) {
+    const adventureArrIndex = this.adventures.findIndex(
+      (a) => a._id === adventureId
+    );
+
+    if (adventureArrIndex === -1) {
+      console.error('Adventure not found');
+      return;
+    }
+
     console.log(
       `Starting adventure: ${adventureId} with character: ${this.characterId}`
     );
-    this.adventuresService.postResult(adventureId, this.characterId);
-    // this.adventureStartSub = this.sidenavService.startAdventure(adventureId, this.playerCharacter.characterId).subscribe({
-    //   next: (response) => {
-    //     console.log(response.message);
-    //     const adventure = this.adventures[this.adventures.findIndex((a) => a.adventureId === adventureId)];
-    //     adventure.timer = {
-    //       ...adventure.timer,
-    //       progressPercent: 100,
-    //       timeLeft: adventure.timeInSeconds
-    //     }
-    //     this.sidenavService.getCharacterAdventures();
-    //     // this.adventureState = AdventureState.IN_PROGRESS;
-    //     adventure.intervalId = setInterval(() => {
-    //       adventure.timer.timeLeft = new Date(response.result.timeFinished).getTime() - new Date().getTime();
-    //       console.log(adventure.timer.timeLeft);
-    //       adventure.timer.progressPercent = (100 * adventure.timer.timeLeft) / (adventure.timeInSeconds * 1000);
-    //       if (adventure.timer.timeLeft <= 0) {
-    //         console.log('adventure done');
-    //         this.adventureResultSub = this.sidenavService.getAdventureResult(response.result.resultId).subscribe({
-    //           next: (result) => {
-    //             console.log(result);
-    //             console.log(this.adventures);
-    //             this.sidenavService.getCharacterAdventures();
-    //           }
-    //         });
-    //         clearInterval(adventure.intervalId);
+    this.adventuresService
+      .postResult(adventureId, this.characterId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          console.log('POST Result response: ', response);
+          this.loadAdventuresInProgress();
+        },
+        error: (err) => {
+          console.error('Failed to start adventure:', err);
+        },
+      });
 
-    //         // SHOW isAttacking TEMPLATE WITH PLAYER VS ENEMY
-    //         // AdventureState.FINISHED -> AdventureState.IDLE
-    //       }
-    //     }, 1000);
-    //   }
-    // })
+    console.log('Adventures in progress: ', this.adventuresInProgress);
+  }
+
+  onCollectReward(result) {
+    console.log('Collecting reward: ', result);
+    this.adventuresService
+      .collectReward(result._id)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          console.log('Collect Reward response: ', response);
+          this.loadAdventuresRewardNotCollected();
+        },
+        error: (err) => {
+          console.error('Failed to collected reward:', err);
+        },
+      });
   }
 
   ngOnDestroy(): void {
-    this.adventuresSub ?? this.adventuresSub.unsubscribe();
-    // this.charAdvsSub.unsubscribe();
-    // if (this.adventureStartSub) {
-    //   this.adventureStartSub.unsubscribe();
-    // };
-    // if (this.adventureResultSub) {
-    //   this.adventureResultSub.unsubscribe();
-    // };
-    // if (this.charUpdateSub) {
-    //   this.charUpdateSub.unsubscribe();
-    // };
+    this.destroy$.next();
+    this.destroy$.complete();
+    clearInterval(this.adventureCheckInterval);
   }
 }

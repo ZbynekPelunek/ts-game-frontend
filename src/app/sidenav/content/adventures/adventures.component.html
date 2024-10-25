@@ -1,66 +1,117 @@
 <div *ngIf="!areAdventuresLoading; else loadingDataSpinner">
-  <mat-card class="adventure-card" *ngFor="let adventure of adventures">
-    <mat-card-title>{{ adventure.name }}</mat-card-title>
-    <mat-card-subtitle>
-      Level: {{ adventure.adventureLevel }}<br>
-      Time: {{ adventure.timeInSeconds }} seconds
-    </mat-card-subtitle>
-    <mat-card-content>
-      <div *ngFor="let reward of adventure.rewards">
-        <span *ngIf="isReward(reward.rewardId)">
-          Reward:<br>
-          <span *ngIf="reward.rewardId.experience > 0">Experience: {{ reward.rewardId.experience}}<br></span>
-          <span *ngIf="reward.rewardId.currencies.length > 0">
-            Currency:<br>
-            <span *ngFor="let currency of reward.rewardId.currencies">
-              <span *ngIf="isCurrency(currency.currencyId)">{{ currency.currencyId.label }}: {{
-                currency.amount}}<br></span>
-            </span>
-          </span>
-          <span *ngIf="reward.rewardId.items.length > 0">
-            Item:<br>
-            <span *ngFor="let item of reward.rewardId.items">
-              <span *ngIf="isItem(item.itemId)">{{item.itemId.name}}</span>
-            </span>
-          </span>
-        </span>
+  <mat-grid-list cols="2" rowHeight="100px">
+    <mat-grid-tile>
+      <div>
+        <h1>Available adventures</h1>
       </div>
-    </mat-card-content>
-    <mat-card-actions>
-      <button mat-button color="primary" type="button" class="adventure-action-buttons"
-              (click)="onStartAdventure(adventure._id)">Start
-        Adventure</button>
-      <ng-template #cancelButtons>
-        <button mat-button class="adventure-action-buttons" color="primary" type="button">Cancel</button>
-        <button mat-button class="adventure-action-buttons" color="primary" type="button">Skip</button>
-      </ng-template>
-    </mat-card-actions>
-    <ng-container>
-      <div *ngIf="adventure.requiredLevel > 1">
-        Required level: {{ adventure.requiredLevel }}
-      </div>
-    </ng-container>
+    </mat-grid-tile>
+    <mat-grid-tile>
+      <h1>Adventures in progress {{adventuresInProgress.length}}/3</h1>
+    </mat-grid-tile>
+    <mat-grid-tile rowspan="7">
+      <cdk-virtual-scroll-viewport itemSize="100" class="adventures-viewport">
+        <div *cdkVirtualFor="let adventure of adventures" class="adventure-item">
+          <mat-card class="adventure-card">
+            <mat-card-title>{{ adventure.name }}</mat-card-title>
+            <mat-card-subtitle>
+              Level: {{ adventure.adventureLevel }}<br>
+              Time: {{ adventure.timeInSeconds }} seconds
+            </mat-card-subtitle>
+            <mat-card-content>
+              <div *ngFor="let reward of adventure.rewards">
+                <span *ngIf="isReward(reward.rewardId)">
+                  Reward:<br>
+                  <span *ngIf="reward.rewardId.experience > 0">Experience: {{ reward.rewardId.experience}}<br></span>
+                  <span *ngIf="reward.rewardId.currencies.length > 0">
+                    Currency:<br>
+                    <span *ngFor="let currency of reward.rewardId.currencies">
+                      <span *ngIf="isCurrency(currency.currencyId)">{{ currency.currencyId.label }}: {{
+                        currency.amount}}<br></span>
+                    </span>
+                  </span>
+                  <span *ngIf="reward.rewardId.items.length > 0">
+                    Item:<br>
+                    <span *ngFor="let item of reward.rewardId.items">
+                      <span *ngIf="isItem(item.itemId)">{{item.itemId.name}}</span>
+                    </span>
+                  </span>
+                </span>
+              </div>
+            </mat-card-content>
+            <mat-card-actions>
+              <button mat-button color="primary" type="button" class="adventure-action-buttons"
+                      (click)="onStartAdventure(adventure._id)">Start
+                Adventure</button>
+              <!-- <ng-template #cancelButtons>
+                <button mat-button class="adventure-action-buttons" color="primary" type="button">Cancel</button>
+                <button mat-button class="adventure-action-buttons" color="primary" type="button">Skip</button>
+              </ng-template> -->
+            </mat-card-actions>
+            <!-- <ng-container>
+              <div *ngIf="adventure.requiredLevel > 1">
+                Required level: {{ adventure.requiredLevel }}
+              </div>
+            </ng-container> -->
+          </mat-card>
+        </div>
+      </cdk-virtual-scroll-viewport>
+    </mat-grid-tile>
+    <mat-grid-tile rowspan="3">
+      <cdk-virtual-scroll-viewport itemSize="100" class="adventures-viewport" *ngIf="adventuresInProgress.length > 0">
+        <div *cdkVirtualFor="let adventure of adventuresInProgress" class="adventure-item">
+          <mat-card class="adventure-card">
+            <mat-card-title>{{ adventure.adventureName }}</mat-card-title>
+            <mat-card-content>
+              Completes: {{ adventure.timeFinish }}
+            </mat-card-content>
+            <mat-card-actions>
 
-    <!-- <mat-progress-bar *ngIf="adventure.adventureState === adventureState_InProgress" mode="determinate"
-                      [value]="adventure.timer.progressPercent" color="warn">
-    </mat-progress-bar> -->
-  </mat-card>
-  <!-- <ng-container *ngIf="adventure.adventureState === adventureState_Finished">
-    <mat-grid-list cols="2">
-      <mat-grid-tile>
-        Player HP: TBD<br>
-        Player Damage: TBD
-      </mat-grid-tile>
-      <mat-grid-tile>
-        Enemy HP: TBD<br>
-        Enemy Damage: TBD
-      </mat-grid-tile>
-    </mat-grid-list>
-  </ng-container> -->
+              <button mat-button class="adventure-action-buttons" color="primary" type="button">Cancel</button>
+              <button mat-button class="adventure-action-buttons" color="primary" type="button">Skip</button>
+
+            </mat-card-actions>
+            <ng-template #finishedAdventure>
+              <mat-card-actions>
+
+                <button mat-button class="adventure-action-buttons" color="primary" type="button"
+                        (click)="onCollectReward(adventure)">Collect
+                  Reward</button>
+
+              </mat-card-actions>
+            </ng-template>
+          </mat-card>
+        </div>
+      </cdk-virtual-scroll-viewport>
+    </mat-grid-tile>
+    <mat-grid-tile>
+      <div>
+        <h1>Finished adventures {{adventureResultsWithoutCollectedRewards.length }}/10</h1>
+      </div>
+    </mat-grid-tile>
+    <mat-grid-tile rowspan="3">
+      <cdk-virtual-scroll-viewport itemSize="100" class="adventures-viewport"
+                                   *ngIf="adventureResultsWithoutCollectedRewards.length > 0">
+        <div *cdkVirtualFor="let result of adventureResultsWithoutCollectedRewards" class="adventure-item">
+          <mat-card class="adventure-card">
+            <mat-card-title>{{ result.adventureName }}</mat-card-title>
+            <mat-card-content>
+              Completed: {{ result.timeFinish }}
+            </mat-card-content>
+
+            <mat-card-actions>
+
+              <button mat-button class="adventure-action-buttons" color="primary" type="button"
+                      (click)="onCollectReward(result)">Collect
+                Reward</button>
+
+            </mat-card-actions>
+
+          </mat-card>
+        </div>
+      </cdk-virtual-scroll-viewport>
+    </mat-grid-tile>
+  </mat-grid-list>
 </div>
 <ng-template #loadingDataSpinner>
-  <h1>NO DATA CURRENTLY AVAILABLE.</h1>
-</ng-template>
-<ng-template #noCharData>
-  <h1>NO CHARACTER DATA</h1>
+  <h1>NO ADVENTURES DATA CURRENTLY AVAILABLE</h1>
 </ng-template>

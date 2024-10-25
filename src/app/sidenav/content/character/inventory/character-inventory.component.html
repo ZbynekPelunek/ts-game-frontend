@@ -3,8 +3,11 @@
 </div>
 <div id="inventory" class="inventory-list" *ngIf="!isLoading">
   <span class="inventory-slot" *ngFor="let invSlot of inventorySlots">
+    <h3>Slot {{ invSlot.slot }}</h3>
     <span class="inventory-slot-item">
-      <span *ngIf="invSlot.item"></span>
+      <span *ngIf="invSlot.item"><span *ngIf="isItemObject(invSlot.item.itemId)">
+          <img [src]="invSlot.item.itemId.icon" alt="Item Image" />
+        </span></span>
       <!-- (click)="openItemDialog(invSlot.item)">{{invSlot.item.itemType}} -->
     </span>
   </span>

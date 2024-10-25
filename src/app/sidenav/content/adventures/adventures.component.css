@@ -4,9 +4,18 @@ mat-progress-bar {
 }
 
 .adventure-card {
-  max-width: 400px;
+  border: 1px solid white;
 }
 
 .adventure-action-buttons {
   background-color: aliceblue;
+}
+
+.adventures-viewport {
+  height: 100%;
+  width: 100%;
+}
+
+.adventure-item {
+  height: 100%;
 }
