@@ -2,32 +2,70 @@ h1 {
   text-align: center;
 }
 
-.inventory-list {
-  height: 100%;
-  width: 100%;
+.inventory-background {
   background-color: brown;
-  display: inline-flex;
+  width: 100%;
+  height: 100%;
+}
+
+.inventory-list {
+  display: flex;
+  flex-wrap: wrap; /* Allow items to wrap to the next line */
+  gap: 2px; /* Consistent spacing between slots */
+  padding: 0;
 }
 
 .inventory-slot {
-  display: inline-block;
-  height: 72px;
-  width: 72px;
-  margin: 50px 2px 2px 2px;
-  border: solid 4px #ccc;
-  color: rgba(0, 0, 0, 0.87);
-  box-sizing: border-box;
+  position: relative; /* Set relative positioning to reference the absolute item */
+  display: flex;
+  flex-direction: column; /* Align children vertically */
+  align-items: center; /* Center children horizontally */
+  height: 72px; /* Fixed height */
+  width: 72px; /* Fixed width */
+  outline-color: blueviolet;
+  outline-style: dotted;
+  background: white;
+  font-size: 14px;
+  flex-shrink: 0; /* Prevent shrinking */
+  margin: 3px; /* Space between slots */
+}
+
+.inventory-slot h3 {
+  margin: 0;
+  padding: 4px; /* Adjust padding if needed */
+  font-size: 12px; /* Adjust text size if necessary */
+  color: #000; /* Set your desired color here */
+}
+
+.inventory-slot-item {
+  position: absolute; /* Position it absolutely within .inventory-slot */
+  top: 4px; /* Adjust to position above the h3 */
+  height: 64px; /* Fixed height */
+  width: 64px; /* Fixed width */
+  outline-color: blue;
+  outline-style: groove;
   background: white;
   font-size: 14px;
 }
 
-.inventory-slot-item {
-  display: inline-flex;
-  height: 64px;
-  width: 64px;
-  border: solid 2px lightblue;
-  box-sizing: border-box;
-  background: white;
-  font-size: 14px;
-  cursor: grab;
+.options {
+  padding-left: 20px;
+  margin-top: 5px;
+}
+
+.options ul {
+  list-style: none;
+  padding: 0;
+}
+
+.options li {
+  cursor: pointer;
+  padding: 5px;
+  width: 80px;
+  height: 24px;
+  outline-color: greenyellow;
+  outline-style: double;
+  z-index: 100;
+  position: relative;
+  background-color: aqua;
 }

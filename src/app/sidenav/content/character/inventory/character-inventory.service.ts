@@ -2,6 +2,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
   ApiRoutes,
+  CharacterEquipmentPostActions,
+  InventoryPatchActions,
   Request_Inventory_GET_all_query,
   Response_Inventory_GET_all,
 } from '../../../../../../../shared/src';
@@ -26,6 +28,24 @@ export class CharacterInventoryService {
     return this.http.get<Response_Inventory_GET_all>(
       `${BACKEND_URL}/${ApiRoutes.INVENTORY}`,
       { params: queryParams }
+    );
+  }
+
+  equipItemFromInventory(body: {
+    characterId: string;
+    itemId: number;
+    inventoryId: string;
+  }) {
+    return this.http.post(
+      `${BACKEND_URL}/${ApiRoutes.CHARACTER_EQUIPMENT}/${CharacterEquipmentPostActions.EQUIP_ITEM}`,
+      body
+    );
+  }
+
+  sellItem(params: { inventorySlotId: string }) {
+    return this.http.patch(
+      `${BACKEND_URL}/${ApiRoutes.INVENTORY}/${params.inventorySlotId}/${InventoryPatchActions.SELL_ITEM}`,
+      null
     );
   }
 }

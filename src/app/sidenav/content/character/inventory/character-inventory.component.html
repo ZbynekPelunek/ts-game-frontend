@@ -1,15 +1,23 @@
 <div *ngIf="isLoading">
   <h1>NO INVENTORY DATA</h1>
 </div>
-<div id="inventory" class="inventory-list" *ngIf="!isLoading">
-  <span class="inventory-slot" *ngFor="let invSlot of inventorySlots">
-    <h3>Slot {{ invSlot.slot }}</h3>
-    <span class="inventory-slot-item">
-      <span *ngIf="invSlot.item"><span *ngIf="isItemObject(invSlot.item.itemId)">
+<div class="inventory-background">
+  <div class="inventory-list" *ngIf="!isLoading">
+    <span class="inventory-slot" *ngFor="let invSlot of inventorySlots">
+      <h3>Slot {{ invSlot.slot }}</h3>
+      <span class="inventory-slot-item" *ngIf="invSlot.item">
+        <span *ngIf="isItemObject(invSlot.item.itemId)" (click)="onItemClick(invSlot.item)">
           <img [src]="invSlot.item.itemId.icon" alt="Item Image" />
-        </span></span>
+        </span>
+      </span>
+      <div *ngIf="selectedItem === invSlot.item && selectedItem !== null" class="options">
+        <ul>
+          <li (click)="onEquip(invSlot.item, invSlot._id)">Equip</li>
+          <li (click)="onSell(invSlot._id)">Sell</li>
+        </ul>
+      </div>
       <!-- (click)="openItemDialog(invSlot.item)">{{invSlot.item.itemType}} -->
     </span>
-  </span>
-  <button mat-raised-button color="accent" type="button" class="button">Add ITEM</button>
+    <!-- <button mat-raised-button color="accent" type="button" class="button">Add ITEM</button> -->
+  </div>
 </div>
