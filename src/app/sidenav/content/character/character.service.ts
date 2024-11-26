@@ -4,9 +4,9 @@ import { environment } from 'src/environments/environment';
 
 import {
   Request_CharacterCurrency_GET_all_query,
-  Response_CharacterAttribute_GET_all,
   Response_CharacterCurrency_GET_all,
   Response_CharacterEquipment_GET_all,
+  ResponseCharacterAttributeList,
 } from '../../../../../../shared/src';
 
 const BACKEND_URL = `${environment.apiUrl}`;
@@ -38,7 +38,7 @@ export class CharacterService {
     const isQueryString = queryString.length < 0 ? '' : '?';
     const finalQueryString = queryString.join('&&');
 
-    return this.http.get<Response_CharacterAttribute_GET_all>(
+    return this.http.get<ResponseCharacterAttributeList>(
       `${BACKEND_URL}/character-attributes${isQueryString}${finalQueryString}`
     );
   }
