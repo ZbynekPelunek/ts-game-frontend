@@ -7,17 +7,28 @@
   <mat-card-content id="equipment-all-container" *ngIf="!isLoading">
     <span class="equipment-left-container">
       <span class="equipment-slot-left" *ngFor="let leftSlot of leftEquipment">
-        {{leftSlot.itemId}}
+        <span *ngIf="isItemObject(leftSlot.itemId)" (click)="onItemClick(leftSlot.itemId)">
+          <img [src]="leftSlot.itemId.icon" alt="Item Image" />
+        </span>
+        <div *ngIf="selectedItem === leftSlot.itemId && selectedItem !== null" class="options">
+          <ul>
+            <li (click)="onUnequip(leftSlot._id)">Unequip</li>
+          </ul>
+        </div>
       </span>
     </span>
     <span class="equipment-bottom-container">
       <span class="equipment-slot-bottom" *ngFor="let bottomSlot of bottomEquipment">
-        {{bottomSlot.itemId}}
+        <span *ngIf="isItemObject(bottomSlot.itemId)">
+          <img [src]="bottomSlot.itemId.icon" alt="Item Image" />
+        </span>
       </span>
     </span>
     <span class="equipment-right-container">
       <span class="equipment-slot-right" *ngFor="let rightSlot of rightEquipment">
-        {{rightSlot.itemId}}
+        <span *ngIf="isItemObject(rightSlot.itemId)">
+          <img [src]="rightSlot.itemId.icon" alt="Item Image" />
+        </span>
       </span>
     </span>
   </mat-card-content>

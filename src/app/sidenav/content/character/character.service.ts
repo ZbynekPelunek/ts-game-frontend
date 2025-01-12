@@ -61,10 +61,4 @@ export class CharacterService {
       { params: queryString as HttpParams }
     );
   }
-
-  getCharacterEquipment(characterId: string) {
-    return this.http.get<Response_CharacterEquipment_GET_all>(
-      `${BACKEND_URL}/character-equipment?characterId=${characterId}`
-    );
-  }
 }

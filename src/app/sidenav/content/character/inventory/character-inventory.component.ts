@@ -66,9 +66,7 @@ export class CharacterInventoryComponent implements OnInit, OnDestroy {
         inventoryId: inventorySlotId,
       })
       .pipe(takeUntil(this.destroy$))
-      .subscribe((res) => {
-        console.log('equipItemFromInventory() response: ', res);
-      });
+      .subscribe();
   }
 
   onSell(inventorySlotId: string) {

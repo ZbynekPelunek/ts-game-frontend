@@ -69,16 +69,16 @@ export class CharacterDetailsComponent implements OnInit, OnDestroy {
 
   private generateStats() {
     this.mainAttributes = this.characterAttributes.filter(
-      (s) => s.attribute.attributeName in MainAttributeNames
+      (s) => s.attributeName in MainAttributeNames
     );
     this.primaryAttributes = this.characterAttributes.filter(
-      (s) => s.attribute.attributeName in PrimaryAttributeNames
+      (s) => s.attributeName in PrimaryAttributeNames
     );
     this.secondaryAttributes = this.characterAttributes.filter(
-      (s) => s.attribute.attributeName in SecondaryAttributeNames
+      (s) => s.attributeName in SecondaryAttributeNames
     );
     this.miscAttributes = this.characterAttributes.filter(
-      (s) => s.attribute.attributeName in MiscAttributeNames
+      (s) => s.attributeName in MiscAttributeNames
     );
   }
 

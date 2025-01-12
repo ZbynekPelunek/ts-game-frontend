@@ -36,3 +36,24 @@
   font-size: 14px;
 }
 
+.options {
+  padding-left: 20px;
+  margin-top: 5px;
+}
+
+.options ul {
+  list-style: none;
+  padding: 0;
+}
+
+.options li {
+  cursor: pointer;
+  padding: 5px;
+  width: 80px;
+  height: 24px;
+  outline-color: greenyellow;
+  outline-style: double;
+  z-index: 100;
+  position: relative;
+  background-color: aqua;
+}

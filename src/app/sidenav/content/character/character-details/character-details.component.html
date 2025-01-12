@@ -3,8 +3,9 @@
   <mat-tab label="Main">
     <cdk-virtual-scroll-viewport [itemSize]="1 * 1" class="character-stats">
       <div *cdkVirtualFor="let attribute of mainAttributes">
-        <span>{{attribute.attribute.label}}: {{attribute.totalValue}} <span
-                *ngIf="attribute.attribute.isPercent">%</span></span>
+        <span>{{attribute.attributeName}}: {{attribute.totalValue}}
+          <!-- <span *ngIf="attribute.attribute.isPercent">%</span> -->
+        </span>
       </div>
     </cdk-virtual-scroll-viewport>
   </mat-tab>
@@ -12,24 +13,27 @@
   <mat-tab label="Primary">
     <cdk-virtual-scroll-viewport [itemSize]="1 * 1" class="character-stats">
       <div *cdkVirtualFor="let attribute of primaryAttributes">
-        <span>{{attribute.attribute.label}}: {{attribute.totalValue}} <span
-                *ngIf="attribute.attribute.isPercent">%</span></span>
+        <span>{{attribute.attributeName}}: {{attribute.totalValue}}
+          <!-- <span *ngIf="attribute.attribute.isPercent">%</span> -->
+        </span>
       </div>
     </cdk-virtual-scroll-viewport>
   </mat-tab>
   <mat-tab label="Secondary">
     <cdk-virtual-scroll-viewport [itemSize]="1 * 1" class="character-stats">
       <div *cdkVirtualFor="let attribute of secondaryAttributes">
-        <span>{{attribute.attribute.label}}: {{attribute.totalValue}} <span
-                *ngIf="attribute.attribute.isPercent">%</span></span>
+        <span>{{attribute.attributeName}}: {{attribute.totalValue}}
+          <!-- <span *ngIf="attribute.attribute.isPercent">%</span> -->
+        </span>
       </div>
     </cdk-virtual-scroll-viewport>
   </mat-tab>
   <mat-tab label="Misc">
     <cdk-virtual-scroll-viewport [itemSize]="1 * 1" class="character-stats">
       <div *cdkVirtualFor="let attribute of miscAttributes">
-        <span>{{attribute.attribute.label}}: {{attribute.totalValue}} <span
-                *ngIf="attribute.attribute.isPercent">%</span></span>
+        <span>{{attribute.attributeName}}: {{attribute.totalValue}}
+          <!-- <span *ngIf="attribute.attribute.isPercent">%</span> -->
+        </span>
       </div>
     </cdk-virtual-scroll-viewport>
   </mat-tab>
