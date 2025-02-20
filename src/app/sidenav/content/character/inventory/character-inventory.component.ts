@@ -4,8 +4,11 @@ import { Subject, takeUntil } from 'rxjs';
 import {
   CommonItemParams,
   InventoryFrontend,
-  InventoryItem,
+  ItemQuality,
 } from '../../../../../../../shared/src';
+import { ItemDetailsDialogComponent } from 'src/app/dialog/item-details/item-details-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
+import { ITEM_QUALITY_COLORS } from 'src/app/sidenav/utils/item-quality.utils';
 
 @Component({
   selector: 'app-character-inventory',
@@ -21,23 +24,29 @@ export class CharacterInventoryComponent implements OnInit, OnDestroy {
 
   selectedItem: any = null;
 
-  constructor(private characterInventoryService: CharacterInventoryService) {}
+  constructor(
+    private characterInventoryService: CharacterInventoryService,
+    private dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
     this.isLoading = true;
     console.log('Getting inventory data...');
     this.characterInventoryService
-      .listInventorySlots({ characterId: this.characterId, populateItem: true })
+      .getInventory()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
           console.log('...inventory data fetched.: ', response);
-          if (response.success) {
-            this.inventorySlots = response.inventory;
-            this.isLoading = false;
-          }
+
+          this.inventorySlots = response;
+          this.isLoading = false;
         },
       });
+    this.characterInventoryService.listInventorySlots({
+      characterId: this.characterId,
+      populateItem: true,
+    });
   }
 
   onItemClick(item: any) {
@@ -48,36 +57,27 @@ export class CharacterInventoryComponent implements OnInit, OnDestroy {
     }
   }
 
-  onEquip(item: InventoryItem, inventorySlotId: string) {
-    console.log('Equip performed on', item);
+  openItemDetailsDialog(item: number | CommonItemParams): void {
+    this.dialog.open(ItemDetailsDialogComponent, {
+      width: '500px',
+      data: { item },
+    });
+  }
 
-    let itemId: number;
+  getItemQualityClass(quality: ItemQuality): string {
+    return ITEM_QUALITY_COLORS[quality] || ITEM_QUALITY_COLORS['COMMON'];
+  }
 
-    if (this.isItemObject(item.itemId)) {
-      itemId = item.itemId.itemId;
-    } else {
-      itemId = item.itemId;
-    }
-
-    this.characterInventoryService
-      .equipItemFromInventory({
-        characterId: this.characterId,
-        itemId,
-        inventoryId: inventorySlotId,
-      })
-      .pipe(takeUntil(this.destroy$))
-      .subscribe();
+  onEquip(inventorySlotId: string) {
+    this.characterInventoryService.equipItemFromInventory({
+      inventoryId: inventorySlotId,
+    });
   }
 
   onSell(inventorySlotId: string) {
-    this.characterInventoryService
-      .sellItem({
-        inventorySlotId,
-      })
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res) => {
-        console.log('sellItem() response: ', res);
-      });
+    this.characterInventoryService.sellItem({
+      inventorySlotId,
+    });
   }
 
   isItemObject(item: number | CommonItemParams): item is CommonItemParams {

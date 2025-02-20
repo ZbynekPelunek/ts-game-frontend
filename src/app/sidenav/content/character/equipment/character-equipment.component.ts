@@ -1,13 +1,13 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs/internal/Subscription';
 
 import {
   CharacterEquipmentFrontend,
   CommonItemParams,
-  UiPosition,
 } from '../../../../../../../shared/src';
 import { CharacterEquipmentService } from './character-equipment.service';
 import { Subject, takeUntil } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { ItemDetailsDialogComponent } from 'src/app/dialog/item-details/item-details-dialog.component';
 
 @Component({
   selector: 'app-character-equipment',
@@ -23,41 +23,28 @@ export class CharacterEquipmentComponent implements OnInit, OnDestroy {
   selectedItem: any = null;
 
   characterEquipment: CharacterEquipmentFrontend[] = [];
-  leftEquipment: CharacterEquipmentFrontend[] = [];
-  rightEquipment: CharacterEquipmentFrontend[] = [];
-  bottomEquipment: CharacterEquipmentFrontend[] = [];
 
-  constructor(private characterEquipmentService: CharacterEquipmentService) {}
+  constructor(
+    private characterEquipmentService: CharacterEquipmentService,
+    private dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
     this.characterEquipmentService
-      .listCharacterEquipment({
-        characterId: this.characterId,
-        populateItem: true,
-      })
+      .getEquipment()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
           console.log('character equipment response: ', response);
-          if (response.success) {
-            this.characterEquipment = response.characterEquipment;
-            this.filterUiPosition();
-            this.isLoading = false;
-          }
+
+          this.characterEquipment = response;
+          this.isLoading = false;
         },
       });
-  }
-
-  filterUiPosition() {
-    this.leftEquipment = this.characterEquipment.filter(
-      (e) => e.uiPosition === UiPosition.LEFT
-    );
-    this.rightEquipment = this.characterEquipment.filter(
-      (e) => e.uiPosition === UiPosition.RIGHT
-    );
-    this.bottomEquipment = this.characterEquipment.filter(
-      (e) => e.uiPosition === UiPosition.BOTTOM
-    );
+    this.characterEquipmentService.listCharacterEquipment({
+      characterId: this.characterId,
+      populateItem: true,
+    });
   }
 
   onItemClick(item: any) {
@@ -68,13 +55,20 @@ export class CharacterEquipmentComponent implements OnInit, OnDestroy {
     }
   }
 
-  onUnequip(characterEquipmentId: string) {
-    console.log('Clicking on char equip with ID: ', characterEquipmentId);
+  openItemDetailsDialog(item: number | CommonItemParams): void {
+    this.dialog.open(ItemDetailsDialogComponent, {
+      width: '500px',
+      data: { item },
+    });
+  }
 
-    this.characterEquipmentService
-      .unequipItem({ characterEquipmentId })
-      .pipe(takeUntil(this.destroy$))
-      .subscribe();
+  onUnequip(characterEquipmentId: string) {
+    this.characterEquipmentService.unequipItem({ characterEquipmentId });
+  }
+
+  onSell(characterEquipmentId: string) {
+    console.log('Selling char equip with ID: ', characterEquipmentId);
+    this.characterEquipmentService.sellEquipmentItem({ characterEquipmentId });
   }
 
   isItemObject(

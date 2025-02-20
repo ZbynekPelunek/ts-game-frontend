@@ -22,8 +22,8 @@ h1 {
   align-items: center; /* Center children horizontally */
   height: 72px; /* Fixed height */
   width: 72px; /* Fixed width */
-  outline-color: blueviolet;
-  outline-style: dotted;
+  outline-style: groove;
+  outline-color: brown;
   background: white;
   font-size: 14px;
   flex-shrink: 0; /* Prevent shrinking */
@@ -42,10 +42,15 @@ h1 {
   top: 4px; /* Adjust to position above the h3 */
   height: 64px; /* Fixed height */
   width: 64px; /* Fixed width */
-  outline-color: blue;
-  outline-style: groove;
   background: white;
   font-size: 14px;
+}
+
+.inventory-slot-item-quality {
+  position: inherit; /* Position it absolutely within .inventory-slot */
+  height: 64px;
+  width: 64px;
+  outline-style: groove;
 }
 
 .options {
@@ -68,4 +73,5 @@ h1 {
   z-index: 100;
   position: relative;
   background-color: aqua;
+  color: black;
 }

@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 
 import {
   BasicAttribute,
@@ -9,14 +9,15 @@ import {
   PrimaryAttributeNames,
   SecondaryAttributeNames,
 } from '../../../../../../../shared/src';
-import { CharacterService } from '../character.service';
+import { CharacterDetailsService } from './character-attributes.service';
 
 @Component({
-  selector: 'app-character-details',
-  templateUrl: './character-details.component.html',
-  styleUrls: ['./character-details.component.css'],
+  selector: 'app-character-attributes',
+  templateUrl: './character-attributes.component.html',
+  styleUrls: ['./character-attributes.component.css'],
 })
-export class CharacterDetailsComponent implements OnInit, OnDestroy {
+export class CharacterAttributesComponent implements OnInit, OnDestroy {
+  private destroy$ = new Subject<void>();
   @Input() characterId: string;
 
   isLoading = true;
@@ -48,23 +49,26 @@ export class CharacterDetailsComponent implements OnInit, OnDestroy {
   characterMaxDamageAdded: number;
   characterMaxDamageTotal: number;
 
-  getAllCharAttributesSub: Subscription;
-
-  constructor(private characterService: CharacterService) {}
+  constructor(private characterDetailsService: CharacterDetailsService) {}
 
   ngOnInit(): void {
-    this.getAllCharAttributesSub = this.characterService
-      .getCharacterAttributes(this.characterId, true)
+    this.characterDetailsService
+      .getAttributes()
+      .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
           console.log('character attributes response: ', response);
-          if (response.success) {
-            this.characterAttributes = response.characterAttributes;
-            this.isLoading = false;
-            this.generateStats();
-          }
+
+          this.characterAttributes = response;
+          this.isLoading = false;
+          this.generateStats();
         },
       });
+
+    this.characterDetailsService.getCharacterAttributes({
+      characterId: this.characterId,
+      populateAttribute: true,
+    });
   }
 
   private generateStats() {
@@ -83,6 +87,7 @@ export class CharacterDetailsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.getAllCharAttributesSub.unsubscribe();
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

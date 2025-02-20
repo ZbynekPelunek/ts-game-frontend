@@ -1,0 +1,31 @@
+.item-dialog {
+  font-family: Arial, sans-serif;
+}
+
+.item-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 10px;
+}
+
+.item-icon {
+  width: 50px;
+  height: 50px;
+}
+
+.item-info,
+.equipment-info,
+.attributes {
+  margin-top: 10px;
+}
+
+.attributes ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.attributes li {
+  margin: 5px 0;
+}

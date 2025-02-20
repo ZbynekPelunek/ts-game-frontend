@@ -2,17 +2,44 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
   ApiRoutes,
+  CharacterEquipmentFrontend,
   CharacterEquipmentPatchActions,
   Request_CharacterEquipment_GET_all_query,
   Response_CharacterEquipment_GET_all,
 } from '../../../../../../../shared/src';
 import { environment } from 'src/environments/environment';
+import { BehaviorSubject } from 'rxjs';
+import { CharacterCreateService } from 'src/app/character-create/character-create.service';
+import { CharacterEvents, EventBusService } from 'src/app/eventBus.service';
 
 const BACKEND_URL = `${environment.apiUrl}`;
 
 @Injectable({ providedIn: 'root' })
 export class CharacterEquipmentService {
-  constructor(private http: HttpClient) {}
+  private equipmentSubject = new BehaviorSubject<CharacterEquipmentFrontend[]>(
+    []
+  );
+  private characterId: string;
+
+  constructor(
+    private http: HttpClient,
+    private eventBus: EventBusService,
+    private characterCreateService: CharacterCreateService
+  ) {
+    this.characterId = characterCreateService.getCharacterId();
+    this.eventBus.getEvents().subscribe((event) => {
+      if (event === CharacterEvents.REFRESH_EQUIPMENT) {
+        this.listCharacterEquipment({
+          characterId: this.characterId,
+          populateItem: true,
+        });
+      }
+    });
+  }
+
+  getEquipment() {
+    return this.equipmentSubject.asObservable();
+  }
 
   listCharacterEquipment(params: Request_CharacterEquipment_GET_all_query) {
     let queryParams = new HttpParams();
@@ -24,23 +51,53 @@ export class CharacterEquipmentService {
       }
     }
 
-    return this.http.get<Response_CharacterEquipment_GET_all>(
-      `${BACKEND_URL}/${ApiRoutes.CHARACTER_EQUIPMENT}`,
-      { params: queryParams }
-    );
+    this.http
+      .get<Response_CharacterEquipment_GET_all>(
+        `${BACKEND_URL}/${ApiRoutes.CHARACTER_EQUIPMENT}`,
+        { params: queryParams }
+      )
+      .subscribe({
+        next: (response) => {
+          if (response.success) {
+            this.equipmentSubject.next(response.characterEquipment);
+          }
+        },
+      });
   }
 
   unequipItem(params: { characterEquipmentId: string }) {
-    return this.http.patch(
-      `${BACKEND_URL}/${ApiRoutes.CHARACTER_EQUIPMENT}/${params.characterEquipmentId}/${CharacterEquipmentPatchActions.UNEQUIP_ITEM}`,
-      null
-    );
+    this.http
+      .patch(
+        `${BACKEND_URL}/${ApiRoutes.CHARACTER_EQUIPMENT}/${params.characterEquipmentId}/${CharacterEquipmentPatchActions.UNEQUIP_ITEM}`,
+        null
+      )
+      .subscribe({
+        next: () => {
+          this.eventBus.emitEvent(CharacterEvents.REFRESH_INVENTORY);
+          this.eventBus.emitEvent(CharacterEvents.REFRESH_ATTRIBUTES);
+          this.listCharacterEquipment({
+            characterId: this.characterId,
+            populateItem: true,
+          });
+        },
+      });
   }
 
-  // sellItem(params: { inventorySlotId: string }) {
-  //   return this.http.patch(
-  //     `${BACKEND_URL}/${ApiRoutes.INVENTORY}/${params.inventorySlotId}/${InventoryPatchActions.SELL_ITEM}`,
-  //     null
-  //   );
-  // }
+  sellEquipmentItem(params: { characterEquipmentId: string }) {
+    this.http
+      .patch(
+        `${BACKEND_URL}/${ApiRoutes.CHARACTER_EQUIPMENT}/${params.characterEquipmentId}/${CharacterEquipmentPatchActions.SELL_ITEM}`,
+        null
+      )
+      .subscribe({
+        next: () => {
+          this.eventBus.emitEvent(CharacterEvents.REFRESH_CURRENCIES);
+          this.eventBus.emitEvent(CharacterEvents.REFRESH_ATTRIBUTES);
+          this.listCharacterEquipment({
+            characterId: this.characterId,
+            populateItem: true,
+          });
+        },
+      });
+  }
 }

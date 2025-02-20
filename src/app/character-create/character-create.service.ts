@@ -15,30 +15,36 @@ export class CharacterCreateService {
 
   charCreating$ = this.charCreatingListener.asObservable();
 
-  constructor(private router: Router, private http: HttpClient) { }
+  constructor(
+    private router: Router,
+    private http: HttpClient
+  ) {}
 
   setCharCreatingValue(value: boolean): void {
     this.charCreatingListener.next(value);
   }
 
   getCharacterId(): string {
-    console.log('character-create getCharacterId() characterId: ', this.characterId);
     return this.characterId;
   }
 
   create(accountId: string): void {
     const generateRandomInt = Math.floor(Math.random() * 10000000) + 1;
-    this.http.post<Response_Character_POST>(`${BACKEND_URL}/characters`, { accountId, name: `TESTNAME${generateRandomInt}` }).subscribe({
-      next: (response) => {
-        console.log('character created: ', response);
-        if (response.success) {
-          this.characterId = response.character.characterId;
-          console.log('created character ID: ', this.characterId);
-        }
-        this.setCharCreatingValue(false);
-        this.router.navigate(['/ui/menu/character']);
-      }
-    })
-
+    this.http
+      .post<Response_Character_POST>(`${BACKEND_URL}/characters`, {
+        accountId,
+        name: `TESTNAME${generateRandomInt}`,
+      })
+      .subscribe({
+        next: (response) => {
+          console.log('character created: ', response);
+          if (response.success) {
+            this.characterId = response.character.characterId;
+            console.log('created character ID: ', this.characterId);
+          }
+          this.setCharCreatingValue(false);
+          this.router.navigate(['/ui/menu/character']);
+        },
+      });
   }
 }

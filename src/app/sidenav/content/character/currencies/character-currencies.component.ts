@@ -2,14 +2,16 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs/internal/Subscription';
 
 import { CharacterCurrencyFrontend } from '../../../../../../../shared/src';
-import { CharacterService } from '../character.service';
+import { CharacterCurrenciesService } from './character-currencies.service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-character-currencies',
   templateUrl: './character-currencies.component.html',
-  styleUrls: ['./character-currencies.component.css']
+  styleUrls: ['./character-currencies.component.css'],
 })
 export class CharacterCurrenciesComponent implements OnInit, OnDestroy {
+  private destroy$ = new Subject<void>();
   @Input() characterId: string;
 
   isLoading = true;
@@ -18,21 +20,26 @@ export class CharacterCurrenciesComponent implements OnInit, OnDestroy {
 
   getAllCharCurrenciesSub: Subscription;
 
-  constructor(private characterService: CharacterService) { }
+  constructor(private characterCurrenciesService: CharacterCurrenciesService) {}
 
   ngOnInit(): void {
-    this.getAllCharCurrenciesSub = this.characterService.getCharacterCurrencies(this.characterId, true).subscribe({
-      next: (response) => {
-        console.log('character currencies response: ', response);
-        if (response.success) {
-          this.characterCurrencies = response.characterCurrencies;
+    this.characterCurrenciesService
+      .getCurrencies()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          console.log('character currencies response: ', response);
+          this.characterCurrencies = response;
           this.isLoading = false;
-        }
-      }
-    })
+        },
+      });
+    this.characterCurrenciesService.listCharacterCurrencies({
+      characterId: this.characterId,
+      populateCurrency: true,
+    });
   }
   ngOnDestroy(): void {
-    this.isLoading = true;
-    this.getAllCharCurrenciesSub.unsubscribe();
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

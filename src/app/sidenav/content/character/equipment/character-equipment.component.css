@@ -9,22 +9,7 @@
   justify-content: space-between;
 }
 
-.equipment-left-container,
-.equipment-right-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-}
-
-.equipment-bottom-container {
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
-}
-
-.equipment-slot-left,
-.equipment-slot-right,
-.equipment-slot-bottom {
+.equipment-slot {
   display: inline-flex;
   height: 72px;
   width: 72px;
@@ -32,6 +17,17 @@
   border: solid 4px #ccc;
   color: rgba(0, 0, 0, 0.87);
   box-sizing: border-box;
+  background: white;
+  font-size: 14px;
+}
+
+.equipment-slot-item {
+  position: absolute; /* Position it absolutely within .inventory-slot */
+  top: 38px; /* Adjust to position above the h3 */
+  height: 64px; /* Fixed height */
+  width: 64px; /* Fixed width */
+  outline-color: blue;
+  outline-style: groove;
   background: white;
   font-size: 14px;
 }

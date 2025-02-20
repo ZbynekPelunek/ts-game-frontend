@@ -2,9 +2,9 @@
   <span><a [routerLink]="userIsAuthenticated ? '/ui/menu/character' : '/'">Game</a></span>
   <span class="spacer"></span>
   <ul>
-    <!-- <li *ngIf="!userIsAuthenticated">
+    <li *ngIf="!userIsAuthenticated">
       <a mat-button routerLink="/ui/auth/login" routerLinkActive="mat-accent">Login</a>
-    </li> -->
+    </li>
     <li *ngIf="!userIsAuthenticated">
       <a mat-button routerLink="/ui/auth/signup" routerLinkActive="mat-accent">Sign Up</a>
     </li>

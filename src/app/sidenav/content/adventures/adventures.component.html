@@ -1,93 +1,91 @@
 <div *ngIf="!areAdventuresLoading; else loadingDataSpinner">
   <mat-grid-list cols="2" rowHeight="100px">
+    <!-- Header Section -->
     <mat-grid-tile>
-      <div>
-        <h1>Available adventures</h1>
-      </div>
+      <h1>Available Adventures</h1>
     </mat-grid-tile>
     <mat-grid-tile>
-      <h1>Adventures in progress {{adventuresInProgress.length}}/3</h1>
+      <h1>Adventures in Progress {{ adventuresInProgress.length }}/3</h1>
     </mat-grid-tile>
+
+    <!-- Available Adventures List -->
     <mat-grid-tile rowspan="7">
       <cdk-virtual-scroll-viewport itemSize="100" class="adventures-viewport">
         <div *cdkVirtualFor="let adventure of adventures" class="adventure-item">
           <mat-card class="adventure-card">
-            <mat-card-title>{{ adventure.name }}</mat-card-title>
+            <mat-card-title>[{{ adventure._id }}] {{ adventure.name }}</mat-card-title>
             <mat-card-subtitle>
-              Level: {{ adventure.adventureLevel }}<br>
+              Level: {{ adventure.adventureLevel }}<br />
               Time: {{ adventure.timeInSeconds }} seconds
             </mat-card-subtitle>
             <mat-card-content>
-              <div *ngFor="let reward of adventure.rewards">
-                <span *ngIf="isReward(reward.rewardId)">
-                  Reward:<br>
-                  <span *ngIf="reward.rewardId.experience > 0">Experience: {{ reward.rewardId.experience}}<br></span>
-                  <span *ngIf="reward.rewardId.currencies.length > 0">
-                    Currency:<br>
-                    <span *ngFor="let currency of reward.rewardId.currencies">
-                      <span *ngIf="isCurrency(currency.currencyId)">{{ currency.currencyId.label }}: {{
-                        currency.amount}}<br></span>
+              <ng-container *ngFor="let reward of adventure.rewards">
+                <ng-container *ngIf="isReward(reward.rewardId)">
+                  <div>
+                    <span *ngIf="reward.rewardId.experience > 0">
+                      {{ reward.rewardId.experience }} XP<br />
                     </span>
-                  </span>
-                  <span *ngIf="reward.rewardId.items.length > 0">
-                    Item:<br>
-                    <span *ngFor="let item of reward.rewardId.items">
-                      <span *ngIf="isItem(item.itemId)">{{item.itemId.name}}</span>
+                    <span *ngIf="reward.rewardId.currencies.length > 0">
+                      <span *ngFor="let currency of reward.rewardId.currencies">
+                        <span *ngIf="isCurrency(currency.currencyId)">
+                          {{ currency.amount }} {{ currency.currencyId.label }}
+                        </span>
+                      </span>
                     </span>
-                  </span>
-                </span>
-              </div>
+                    <span *ngIf="reward.rewardId.items.length > 0">
+                      <span *ngFor="let item of reward.rewardId.items">
+                        <span *ngIf="isItem(item.itemId)">
+                          <span class="clickable-item" [style.color]="getItemQualityClass(item.itemId.quality)"
+                                (click)="openItemDetailsDialog(item.itemId)">
+                            <strong>[{{ item.itemId.name }}]</strong>
+                          </span>
+                        </span>
+                      </span>
+                    </span>
+                  </div>
+                </ng-container>
+              </ng-container>
             </mat-card-content>
             <mat-card-actions>
-              <button mat-button color="primary" type="button" class="adventure-action-buttons"
-                      (click)="onStartAdventure(adventure._id)">Start
-                Adventure</button>
-              <!-- <ng-template #cancelButtons>
-                <button mat-button class="adventure-action-buttons" color="primary" type="button">Cancel</button>
-                <button mat-button class="adventure-action-buttons" color="primary" type="button">Skip</button>
-              </ng-template> -->
+              <button mat-button color="primary" (click)="onStartAdventure(adventure._id)"
+                      class="adventure-action-buttons">
+                Start Adventure
+              </button>
             </mat-card-actions>
-            <!-- <ng-container>
-              <div *ngIf="adventure.requiredLevel > 1">
-                Required level: {{ adventure.requiredLevel }}
-              </div>
-            </ng-container> -->
           </mat-card>
         </div>
       </cdk-virtual-scroll-viewport>
     </mat-grid-tile>
+
+    <!-- Adventures in Progress List -->
     <mat-grid-tile rowspan="3">
       <cdk-virtual-scroll-viewport itemSize="100" class="adventures-viewport" *ngIf="adventuresInProgress.length > 0">
         <div *cdkVirtualFor="let adventure of adventuresInProgress" class="adventure-item">
           <mat-card class="adventure-card">
             <mat-card-title>{{ adventure.adventureName }}</mat-card-title>
             <mat-card-content>
-              Completes: {{ adventure.timeFinish }}
+              Completes: {{ adventure.timeFinish | date: 'mediumTime' }}
+              <mat-progress-bar mode="determinate" [value]="progressMap.get(adventure._id) || 0"></mat-progress-bar>
             </mat-card-content>
             <mat-card-actions>
-
-              <button mat-button class="adventure-action-buttons" color="primary" type="button">Cancel</button>
-              <button mat-button class="adventure-action-buttons" color="primary" type="button">Skip</button>
-
+              <button mat-button color="primary" class="adventure-action-buttons">
+                Cancel
+              </button>
+              <button mat-button color="primary" class="adventure-action-buttons">
+                Skip
+              </button>
             </mat-card-actions>
-            <ng-template #finishedAdventure>
-              <mat-card-actions>
-
-                <button mat-button class="adventure-action-buttons" color="primary" type="button"
-                        (click)="onCollectReward(adventure)">Collect
-                  Reward</button>
-
-              </mat-card-actions>
-            </ng-template>
           </mat-card>
         </div>
       </cdk-virtual-scroll-viewport>
     </mat-grid-tile>
+
+    <!-- Finished Adventures Header -->
     <mat-grid-tile>
-      <div>
-        <h1>Finished adventures {{adventureResultsWithoutCollectedRewards.length }}/10</h1>
-      </div>
+      <h1>Finished Adventures {{ adventureResultsWithoutCollectedRewards.length }}/10</h1>
     </mat-grid-tile>
+
+    <!-- Finished Adventures List -->
     <mat-grid-tile rowspan="3">
       <cdk-virtual-scroll-viewport itemSize="100" class="adventures-viewport"
                                    *ngIf="adventureResultsWithoutCollectedRewards.length > 0">
@@ -95,23 +93,47 @@
           <mat-card class="adventure-card">
             <mat-card-title>{{ result.adventureName }}</mat-card-title>
             <mat-card-content>
-              Completed: {{ result.timeFinish }}
+              Completed: {{ result.timeFinish | date: 'short' }}
+              <br>
+              <ng-container>
+                Reward:
+                <div>
+                  <span *ngIf="result.reward.experience > 0">
+                    {{ result.reward.experience }} XP<br />
+                  </span>
+                  <span *ngIf="result.reward.currencies.length > 0">
+                    <span *ngFor="let currency of result.reward.currencies">
+                      <span *ngIf="isCurrency(currency.currencyId)">
+                        {{ currency.amount }} {{ currency.currencyId.label }}
+                      </span>
+                    </span>
+                  </span>
+                  <span *ngIf="result.reward.items.length > 0">
+                    <span *ngFor="let item of result.reward.items">
+                      <span *ngIf="isItem(item.itemId)">
+                        <span class="clickable-item" [style.color]="getItemQualityClass(item.itemId.quality)"
+                              (click)="openItemDetailsDialog(item.itemId)">
+                          <strong>[{{ item.itemId.name }}]</strong>
+                        </span>
+                      </span>
+                    </span>
+                  </span>
+                </div>
+              </ng-container>
             </mat-card-content>
-
             <mat-card-actions>
-
-              <button mat-button class="adventure-action-buttons" color="primary" type="button"
-                      (click)="onCollectReward(result)">Collect
-                Reward</button>
-
+              <button mat-button color="primary" class="adventure-action-buttons" (click)="onCollectReward(result)">
+                Collect Reward
+              </button>
             </mat-card-actions>
-
           </mat-card>
         </div>
       </cdk-virtual-scroll-viewport>
     </mat-grid-tile>
   </mat-grid-list>
 </div>
+
+<!-- Loading Spinner -->
 <ng-template #loadingDataSpinner>
   <h1>NO ADVENTURES DATA CURRENTLY AVAILABLE</h1>
 </ng-template>

@@ -3,24 +3,19 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 import { AngularMaterialModule } from '../angular-material.module';
-import { CharDialogModule } from '../dialog/char-dialog.module';
 import { AdventuresComponent } from './content/adventures/adventures.component';
 import { ArenaComponent } from './content/arena/arena.component';
-import {
-  CharacterDetailsComponent,
-} from './content/character/character-details/character-details.component';
+import { CharacterAttributesComponent } from './content/character/character-attributes/character-attributes.component';
 import { CharacterComponent } from './content/character/character.component';
-import {
-  CharacterCurrenciesComponent,
-} from './content/character/currencies/character-currencies.component';
-import {
-  CharacterEquipmentComponent,
-} from './content/character/equipment/character-equipment.component';
+import { CharacterCurrenciesComponent } from './content/character/currencies/character-currencies.component';
+import { CharacterEquipmentComponent } from './content/character/equipment/character-equipment.component';
 import { DashboardComponent } from './content/dashboard/dashboard.component';
 import { SidenavRoutingModule } from './sidenav-routing.module';
 import { CharacterInventoryComponent } from './content/character/inventory/character-inventory.component';
+import { ItemDetailsDialogComponent } from '../dialog/item-details/item-details-dialog.component';
 
 @NgModule({
   declarations: [
@@ -28,10 +23,11 @@ import { CharacterInventoryComponent } from './content/character/inventory/chara
     CharacterComponent,
     ArenaComponent,
     AdventuresComponent,
-    CharacterDetailsComponent,
+    CharacterAttributesComponent,
     CharacterCurrenciesComponent,
     CharacterEquipmentComponent,
-    CharacterInventoryComponent
+    CharacterInventoryComponent,
+    ItemDetailsDialogComponent,
   ],
   imports: [
     CommonModule,
@@ -39,8 +35,8 @@ import { CharacterInventoryComponent } from './content/character/inventory/chara
     SidenavRoutingModule,
     FormsModule,
     DragDropModule,
-    CharDialogModule,
-    ScrollingModule
-  ]
+    ScrollingModule,
+    MatProgressBarModule,
+  ],
 })
-export class SidenavModule { }
+export class SidenavModule {}

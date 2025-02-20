@@ -1,23 +1,54 @@
-<div *ngIf="isLoading">
+<div *ngIf="isLoading" class="inventory-loading">
   <h1>NO INVENTORY DATA</h1>
 </div>
+
+<!-- WIP: new inventory UI -->
+<!-- <div class="inventory-grid" *ngIf="!isLoading">
+  <div *ngFor="let invSlot of inventorySlots" class="inventory-slot"
+       [ngClass]="invSlot.item && isItemObject(invSlot.item.itemId) ? getItemQualityClass(invSlot.item.itemId.quality) : ''">
+
+
+    <h3 *ngIf="!invSlot.item">Slot {{ invSlot.slot}}</h3>
+
+
+    <div class="inventory-slot-item" *ngIf="invSlot.item">
+      <div *ngIf="isItemObject(invSlot.item.itemId)" (click)="onItemClick(invSlot.item)"
+           [style.borderColor]="getItemQualityClass(invSlot.item.itemId.quality)">
+        <img [src]="invSlot.item.itemId.icon" [alt]="invSlot.item.itemId.name" />
+      </div>
+    </div>
+
+    <div *ngIf="selectedItem === invSlot.item && selectedItem !== null" class="inventory-options">
+      <ul>
+        <li (click)="openItemDetailsDialog(invSlot.item.itemId)">Details</li>
+        <li (click)="onEquip(invSlot._id)">Equip</li>
+        <li (click)="onSell(invSlot._id)">Sell</li>
+      </ul>
+    </div>
+
+  </div>
+</div> -->
+
+
+
 <div class="inventory-background">
   <div class="inventory-list" *ngIf="!isLoading">
     <span class="inventory-slot" *ngFor="let invSlot of inventorySlots">
-      <h3>Slot {{ invSlot.slot }}</h3>
+      <h3 *ngIf="!invSlot.item">Slot {{ invSlot.slot }}</h3>
       <span class="inventory-slot-item" *ngIf="invSlot.item">
-        <span *ngIf="isItemObject(invSlot.item.itemId)" (click)="onItemClick(invSlot.item)">
+        <span class="inventory-slot-item-quality" *ngIf="isItemObject(invSlot.item.itemId)"
+              (click)="onItemClick(invSlot.item)"
+              [style.outline-color]="getItemQualityClass(invSlot.item.itemId.quality)">
           <img [src]="invSlot.item.itemId.icon" alt="Item Image" />
         </span>
       </span>
       <div *ngIf="selectedItem === invSlot.item && selectedItem !== null" class="options">
         <ul>
-          <li (click)="onEquip(invSlot.item, invSlot._id)">Equip</li>
+          <li (click)="openItemDetailsDialog(invSlot.item.itemId)">Details</li>
+          <li (click)="onEquip(invSlot._id)">Equip</li>
           <li (click)="onSell(invSlot._id)">Sell</li>
         </ul>
       </div>
-      <!-- (click)="openItemDialog(invSlot.item)">{{invSlot.item.itemType}} -->
     </span>
-    <!-- <button mat-raised-button color="accent" type="button" class="button">Add ITEM</button> -->
   </div>
 </div>

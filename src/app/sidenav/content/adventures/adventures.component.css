@@ -19,3 +19,7 @@ mat-progress-bar {
 .adventure-item {
   height: 100%;
 }
+
+.clickable-item {
+  cursor: pointer;
+}

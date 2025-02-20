@@ -6,10 +6,13 @@ import {
   Adventure,
   CommonItemsEquipmenParams,
   Currency,
+  ItemQuality,
   ResultFrontend,
   Reward,
 } from '../../../../../../shared/src';
-import { CharacterCreateService } from 'src/app/character-create/character-create.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ItemDetailsDialogComponent } from 'src/app/dialog/item-details/item-details-dialog.component';
+import { ITEM_QUALITY_COLORS } from '../../utils/item-quality.utils';
 
 @Component({
   templateUrl: './adventures.component.html',
@@ -17,7 +20,8 @@ import { CharacterCreateService } from 'src/app/character-create/character-creat
 })
 export class AdventuresComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
-  private adventureCheckInterval: any;
+  progressMap: Map<string, number> = new Map();
+  progressInterval: NodeJS.Timeout;
 
   areAdventuresLoading: boolean;
 
@@ -25,79 +29,63 @@ export class AdventuresComponent implements OnInit, OnDestroy {
   adventuresInProgress: ResultFrontend[] = [];
   adventureResultsWithoutCollectedRewards: ResultFrontend[] = [];
 
-  characterId: string;
-
   constructor(
     private adventuresService: AdventuresService,
-    private characterCreateService: CharacterCreateService
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
-    this.characterId = this.characterCreateService.getCharacterId();
     this.areAdventuresLoading = true;
 
-    this.loadAdventures();
-
-    this.loadAdventuresInProgress();
-    this.loadAdventuresRewardNotCollected();
-
-    this.adventureCheckInterval = setInterval(() => {
-      this.adventuresService
-        .checkResults()
-        .pipe(takeUntil(this.destroy$))
-        .subscribe({
-          next: (response) => {
-            console.log('Check results response: ', response);
-            if (response.success) {
-              this.loadAdventuresInProgress();
-              this.loadAdventuresRewardNotCollected();
-            }
-          },
-        });
-    }, 5000);
+    if (this.adventuresService.characterExists()) {
+      this.loadAdventures();
+      this.loadAdventuresInProgress();
+      this.loadAdventuresRewardNotCollected();
+      this.areAdventuresLoading = false;
+      this.startProgressUpdates();
+    }
   }
 
   private loadAdventures(): void {
     this.adventuresService
-      .listAdventures(true)
+      .getAdventures()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
-          console.log('Called adventures: ', response);
-          if (response.success) {
-            this.adventures = response.adventures;
-            this.areAdventuresLoading = false;
-          }
+          //console.log('Called adventures: ', response);
+          this.adventures = response;
         },
       });
+    this.adventuresService.listAdventures({ populateReward: true });
   }
 
   private loadAdventuresInProgress(): void {
     this.adventuresService
-      .listResults(this.characterId, true)
+      .getAdventuresInProgress()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
-          console.log('List Results response: ', response);
-          if (response.success) {
-            this.adventuresInProgress = response.results;
-          }
+          //console.log('List Adventures in progress response: ', response);
+
+          this.adventuresInProgress = response;
         },
       });
+    this.adventuresService.checkResults();
+    this.adventuresService.startTimersInProgress(this.adventuresInProgress);
   }
 
   private loadAdventuresRewardNotCollected(): void {
     this.adventuresService
-      .listResults(this.characterId, undefined, false)
+      .getAdventuresUncollectedReward()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
-          console.log('loadAdventuresRewardNotCollected response: ', response);
-          if (response.success) {
-            this.adventureResultsWithoutCollectedRewards = response.results;
-          }
+          //console.log('loadAdventuresRewardNotCollected response: ', response);
+
+          this.adventureResultsWithoutCollectedRewards = response;
         },
       });
+    this.adventuresService.listAdventuresUncollectedRewards();
   }
 
   isReward(rewardId: number | Reward): rewardId is Reward {
@@ -115,53 +103,51 @@ export class AdventuresComponent implements OnInit, OnDestroy {
   }
 
   onStartAdventure(adventureId: number) {
-    const adventureArrIndex = this.adventures.findIndex(
-      (a) => a._id === adventureId
-    );
-
-    if (adventureArrIndex === -1) {
-      console.error('Adventure not found');
-      return;
-    }
-
-    console.log(
-      `Starting adventure: ${adventureId} with character: ${this.characterId}`
-    );
-    this.adventuresService
-      .postResult(adventureId, this.characterId)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (response) => {
-          console.log('POST Result response: ', response);
-          this.loadAdventuresInProgress();
-        },
-        error: (err) => {
-          console.error('Failed to start adventure:', err);
-        },
-      });
-
-    console.log('Adventures in progress: ', this.adventuresInProgress);
+    //console.log(`Starting adventure: ${adventureId}`);
+    this.adventuresService.startAdventure(adventureId);
   }
 
-  onCollectReward(result) {
-    console.log('Collecting reward: ', result);
-    this.adventuresService
-      .collectReward(result._id)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (response) => {
-          console.log('Collect Reward response: ', response);
-          this.loadAdventuresRewardNotCollected();
-        },
-        error: (err) => {
-          console.error('Failed to collected reward:', err);
-        },
-      });
+  onCollectReward(result: ResultFrontend) {
+    //console.log('Collecting reward: ', result);
+    this.adventuresService.collectReward(result._id);
+  }
+
+  openItemDetailsDialog(item: CommonItemsEquipmenParams): void {
+    this.dialog.open(ItemDetailsDialogComponent, {
+      width: '500px',
+      data: { item },
+    });
+  }
+
+  startProgressUpdates(): void {
+    this.progressInterval = setInterval(() => {
+      this.updateProgress();
+    }, 1000);
+  }
+
+  updateProgress(): void {
+    const now = Date.now();
+
+    this.adventuresInProgress.forEach((adventure) => {
+      const finishTime = new Date(adventure.timeFinish).getTime();
+      const startTime = new Date(adventure.timeStart).getTime();
+
+      if (now < finishTime) {
+        const elapsed = now - startTime;
+        const total = finishTime - startTime;
+        const progress = Math.round((elapsed / total) * 100);
+        this.progressMap.set(adventure._id, progress);
+      }
+    });
+  }
+
+  getItemQualityClass(quality: ItemQuality): string {
+    return ITEM_QUALITY_COLORS[quality] || ITEM_QUALITY_COLORS['COMMON'];
   }
 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
-    clearInterval(this.adventureCheckInterval);
+    clearInterval(this.progressInterval);
   }
 }

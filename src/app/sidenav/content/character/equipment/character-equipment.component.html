@@ -5,30 +5,19 @@
 <mat-card id="equipment-card">
   <mat-card-title>EQUIPMENT</mat-card-title>
   <mat-card-content id="equipment-all-container" *ngIf="!isLoading">
-    <span class="equipment-left-container">
-      <span class="equipment-slot-left" *ngFor="let leftSlot of leftEquipment">
-        <span *ngIf="isItemObject(leftSlot.itemId)" (click)="onItemClick(leftSlot.itemId)">
-          <img [src]="leftSlot.itemId.icon" alt="Item Image" />
+    <span class="equipment-slot" *ngFor="let equipment of characterEquipment">
+      {{equipment.slot}}
+      <span *ngIf="equipment.itemId" class="equipment-slot-item">
+        <span *ngIf="isItemObject(equipment.itemId)" (click)="onItemClick(equipment.itemId)">
+          <img [src]="equipment.itemId.icon" alt="Item Image" />
         </span>
-        <div *ngIf="selectedItem === leftSlot.itemId && selectedItem !== null" class="options">
+        <div *ngIf="selectedItem === equipment.itemId && selectedItem !== null" class="options">
           <ul>
-            <li (click)="onUnequip(leftSlot._id)">Unequip</li>
+            <li (click)="openItemDetailsDialog(equipment.itemId)">Details</li>
+            <li (click)="onUnequip(equipment._id)">Unequip</li>
+            <li (click)="onSell(equipment._id)">Sell</li>
           </ul>
         </div>
-      </span>
-    </span>
-    <span class="equipment-bottom-container">
-      <span class="equipment-slot-bottom" *ngFor="let bottomSlot of bottomEquipment">
-        <span *ngIf="isItemObject(bottomSlot.itemId)">
-          <img [src]="bottomSlot.itemId.icon" alt="Item Image" />
-        </span>
-      </span>
-    </span>
-    <span class="equipment-right-container">
-      <span class="equipment-slot-right" *ngFor="let rightSlot of rightEquipment">
-        <span *ngIf="isItemObject(rightSlot.itemId)">
-          <img [src]="rightSlot.itemId.icon" alt="Item Image" />
-        </span>
       </span>
     </span>
   </mat-card-content>

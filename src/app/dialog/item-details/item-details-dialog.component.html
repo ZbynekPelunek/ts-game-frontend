@@ -1,0 +1,39 @@
+<mat-dialog-content class="item-dialog">
+  <div class="item-header">
+    <img [src]="data.item.icon" alt="{{ data.item.name }}" class="item-icon" />
+    <h2 [style.color]="getItemQualityClass(data.item.quality)">
+      {{ data.item.name }}
+    </h2>
+  </div>
+
+  <!-- Equipment-specific details -->
+  <ng-container *ngIf="isEquipment(data.item)">
+    <div class="equipment-info">
+      <p><strong>Item Level:</strong> {{ data.item.itemLevel }}</p>
+
+      <p *ngIf="isArmor(data.item)"><strong>Armor Type:</strong> {{ data.item.equipmentType }}</p>
+      <p *ngIf="isWeapon(data.item)"><strong>Weapon Type:</strong> {{ data.item.equipmentType }}</p>
+    </div>
+
+    <!-- Attributes -->
+    <div class="attributes">
+      <ul>
+        <li *ngFor="let attr of data.item.attributes">
+          <span *ngIf="attr.attributeValue>0">+</span>
+          <span *ngIf="attr.attributeValue<0">-</span>
+          {{ attr.attributeValue}} <strong>{{ attr.attributeName}}</strong>
+        </li>
+      </ul>
+    </div>
+  </ng-container>
+
+  <div class="item-info">
+    <p *ngIf="data.item.sell"><strong>Sell Value:</strong> {{ data.item.sell.value }} {{ data.item.sell.currencyId }}
+    </p>
+    <p *ngIf="data.item.levelReq"><strong>Level Required:</strong> {{ data.item.levelReq }}</p>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="closeDialog()">Close</button>
+</mat-dialog-actions>
