@@ -1,24 +1,35 @@
-<div *ngIf="characterEquipment.length === 0">
-  <h1>NO EQUIPMENT DATA</h1>
-</div>
-<mat-spinner *ngIf="isLoading"></mat-spinner>
-<mat-card id="equipment-card">
-  <mat-card-title>EQUIPMENT</mat-card-title>
-  <mat-card-content id="equipment-all-container" *ngIf="!isLoading">
-    <span class="equipment-slot" *ngFor="let equipment of characterEquipment">
-      {{equipment.slot}}
-      <span *ngIf="equipment.itemId" class="equipment-slot-item">
-        <span *ngIf="isItemObject(equipment.itemId)" (click)="onItemClick(equipment.itemId)">
-          <img [src]="equipment.itemId.icon" alt="Item Image" />
-        </span>
-        <div *ngIf="selectedItem === equipment.itemId && selectedItem !== null" class="options">
-          <ul>
-            <li (click)="openItemDetailsDialog(equipment.itemId)">Details</li>
-            <li (click)="onUnequip(equipment._id)">Unequip</li>
-            <li (click)="onSell(equipment._id)">Sell</li>
-          </ul>
+<ng-container *ngIf="!isLoading; else loading">
+  <div *ngIf="characterEquipment.length === 0" class="no-equipment">
+    <h1>No Equipment Data</h1>
+  </div>
+  <mat-card class="equipment-card" *ngIf="characterEquipment.length > 0">
+    <mat-card-title>EQUIPMENT</mat-card-title>
+    <mat-card-content class="equipment-all-container">
+      <div class="equipment-slots">
+        <div class="equipment-slot" *ngFor="let equipment of characterEquipment">
+          <div class="slot-label">{{ equipment.slot }}</div>
+          <div class="slot"
+               [ngClass]="
+          equipment.itemId && isItemObject(equipment.itemId) ? 'quality-' + equipment.itemId.quality.toLowerCase() : ''">
+            <ng-container *ngIf="equipment.itemId && isItemObject(equipment.itemId); else emptySlot">
+              <img [src]="equipment.itemId.icon" alt="Item Image" (click)="onItemClick(equipment.itemId)" />
+              <div *ngIf="selectedItem === equipment.itemId" class="options">
+                <ul>
+                  <li (click)="openItemDetailsDialog(equipment.itemId)">Details</li>
+                  <li (click)="onUnequip(equipment._id)">Unequip</li>
+                  <li (click)="onSell(equipment._id)">Sell</li>
+                </ul>
+              </div>
+            </ng-container>
+            <ng-template #emptySlot>
+              <div class="empty-slot">Empty</div>
+            </ng-template>
+          </div>
         </div>
-      </span>
-    </span>
-  </mat-card-content>
-</mat-card>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</ng-container>
+<ng-template #loading>
+  <mat-spinner></mat-spinner>
+</ng-template>

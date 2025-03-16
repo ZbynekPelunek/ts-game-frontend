@@ -1,16 +1,22 @@
+/* Style the entire sidenav container */
 mat-sidenav-container {
-  position: absolute;
-  top: 64px;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  background: linear-gradient(135deg, #2c1a1a, #4d2e1e);
+  min-height: 100vh;
 }
 
+/* Style the sidenav panel */
 mat-sidenav {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 200px;
-  height: 100%;
-  background: #7b1fa2;
+  background: rgba(0, 0, 0, 0.5);
+  border-right: 2px solid #a67c52;
+  font-family: 'Cinzel', serif;
+  color: #f1e3c0;
+  padding: 20px;
+}
+
+/* Style the main content area */
+mat-sidenav-content {
+  background: linear-gradient(135deg, #2c1a1a, #4d2e1e);
+  padding: 20px;
+  color: #f1e3c0;
+  font-family: 'Cinzel', serif;
 }

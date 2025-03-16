@@ -2,7 +2,7 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 
 import {
   CharacterEquipmentFrontend,
-  CommonItemParams,
+  CommonItemParams
 } from '../../../../../../../shared/src';
 import { CharacterEquipmentService } from './character-equipment.service';
 import { Subject, takeUntil } from 'rxjs';
@@ -12,7 +12,7 @@ import { ItemDetailsDialogComponent } from 'src/app/dialog/item-details/item-det
 @Component({
   selector: 'app-character-equipment',
   templateUrl: './character-equipment.component.html',
-  styleUrls: ['./character-equipment.component.css'],
+  styleUrls: ['./character-equipment.component.scss']
 })
 export class CharacterEquipmentComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
@@ -39,11 +39,11 @@ export class CharacterEquipmentComponent implements OnInit, OnDestroy {
 
           this.characterEquipment = response;
           this.isLoading = false;
-        },
+        }
       });
     this.characterEquipmentService.listCharacterEquipment({
       characterId: this.characterId,
-      populateItem: true,
+      populateItem: true
     });
   }
 
@@ -58,7 +58,7 @@ export class CharacterEquipmentComponent implements OnInit, OnDestroy {
   openItemDetailsDialog(item: number | CommonItemParams): void {
     this.dialog.open(ItemDetailsDialogComponent, {
       width: '500px',
-      data: { item },
+      data: { item }
     });
   }
 

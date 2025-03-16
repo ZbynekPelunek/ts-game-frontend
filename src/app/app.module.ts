@@ -12,6 +12,8 @@ import { HeaderComponent } from './header/header.component';
 import { SidenavMenuComponent } from './sidenav/menu/sidenav-menu.component';
 import { SidenavComponent } from './sidenav/sidenav.component';
 import { SidenavModule } from './sidenav/sidenav.module';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [
@@ -28,9 +30,12 @@ import { SidenavModule } from './sidenav/sidenav.module';
     AngularMaterialModule,
     AppRoutingModule,
     AuthModule,
-    SidenavModule
+    SidenavModule,
+    ReactiveFormsModule,
+    MatSnackBarModule
   ],
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}
+

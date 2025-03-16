@@ -2,9 +2,9 @@
 <mat-card *ngIf="!isLoading" class="currency-card">
   <mat-card-title>Currency</mat-card-title>
   <mat-card-content>
-    <cdk-virtual-scroll-viewport [itemSize]="1 * 1" class="currency">
-      <div *cdkVirtualFor="let cc of characterCurrencies">
-        <span>{{cc.currencyId.label}}: {{cc.amount}}</span>
+    <cdk-virtual-scroll-viewport itemSize="30" class="currency-viewport">
+      <div *cdkVirtualFor="let cc of characterCurrencies" class="currency-item">
+        <span>{{ cc.currencyId.label }}: {{ cc.amount }}</span>
       </div>
     </cdk-virtual-scroll-viewport>
   </mat-card-content>

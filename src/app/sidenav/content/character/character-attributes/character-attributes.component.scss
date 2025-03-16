@@ -1,0 +1,80 @@
+.rpg-attributes {
+  background: rgba(0, 0, 0, 0.6);
+  border: 2px solid #a67c52;
+  border-radius: 8px;
+  font-family: 'Cinzel', serif;
+  color: #f1e3c0;
+  overflow: visible; // ensure outer container doesn't clip inner content
+
+  --mdc-tab-indicator-active-indicator-color: #f2c24a;
+  --mat-tab-header-active-label-text-color: #f2c24a;
+  --mat-tab-header-pagination-icon-color: black;
+  --mat-tab-header-active-ripple-color: #f2c24a;
+  --mat-tab-header-inactive-ripple-color: #f1e3c0;
+  --mat-tab-header-active-focus-label-text-color: #f2c24a;
+  --mat-tab-header-active-hover-label-text-color: #f2c24a;
+  --mat-tab-header-active-focus-indicator-color: #f2c24a;
+  --mat-tab-header-active-hover-indicator-color: #f2c24a;
+  --mat-tab-header-inactive-hover-label-text-color: #f1e3c0;
+  --mat-tab-header-inactive-label-text-color: #f1e3c0;
+
+  // Tab header styling
+  .mat-tab-header {
+    background: transparent;
+    border-bottom: 2px solid #a67c52;
+  }
+
+  // Tab label styling
+  .mat-tab-labels {
+    .mat-tab-label {
+      font-size: 1.2em;
+      font-weight: bold;
+      text-transform: uppercase;
+      color: #f1e3c0 !important;
+      padding: 12px 16px;
+      transition:
+        color 0.3s,
+        border-bottom 0.3s;
+      background: transparent;
+    }
+    .mat-tab-label-active {
+      color: #d4af37 !important; // golden accent
+      border-bottom: 3px solid #d4af37 !important;
+    }
+    .mat-tab-label:hover {
+      color: #d4af37 !important;
+    }
+  }
+
+  // Override Angular Material tab body overflow and height using deep selectors
+  :host ::ng-deep .mat-tab-body-wrapper,
+  :host ::ng-deep .mat-tab-body {
+    overflow: visible !important;
+    height: auto !important;
+    max-height: none !important;
+  }
+
+  // Virtual scroll viewport for attributes – fixed height to show multiple items
+  .character-stats {
+    height: 200px; /* Adjust this value if needed */
+    overflow: auto;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 10px;
+    border-radius: 4px;
+    margin-top: 10px;
+  }
+
+  // Styling for each attribute item
+  .attribute-item {
+    padding: 5px;
+    border-bottom: 1px solid rgba(166, 124, 82, 0.5);
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    span {
+      font-size: 1em;
+    }
+  }
+}

@@ -1,0 +1,96 @@
+@import 'src/styles/_item-quality.scss';
+
+mat-progress-bar {
+  margin-top: 10px;
+
+  --mdc-linear-progress-active-indicator-color: rgb(255, 153, 0);
+  --mdc-linear-progress-track-color: #f1e3c0;
+  --mdc-linear-progress-active-indicator-height: 20px;
+  --mdc-linear-progress-track-height: 20px;
+}
+
+.adventure-card {
+  background: rgba(0, 0, 0, 0.6);
+  border: 2px solid #a67c52;
+  border-radius: 8px;
+  color: #f1e3c0;
+  padding: 10px;
+  margin: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
+
+  mat-card-title {
+    font-size: 1.5em;
+    margin-bottom: 5px;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
+  }
+
+  mat-card-subtitle {
+    color: #f1e3c0;
+    font-size: 1.2em;
+    margin-bottom: 5px;
+  }
+
+  mat-card-content {
+    font-size: 1em;
+    margin-bottom: 5px;
+  }
+
+  mat-card-actions {
+    display: flex;
+    justify-content: flex-end;
+  }
+}
+
+.adventure-action-buttons {
+  font-family: 'Cinzel', serif;
+  background: linear-gradient(180deg, #d4af37, #a67c52);
+  border: 2px solid #8b5e3c;
+  border-radius: 4px;
+  color: #2c1a1a;
+  padding: 8px 12px;
+  transition:
+    background 0.3s,
+    transform 0.3s;
+  margin-left: 5px;
+
+  &:hover {
+    background: linear-gradient(180deg, #f5d76e, #b88646);
+    transform: scale(1.05);
+  }
+}
+
+.adventures-viewport {
+  height: 100%;
+  width: 100%;
+  overflow-y: auto;
+  padding: 5px;
+}
+
+.adventure-item {
+  height: 100%;
+  margin-bottom: 10px;
+}
+
+.clickable-item {
+  cursor: pointer;
+}
+
+/* Ensure the grid list spans full width */
+.mat-grid-list {
+  width: 100%;
+}
+
+/* Global heading styling within the grid tiles */
+.mat-grid-tile h1 {
+  margin: 0;
+  font-size: 1.8em;
+  padding: 5px;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+/* Loading Template Styling */
+:host ::ng-deep h1 {
+  text-align: center;
+  padding: 20px;
+  color: #f1e3c0;
+}

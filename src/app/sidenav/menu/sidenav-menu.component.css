@@ -1,3 +1,33 @@
+/* Remove default list styling and add some padding */
 ul {
   list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Each menu item styling */
+ul li {
+  margin-bottom: 15px;
+}
+
+/* Style for the Angular Material button links in the sidenav */
+ul li a[mat-button] {
+  display: block;
+  width: 100%;
+  font-family: 'Cinzel', serif;
+  background: linear-gradient(180deg, #d4af37, #a67c52);
+  border: 2px solid #8b5e3c;
+  border-radius: 8px;
+  color: #2c1a1a;
+  padding: 10px;
+  text-align: center;
+  transition:
+    background 0.3s ease,
+    transform 0.3s ease;
+}
+
+/* Hover effects for the links */
+ul li a[mat-button]:hover {
+  background: linear-gradient(180deg, #f5d76e, #b88646);
+  transform: scale(1.05);
 }

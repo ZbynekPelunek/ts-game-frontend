@@ -1,73 +1,101 @@
-$quality-colors: (
-  common: gray,
-  uncommon: green,
-  rare: blue,
-  epic: purple,
-  legendary: orange,
-);
+@import 'src/styles/_item-quality.scss';
+
+.inventory-container {
+  width: 100%;
+  padding: 10px;
+  background: linear-gradient(135deg, #3e2f20, #2a1d13);
+  border: 3px solid #2a1d13;
+  border-radius: 10px;
+  box-sizing: border-box;
+}
 
 .inventory-grid {
-  display: grid;
-  grid-template-columns: repeat(10, 64px); // Adjust for desired columns
-  gap: 4px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  overflow-x: auto;
   padding: 10px;
 }
 
 .inventory-slot {
+  position: relative;
+  overflow: visible;
   width: 64px;
   height: 64px;
+  box-sizing: border-box; /* Include border in overall dimensions */
+  background: rgba(255, 255, 255, 0.1);
+  border: 6px solid #a67c52; /* Default 6px border */
+  border-radius: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #5a3e2b; // Brownish background
-  border: 2px solid #3b2a1e; // Brown outline
-  font-size: 12px;
-  color: white;
-  position: relative;
-  user-select: none;
+  text-align: center;
+  color: #f1e3c0;
+  cursor: pointer;
+  transition: transform 0.3s;
+  z-index: 1; /* Create stacking context so border remains behind overlay */
+
+  &:hover {
+    transform: scale(1.05);
+    z-index: 1; /* Ensure hover doesn't change the stacking order */
+  }
 }
 
-.inventory-item {
+.inventory-slot-item {
   width: 100%;
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.inventory-slot-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Overlay options appear over the entire slot, regardless of border */
+.inventory-options {
   position: absolute;
-  top: 0;
-  left: 0;
-}
+  top: -6px;
+  left: -6px;
+  width: calc(100% + 12px);
+  height: calc(100% + 12px);
+  z-index: 9999 !important;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 5px;
+  border-radius: 4px;
 
-.inventory-item img {
-  width: 48px;
-  height: 48px;
-}
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    text-align: center;
 
-@each $quality, $color in $quality-colors {
-  .quality-#{$quality} {
-    border-color: $color !important;
+    li {
+      padding: 5px 10px;
+      cursor: pointer;
+      color: #f1e3c0;
+      background: rgba(212, 175, 55, 0.2);
+      margin: 3px 0;
+      border-radius: 4px;
+      font-size: 0.8em;
+
+      &:hover {
+        background: rgba(212, 175, 55, 0.4);
+      }
+    }
   }
 }
 
-.options {
-  padding-left: 20px;
-  margin-top: 5px;
-}
-
-.options ul {
-  list-style: none;
-  padding: 0;
-}
-
-.options li {
-  cursor: pointer;
-  padding: 5px;
-  width: 80px;
-  height: 24px;
-  outline-color: greenyellow;
-  outline-style: double;
-  z-index: 100;
-  position: relative;
-  background-color: aqua;
-  color: black;
+.inventory-loading {
+  text-align: center;
+  color: #f1e3c0;
+  font-family: 'Cinzel', serif;
+  padding: 20px;
 }

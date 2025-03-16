@@ -7,14 +7,14 @@ import {
   MainAttributeNames,
   MiscAttributeNames,
   PrimaryAttributeNames,
-  SecondaryAttributeNames,
+  SecondaryAttributeNames
 } from '../../../../../../../shared/src';
 import { CharacterDetailsService } from './character-attributes.service';
 
 @Component({
   selector: 'app-character-attributes',
   templateUrl: './character-attributes.component.html',
-  styleUrls: ['./character-attributes.component.css'],
+  styleUrls: ['./character-attributes.component.scss']
 })
 export class CharacterAttributesComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
@@ -62,12 +62,12 @@ export class CharacterAttributesComponent implements OnInit, OnDestroy {
           this.characterAttributes = response;
           this.isLoading = false;
           this.generateStats();
-        },
+        }
       });
 
     this.characterDetailsService.getCharacterAttributes({
       characterId: this.characterId,
-      populateAttribute: true,
+      populateAttribute: true
     });
   }
 

@@ -1,9 +1,31 @@
 .currency-card {
-  height: 100%;
-  width: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  border: 2px solid #a67c52;
+  border-radius: 8px;
+  color: #f1e3c0;
+  font-family: 'Cinzel', serif;
+  text-align: center;
+  padding: 10px;
+  margin: 10px;
 }
 
-.currency{
-  height: 140px;
-  width: inherit;
+.currency-card mat-card-title {
+  font-size: 1.5em;
+  border-bottom: 1px solid #a67c52;
+  margin-bottom: 5px;
+  padding-bottom: 5px;
+}
+
+.currency-viewport {
+  height: 100px; /* Adjust based on your needs */
+  overflow: auto;
+}
+
+.currency-item {
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(166, 124, 82, 0.5);
+}
+
+.currency-item:last-child {
+  border-bottom: none;
 }

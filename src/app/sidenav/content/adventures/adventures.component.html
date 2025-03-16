@@ -35,7 +35,7 @@
                     <span *ngIf="reward.rewardId.items.length > 0">
                       <span *ngFor="let item of reward.rewardId.items">
                         <span *ngIf="isItem(item.itemId)">
-                          <span class="clickable-item" [style.color]="getItemQualityClass(item.itemId.quality)"
+                          <span class="clickable-item" [ngClass]="'quality-' + item.itemId.quality.toLowerCase()"
                                 (click)="openItemDetailsDialog(item.itemId)">
                             <strong>[{{ item.itemId.name }}]</strong>
                           </span>
@@ -60,18 +60,20 @@
     <!-- Adventures in Progress List -->
     <mat-grid-tile rowspan="3">
       <cdk-virtual-scroll-viewport itemSize="100" class="adventures-viewport" *ngIf="adventuresInProgress.length > 0">
-        <div *cdkVirtualFor="let adventure of adventuresInProgress" class="adventure-item">
+        <div *cdkVirtualFor="let result of adventuresInProgress" class="adventure-item">
           <mat-card class="adventure-card">
-            <mat-card-title>{{ adventure.adventureName }}</mat-card-title>
+            <mat-card-title>{{ result.adventureName }}</mat-card-title>
             <mat-card-content>
-              Completes: {{ adventure.timeFinish | date: 'mediumTime' }}
-              <mat-progress-bar mode="determinate" [value]="progressMap.get(adventure._id) || 0"></mat-progress-bar>
+              Completes: {{ result.timeFinish | date: 'mediumTime' }}
+              <mat-progress-bar mode="determinate" [value]="getProgressMapValue(result._id) || 0"></mat-progress-bar>
+              {{getProgressMapValue(result._id)}}%
             </mat-card-content>
             <mat-card-actions>
-              <button mat-button color="primary" class="adventure-action-buttons">
+              <button mat-button color="primary" (click)="onCancelAdventure(result._id)"
+                      class="adventure-action-buttons">
                 Cancel
               </button>
-              <button mat-button color="primary" class="adventure-action-buttons">
+              <button mat-button color="primary" (click)="onSkipAdventure(result)" class="adventure-action-buttons">
                 Skip
               </button>
             </mat-card-actions>
@@ -111,7 +113,7 @@
                   <span *ngIf="result.reward.items.length > 0">
                     <span *ngFor="let item of result.reward.items">
                       <span *ngIf="isItem(item.itemId)">
-                        <span class="clickable-item" [style.color]="getItemQualityClass(item.itemId.quality)"
+                        <span class="clickable-item" [ngClass]="'quality-' + item.itemId.quality"
                               (click)="openItemDetailsDialog(item.itemId)">
                           <strong>[{{ item.itemId.name }}]</strong>
                         </span>

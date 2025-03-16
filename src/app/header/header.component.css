@@ -1,18 +1,57 @@
-ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+/* Overall toolbar styling for an RPG look */
+mat-toolbar.rpg-header {
+  background: linear-gradient(135deg, #2c1a1a, #4d2e1e) !important;
+  border-bottom: 2px solid #a67c52;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+  font-family: 'Cinzel', serif;
+  color: #f1e3c0;
+  padding: 0 20px;
 }
 
-a {
+/* Logo styling */
+mat-toolbar .logo a {
+  color: #f1e3c0;
   text-decoration: none;
-  color: white;
+  font-size: 1.8em;
+  font-weight: bold;
 }
 
-ul {
+/* Spacer to push navigation to the right */
+.spacer {
+  flex: 1 1 auto;
+}
+
+/* Navigation links container */
+mat-toolbar ul.nav-links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
   display: flex;
 }
 
-.spacer {
-  flex: 1 1 auto;
+/* Each navigation item spacing */
+mat-toolbar ul.nav-links li {
+  margin-left: 20px;
+}
+
+/* Style for Angular Material buttons and links in the toolbar */
+mat-toolbar button,
+mat-toolbar a[mat-button] {
+  font-family: 'Cinzel', serif;
+  background: linear-gradient(180deg, #d4af37, #a67c52);
+  border: 2px solid #8b5e3c;
+  border-radius: 8px;
+  color: #2c1a1a;
+  font-size: 1em;
+  padding: 5px 15px;
+  transition:
+    background 0.3s ease,
+    transform 0.3s ease;
+}
+
+/* Hover effects for buttons and links */
+mat-toolbar button:hover,
+mat-toolbar a[mat-button]:hover {
+  background: linear-gradient(180deg, #f5d76e, #b88646);
+  transform: scale(1.05);
 }

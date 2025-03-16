@@ -1,7 +1,7 @@
 <mat-dialog-content class="item-dialog">
   <div class="item-header">
     <img [src]="data.item.icon" alt="{{ data.item.name }}" class="item-icon" />
-    <h2 [style.color]="getItemQualityClass(data.item.quality)">
+    <h2 [ngClass]="'quality-' + data.item.quality.toLowerCase()">
       {{ data.item.name }}
     </h2>
   </div>
@@ -32,8 +32,8 @@
     </p>
     <p *ngIf="data.item.levelReq"><strong>Level Required:</strong> {{ data.item.levelReq }}</p>
   </div>
-</mat-dialog-content>
 
-<mat-dialog-actions align="end">
-  <button mat-button (click)="closeDialog()">Close</button>
-</mat-dialog-actions>
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="closeDialog()">Close</button>
+  </mat-dialog-actions>
+</mat-dialog-content>

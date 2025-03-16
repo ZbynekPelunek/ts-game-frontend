@@ -12,10 +12,14 @@ import {
   Response_Result_POST,
   ResultDTO,
   ResultFrontend,
+  ResultGetActions,
+  ResultPatchActions,
+  ResultState
 } from '../../../../../../shared/src';
 import { BehaviorSubject } from 'rxjs';
 import { CharacterCreateService } from 'src/app/character-create/character-create.service';
 import { AdventureEvents, EventBusService } from 'src/app/eventBus.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 const BACKEND_URL = `${environment.apiUrl}`;
 
@@ -30,11 +34,13 @@ export class AdventuresService implements OnDestroy {
     ResultFrontend[]
   >([]);
   private timers = new Map<string, NodeJS.Timeout>();
+  progressMap: Map<string, number> = new Map();
 
   constructor(
     private http: HttpClient,
     private characterCreateService: CharacterCreateService,
-    private eventBus: EventBusService
+    private eventBus: EventBusService,
+    private snackBar: MatSnackBar
   ) {
     this.characterId = characterCreateService.getCharacterId();
     this.eventBus.getEvents().subscribe((event) => {
@@ -76,7 +82,7 @@ export class AdventuresService implements OnDestroy {
       .get<Response_Adventure_GET_all>(
         `${BACKEND_URL}/${ApiRoutes.ADVENTURES}`,
         {
-          params,
+          params
         }
       )
       .subscribe({
@@ -84,30 +90,26 @@ export class AdventuresService implements OnDestroy {
           if (response.success) {
             this.adventuresSubject.next(response.adventures);
           }
-        },
+        }
       });
   }
 
   listResults(query: Request_Result_GET_all_query) {
     let params = new HttpParams();
-    const { characterId, inProgress, rewardCollected } = query;
+    const { characterId, state } = query;
 
     if (characterId) {
       params = params.append('characterId', characterId);
     }
 
-    if (inProgress !== undefined) {
-      params = params.append('inProgress', String(inProgress));
-    }
-
-    if (rewardCollected !== undefined) {
-      params = params.append('rewardCollected', String(rewardCollected));
+    if (state) {
+      params = params.append('state', state);
     }
 
     return this.http.get<Response_Result_GET_all>(
       `${BACKEND_URL}/${ApiRoutes.RESULTS}`,
       {
-        params,
+        params
       }
     );
   }
@@ -115,22 +117,21 @@ export class AdventuresService implements OnDestroy {
   listAdventuresInProgress() {
     this.listResults({
       characterId: this.characterId,
-      inProgress: true,
+      state: ResultState.IN_PROGRESS
     }).subscribe({
       next: (response) => {
         if (response.success) {
           //console.log('listAdventuresInProgress response: ', response.results);
           this.adventuresInProgressSubject.next(response.results);
         }
-      },
+      }
     });
   }
 
   listAdventuresUncollectedRewards() {
     this.listResults({
       characterId: this.characterId,
-      rewardCollected: false,
-      inProgress: false,
+      state: ResultState.FINISHED
     }).subscribe({
       next: (response) => {
         if (response.success) {
@@ -140,7 +141,7 @@ export class AdventuresService implements OnDestroy {
           );
           this.adventuresUncollectedRewardSubject.next(response.results);
         }
-      },
+      }
     });
   }
 
@@ -148,7 +149,10 @@ export class AdventuresService implements OnDestroy {
     this.http
       .patch<{
         success: boolean;
-      }>(`${BACKEND_URL}/${ApiRoutes.RESULTS}/${resultId}/finish-result`, null)
+      }>(
+        `${BACKEND_URL}/${ApiRoutes.RESULTS}/${resultId}/${ResultPatchActions.FINISH_RESULT}`,
+        null
+      )
       .subscribe({
         next: (response) => {
           if (response.success) {
@@ -156,40 +160,111 @@ export class AdventuresService implements OnDestroy {
             this.eventBus.emitEvent(
               AdventureEvents.REFRESH_UNCOLLECTED_REWARDS
             );
+            this.progressMap.delete(resultId);
+          }
+        }
+      });
+  }
+
+  cancelAdventure(resultId: string) {
+    return this.http
+      .patch<{
+        success: boolean;
+      }>(
+        `${BACKEND_URL}/${ApiRoutes.RESULTS}/${resultId}/${ResultPatchActions.CANCEL_ADVENTURE}`,
+        null
+      )
+      .subscribe({
+        next: (response) => {
+          //console.log('Collect Reward response: ', response);
+          if (response.success) {
+            this.eventBus.emitEvent(AdventureEvents.REFRESH_INPROGRESS);
+            this.eventBus.emitEvent(
+              AdventureEvents.REFRESH_UNCOLLECTED_REWARDS
+            );
+            if (this.timers.has(resultId)) {
+              const timer = this.timers.get(resultId);
+              clearTimeout(timer);
+              this.timers.delete(resultId);
+              this.progressMap.delete(resultId);
+            }
           }
         },
+        error: (err) => {
+          console.error('Error creating character', err);
+        }
+      });
+  }
+
+  skipAdventure(result: ResultFrontend) {
+    const resultId = result._id;
+
+    return this.http
+      .patch<{
+        success: boolean;
+      }>(
+        `${BACKEND_URL}/${ApiRoutes.RESULTS}/${resultId}/${ResultPatchActions.SKIP_ADVENTURE}`,
+        null
+      )
+      .subscribe({
+        next: (response) => {
+          //console.log('Collect Reward response: ', response);
+          if (response.success) {
+            this.eventBus.emitEvent(AdventureEvents.REFRESH_INPROGRESS);
+            if (this.timers.has(resultId)) {
+              const timer = this.timers.get(resultId);
+              this.finishResult(resultId);
+              clearTimeout(timer);
+              this.timers.delete(resultId);
+            }
+          }
+        }
       });
   }
 
   checkResults() {
     this.http
-      .get(`${BACKEND_URL}/${ApiRoutes.RESULTS}/check-in-progress`)
+      .patch(
+        `${BACKEND_URL}/${ApiRoutes.RESULTS}/${ResultGetActions.CHECK_IN_PROGRESS}`,
+        {
+          characterId: this.characterId
+        }
+      )
       .subscribe({
         next: () => {
           this.eventBus.emitEvent(AdventureEvents.REFRESH_INPROGRESS);
           this.eventBus.emitEvent(AdventureEvents.REFRESH_UNCOLLECTED_REWARDS);
-        },
+        }
       });
   }
 
   collectReward(resultId: string) {
     return this.http
-      .get<{
+      .patch<{
         success: boolean;
-        finishedResults: any[];
-      }>(`${BACKEND_URL}/${ApiRoutes.RESULTS}/${resultId}/collect-reward`)
+      }>(
+        `${BACKEND_URL}/${ApiRoutes.RESULTS}/${resultId}/${ResultPatchActions.COLLECT_REWARD}`,
+        null
+      )
       .subscribe({
         next: (response) => {
           //console.log('Collect Reward response: ', response);
-          this.eventBus.emitEvent(AdventureEvents.REFRESH_UNCOLLECTED_REWARDS);
+          if (response.success) {
+            this.eventBus.emitEvent(
+              AdventureEvents.REFRESH_UNCOLLECTED_REWARDS
+            );
+          }
         },
+        error: (err) => {
+          this.snackBar.open(err.error.error, 'OK');
+        }
       });
   }
 
   startAdventure(adventureId: number) {
     const resultBody: Request_Result_POST_body = {
       adventureId,
-      characterId: this.characterId,
+      characterId: this.characterId
     };
 
     this.http
@@ -204,7 +279,7 @@ export class AdventuresService implements OnDestroy {
             this.startAdventureTimer(response.result);
           }
           this.eventBus.emitEvent(AdventureEvents.REFRESH_INPROGRESS);
-        },
+        }
       });
   }
 
@@ -246,7 +321,7 @@ export class AdventuresService implements OnDestroy {
         ...r,
         resultId: r._id,
         timeFinish: r.timeFinish,
-        timeStart: r.timeStart,
+        timeStart: r.timeStart
       };
     });
 

@@ -1,19 +1,24 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  HostListener,
+  Input,
+  OnDestroy,
+  OnInit
+} from '@angular/core';
 import { CharacterInventoryService } from './character-inventory.service';
 import { Subject, takeUntil } from 'rxjs';
 import {
   CommonItemParams,
   InventoryFrontend,
-  ItemQuality,
+  InventoryItem
 } from '../../../../../../../shared/src';
 import { ItemDetailsDialogComponent } from 'src/app/dialog/item-details/item-details-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
-import { ITEM_QUALITY_COLORS } from 'src/app/sidenav/utils/item-quality.utils';
 
 @Component({
   selector: 'app-character-inventory',
   templateUrl: './character-inventory.component.html',
-  styleUrls: ['./character-inventory.component.css'],
+  styleUrls: ['./character-inventory.component.scss']
 })
 export class CharacterInventoryComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
@@ -22,7 +27,7 @@ export class CharacterInventoryComponent implements OnInit, OnDestroy {
 
   isLoading = true;
 
-  selectedItem: any = null;
+  selectedItem: InventoryItem = null;
 
   constructor(
     private characterInventoryService: CharacterInventoryService,
@@ -41,12 +46,25 @@ export class CharacterInventoryComponent implements OnInit, OnDestroy {
 
           this.inventorySlots = response;
           this.isLoading = false;
-        },
+        }
       });
     this.characterInventoryService.listInventorySlots({
       characterId: this.characterId,
-      populateItem: true,
+      populateItem: true
     });
+  }
+
+  // Listen for clicks outside of the inventory options
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    const target = event.target as HTMLElement;
+    const clickedInside =
+      target.closest('.inventory-slot-item') ||
+      target.closest('.inventory-options');
+
+    if (!clickedInside) {
+      this.selectedItem = null;
+    }
   }
 
   onItemClick(item: any) {
@@ -60,23 +78,19 @@ export class CharacterInventoryComponent implements OnInit, OnDestroy {
   openItemDetailsDialog(item: number | CommonItemParams): void {
     this.dialog.open(ItemDetailsDialogComponent, {
       width: '500px',
-      data: { item },
+      data: { item }
     });
-  }
-
-  getItemQualityClass(quality: ItemQuality): string {
-    return ITEM_QUALITY_COLORS[quality] || ITEM_QUALITY_COLORS['COMMON'];
   }
 
   onEquip(inventorySlotId: string) {
     this.characterInventoryService.equipItemFromInventory({
-      inventoryId: inventorySlotId,
+      inventoryId: inventorySlotId
     });
   }
 
   onSell(inventorySlotId: string) {
     this.characterInventoryService.sellItem({
-      inventorySlotId,
+      inventorySlotId
     });
   }
 

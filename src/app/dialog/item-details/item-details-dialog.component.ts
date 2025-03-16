@@ -6,16 +6,14 @@ import {
   ArmorType,
   CommonItemParams,
   CommonItemsEquipmenParams,
-  ItemQuality,
   Weapon,
-  WeaponType,
+  WeaponType
 } from '../../../../../shared/src';
-import { ITEM_QUALITY_COLORS } from 'src/app/sidenav/utils/item-quality.utils';
 
 @Component({
   selector: 'app-item-details-dialog',
   templateUrl: './item-details-dialog.component.html',
-  styleUrls: ['./item-details-dialog.component.scss'],
+  styleUrls: ['./item-details-dialog.component.scss']
 })
 export class ItemDetailsDialogComponent {
   constructor(
@@ -25,10 +23,6 @@ export class ItemDetailsDialogComponent {
 
   closeDialog(): void {
     this.dialogRef.close();
-  }
-
-  getItemQualityClass(quality: ItemQuality): string {
-    return ITEM_QUALITY_COLORS[quality] || ITEM_QUALITY_COLORS['COMMON'];
   }
 
   isEquipment(item: CommonItemParams): item is Armor | Weapon {

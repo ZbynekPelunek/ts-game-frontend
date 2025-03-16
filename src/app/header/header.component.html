@@ -1,14 +1,16 @@
-<mat-toolbar color="primary">
-  <span><a [routerLink]="userIsAuthenticated ? '/ui/menu/character' : '/'">Game</a></span>
+<mat-toolbar color="primary" class="rpg-header">
+  <span class="logo">
+    <a [routerLink]="isUserAuthenticated ? '/ui/menu/character' : '/'">Game</a>
+  </span>
   <span class="spacer"></span>
-  <ul>
-    <li *ngIf="!userIsAuthenticated">
+  <ul class="nav-links">
+    <li *ngIf="!isUserAuthenticated">
       <a mat-button routerLink="/ui/auth/login" routerLinkActive="mat-accent">Login</a>
     </li>
-    <li *ngIf="!userIsAuthenticated">
+    <li *ngIf="!isUserAuthenticated">
       <a mat-button routerLink="/ui/auth/signup" routerLinkActive="mat-accent">Sign Up</a>
     </li>
-    <li *ngIf="userIsAuthenticated">
+    <li *ngIf="isUserAuthenticated">
       <button mat-button (click)="onLogout()">Logout</button>
     </li>
   </ul>

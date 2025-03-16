@@ -6,21 +6,19 @@ import {
   Adventure,
   CommonItemsEquipmenParams,
   Currency,
-  ItemQuality,
   ResultFrontend,
-  Reward,
+  Reward
 } from '../../../../../../shared/src';
 import { MatDialog } from '@angular/material/dialog';
 import { ItemDetailsDialogComponent } from 'src/app/dialog/item-details/item-details-dialog.component';
-import { ITEM_QUALITY_COLORS } from '../../utils/item-quality.utils';
 
 @Component({
   templateUrl: './adventures.component.html',
-  styleUrls: ['./adventures.component.css'],
+  styleUrls: ['./adventures.component.scss']
 })
 export class AdventuresComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
-  progressMap: Map<string, number> = new Map();
+
   progressInterval: NodeJS.Timeout;
 
   areAdventuresLoading: boolean;
@@ -54,7 +52,7 @@ export class AdventuresComponent implements OnInit, OnDestroy {
         next: (response) => {
           //console.log('Called adventures: ', response);
           this.adventures = response;
-        },
+        }
       });
     this.adventuresService.listAdventures({ populateReward: true });
   }
@@ -68,7 +66,7 @@ export class AdventuresComponent implements OnInit, OnDestroy {
           //console.log('List Adventures in progress response: ', response);
 
           this.adventuresInProgress = response;
-        },
+        }
       });
     this.adventuresService.checkResults();
     this.adventuresService.startTimersInProgress(this.adventuresInProgress);
@@ -83,7 +81,7 @@ export class AdventuresComponent implements OnInit, OnDestroy {
           //console.log('loadAdventuresRewardNotCollected response: ', response);
 
           this.adventureResultsWithoutCollectedRewards = response;
-        },
+        }
       });
     this.adventuresService.listAdventuresUncollectedRewards();
   }
@@ -105,6 +103,15 @@ export class AdventuresComponent implements OnInit, OnDestroy {
   onStartAdventure(adventureId: number) {
     //console.log(`Starting adventure: ${adventureId}`);
     this.adventuresService.startAdventure(adventureId);
+    console.log('progressMap ', this.adventuresService.progressMap);
+  }
+
+  onCancelAdventure(resultId: string) {
+    this.adventuresService.cancelAdventure(resultId);
+  }
+
+  onSkipAdventure(result: ResultFrontend) {
+    this.adventuresService.skipAdventure(result);
   }
 
   onCollectReward(result: ResultFrontend) {
@@ -115,34 +122,35 @@ export class AdventuresComponent implements OnInit, OnDestroy {
   openItemDetailsDialog(item: CommonItemsEquipmenParams): void {
     this.dialog.open(ItemDetailsDialogComponent, {
       width: '500px',
-      data: { item },
+      data: { item }
     });
   }
 
   startProgressUpdates(): void {
     this.progressInterval = setInterval(() => {
       this.updateProgress();
-    }, 1000);
+    }, 500);
   }
 
   updateProgress(): void {
     const now = Date.now();
 
-    this.adventuresInProgress.forEach((adventure) => {
-      const finishTime = new Date(adventure.timeFinish).getTime();
-      const startTime = new Date(adventure.timeStart).getTime();
+    this.adventuresInProgress.forEach((result) => {
+      const finishTime = new Date(result.timeFinish).getTime();
+      const startTime = new Date(result.timeStart).getTime();
 
       if (now < finishTime) {
         const elapsed = now - startTime;
         const total = finishTime - startTime;
         const progress = Math.round((elapsed / total) * 100);
-        this.progressMap.set(adventure._id, progress);
+        this.adventuresService.progressMap.set(result._id, progress);
       }
     });
   }
 
-  getItemQualityClass(quality: ItemQuality): string {
-    return ITEM_QUALITY_COLORS[quality] || ITEM_QUALITY_COLORS['COMMON'];
+  getProgressMapValue(resultId: string): number {
+    console.log('getProgressMapValue() called');
+    return this.adventuresService.progressMap.get(resultId);
   }
 
   ngOnDestroy(): void {

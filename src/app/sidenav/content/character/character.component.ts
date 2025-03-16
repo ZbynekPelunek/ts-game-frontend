@@ -7,43 +7,32 @@ import { CharacterFrontend } from '../../../../../../shared/src';
 import { SidenavService } from '../../sidenav.service';
 
 interface Tile {
-  color: string;
   cols: number;
   rows: number;
-  text: string;
 }
 
 @Component({
   selector: 'app-character',
   templateUrl: './character.component.html',
-  styleUrls: ['./character.component.css'],
+  styleUrls: ['./character.component.css']
 })
 export class CharacterComponent implements OnInit, OnDestroy {
   characterTile: Tile = {
-    text: 'Character',
     cols: 2,
-    rows: 1,
-    color: 'lightblue',
+    rows: 1
   };
   currencyTile: Tile = {
-    text: 'Currencies',
     cols: 1,
-    rows: 1,
-    color: 'lightgreen',
+    rows: 1
   };
   equipmentTile: Tile = {
-    text: 'Equipment',
     cols: 2,
-    rows: 1,
-    color: 'lightpink',
+    rows: 1
   };
   inventoryTile: Tile = {
-    text: 'Inventory',
     cols: 5,
-    rows: 1,
-    color: '#DDBDF1',
+    rows: 1
   };
-
   private charSub: Subscription;
   characterId: string;
 
@@ -66,19 +55,9 @@ export class CharacterComponent implements OnInit, OnDestroy {
         this.playerCharacter = { ...response.character };
         this.isLoading = false;
         console.log('...character data fetched.: ', response);
-      },
+      }
     });
   }
-
-  // openItemDialog(item: InventoryItem): void {
-  //   console.log('item clicked', item);
-  //   if (item.itemType === ItemType.EQUIPMENT) {
-  //     this.equipmentDialog.open(EquipmentDialogComponent, {
-  //       width: '250px',
-  //       data: item
-  //     });
-  //   }
-  // }
 
   ngOnDestroy(): void {
     this.charSub?.unsubscribe();

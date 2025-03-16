@@ -1,11 +1,9 @@
 <mat-spinner *ngIf="isLoading"></mat-spinner>
-<mat-card *ngIf="!isLoading">
+<mat-card *ngIf="!isLoading" class="character-page">
   <mat-grid-list cols="5" rowHeight="2:3">
-    <mat-grid-tile [style.background]="characterTile.color" [colspan]="characterTile.cols"
-                   [rowspan]="characterTile.rows">
-      <mat-grid-tile-header>{{characterTile.text}}</mat-grid-tile-header>
-      <mat-card class="char-details">
-        <mat-card-title>{{ playerCharacter.name }}</mat-card-title>
+    <mat-grid-tile [colspan]="characterTile.cols" [rowspan]="characterTile.rows">
+      <mat-card class="character-details">
+        <h1>{{ playerCharacter.name }}</h1>
         <mat-card-subtitle>Level {{ playerCharacter.level}}</mat-card-subtitle>
         <mat-card-subtitle>[{{ playerCharacter.currentExperience }}/{{
           playerCharacter.maxExperience}}]</mat-card-subtitle>
@@ -16,25 +14,18 @@
       </mat-card>
 
     </mat-grid-tile>
-    <mat-grid-tile [style.background]="currencyTile.color" [colspan]="currencyTile.cols" [rowspan]="currencyTile.rows">
+    <mat-grid-tile [colspan]="currencyTile.cols" [rowspan]="currencyTile.rows">
       <div class="character-currency">
-        <mat-grid-tile-header>{{currencyTile.text}}</mat-grid-tile-header>
         <app-character-currencies [characterId]="playerCharacter.characterId"></app-character-currencies>
       </div>
     </mat-grid-tile>
-    <mat-grid-tile [style.background]="equipmentTile.color" [colspan]="equipmentTile.cols"
-                   [rowspan]="equipmentTile.rows">
+    <mat-grid-tile [colspan]="equipmentTile.cols" [rowspan]="equipmentTile.rows">
       <div class="character-equipment">
-        <mat-grid-tile-header>{{equipmentTile.text}}</mat-grid-tile-header>
         <app-character-equipment [characterId]="playerCharacter.characterId"></app-character-equipment>
       </div>
     </mat-grid-tile>
-    <mat-grid-tile [style.background]="inventoryTile.color" [colspan]="inventoryTile.cols"
-                   [rowspan]="inventoryTile.rows">
+    <mat-grid-tile [colspan]="inventoryTile.cols" [rowspan]="inventoryTile.rows">
       <div class="character-inventory">
-        <!-- <div>
-          <mat-grid-tile-header>{{inventoryTile.text}}</mat-grid-tile-header>
-        </div> -->
         <app-character-inventory [characterId]="playerCharacter.characterId"></app-character-inventory>
       </div>
     </mat-grid-tile>

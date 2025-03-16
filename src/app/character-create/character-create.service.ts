@@ -4,7 +4,11 @@ import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
-import { Response_Character_POST } from '../../../../shared/src';
+import {
+  Request_Character_POST_body,
+  Response_Character_POST
+} from '../../../../shared/src';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 const BACKEND_URL = `${environment.apiUrl}`;
 
@@ -17,7 +21,8 @@ export class CharacterCreateService {
 
   constructor(
     private router: Router,
-    private http: HttpClient
+    private http: HttpClient,
+    private snackBar: MatSnackBar
   ) {}
 
   setCharCreatingValue(value: boolean): void {
@@ -28,13 +33,9 @@ export class CharacterCreateService {
     return this.characterId;
   }
 
-  create(accountId: string): void {
-    const generateRandomInt = Math.floor(Math.random() * 10000000) + 1;
+  createCharacter(body: Request_Character_POST_body) {
     this.http
-      .post<Response_Character_POST>(`${BACKEND_URL}/characters`, {
-        accountId,
-        name: `TESTNAME${generateRandomInt}`,
-      })
+      .post<Response_Character_POST>(`${BACKEND_URL}/characters`, body)
       .subscribe({
         next: (response) => {
           console.log('character created: ', response);
@@ -45,6 +46,13 @@ export class CharacterCreateService {
           this.setCharCreatingValue(false);
           this.router.navigate(['/ui/menu/character']);
         },
+        error: (err) => {
+          this.snackBar.open(err, 'OK', {
+            duration: 30000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top'
+          });
+        }
       });
   }
 }

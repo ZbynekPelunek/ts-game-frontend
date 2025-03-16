@@ -7,19 +7,24 @@ import { CharacterCreateService } from '../character-create/character-create.ser
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.css']
+  styleUrls: ['./header.component.css'],
 })
 export class HeaderComponent implements OnInit, OnDestroy {
-  userIsAuthenticated = false;
+  isUserAuthenticated = false;
   private authListenerSubs!: Subscription;
 
-  constructor(private authService: AuthService, private charCreateService: CharacterCreateService) { }
+  constructor(
+    private authService: AuthService,
+    private charCreateService: CharacterCreateService
+  ) {}
 
   ngOnInit(): void {
-    this.userIsAuthenticated = this.authService.getIsAuth();
-    this.authListenerSubs = this.authService.getAuthStatusListener().subscribe(isAuthenticated => {
-      this.userIsAuthenticated = isAuthenticated;
-    });
+    this.isUserAuthenticated = this.authService.getIsAuth();
+    this.authListenerSubs = this.authService
+      .getAuthStatusListener()
+      .subscribe((isAuthenticated) => {
+        this.isUserAuthenticated = isAuthenticated;
+      });
   }
 
   onLogout() {

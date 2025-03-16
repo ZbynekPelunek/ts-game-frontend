@@ -1,39 +1,33 @@
 <mat-spinner *ngIf="isLoading"></mat-spinner>
-<mat-tab-group *ngIf="!isLoading">
-  <mat-tab label="Main">
-    <cdk-virtual-scroll-viewport [itemSize]="1 * 1" class="character-stats">
-      <div *cdkVirtualFor="let attribute of mainAttributes">
-        <span>{{attribute.attributeName}}: {{attribute.totalValue}}
-          <!-- <span *ngIf="attribute.attribute.isPercent">%</span> -->
-        </span>
+<mat-tab-group *ngIf="!isLoading" class="rpg-attributes" dynamicHeight>
+  <mat-tab label="Main" class="main-label">
+    <cdk-virtual-scroll-viewport itemSize="30" class="character-stats">
+      <div *cdkVirtualFor="let attribute of mainAttributes" class="attribute-item">
+        <span>{{ attribute.attributeName }}: {{ attribute.totalValue }}</span>
       </div>
     </cdk-virtual-scroll-viewport>
   </mat-tab>
 
   <mat-tab label="Primary">
-    <cdk-virtual-scroll-viewport [itemSize]="1 * 1" class="character-stats">
-      <div *cdkVirtualFor="let attribute of primaryAttributes">
-        <span>{{attribute.attributeName}}: {{attribute.totalValue}}
-          <!-- <span *ngIf="attribute.attribute.isPercent">%</span> -->
-        </span>
+    <cdk-virtual-scroll-viewport itemSize="30" class="character-stats">
+      <div *cdkVirtualFor="let attribute of primaryAttributes" class="attribute-item">
+        <span>{{ attribute.attributeName }}: {{ attribute.totalValue }}</span>
       </div>
     </cdk-virtual-scroll-viewport>
   </mat-tab>
+
   <mat-tab label="Secondary">
-    <cdk-virtual-scroll-viewport [itemSize]="1 * 1" class="character-stats">
-      <div *cdkVirtualFor="let attribute of secondaryAttributes">
-        <span>{{attribute.attributeName}}: {{attribute.totalValue}}
-          <!-- <span *ngIf="attribute.attribute.isPercent">%</span> -->
-        </span>
+    <cdk-virtual-scroll-viewport itemSize="30" class="character-stats">
+      <div *cdkVirtualFor="let attribute of secondaryAttributes" class="attribute-item">
+        <span>{{ attribute.attributeName }}: {{ attribute.totalValue }}</span>
       </div>
     </cdk-virtual-scroll-viewport>
   </mat-tab>
+
   <mat-tab label="Misc">
-    <cdk-virtual-scroll-viewport [itemSize]="1 * 1" class="character-stats">
-      <div *cdkVirtualFor="let attribute of miscAttributes">
-        <span>{{attribute.attributeName}}: {{attribute.totalValue}}
-          <!-- <span *ngIf="attribute.attribute.isPercent">%</span> -->
-        </span>
+    <cdk-virtual-scroll-viewport itemSize="30" class="character-stats">
+      <div *cdkVirtualFor="let attribute of miscAttributes" class="attribute-item">
+        <span>{{ attribute.attributeName }}: {{ attribute.totalValue }}</span>
       </div>
     </cdk-virtual-scroll-viewport>
   </mat-tab>

@@ -1,0 +1,32 @@
+// Define quality color variables
+$quality-common-color: white;
+$quality-uncommon-color: #10ee10;
+$quality-rare-color: rgb(0, 171, 255);
+$quality-epic-color: #df47df;
+$quality-legendary-color: #d98c00;
+
+// Define quality border classes
+.quality-common {
+  border-color: $quality-common-color !important;
+  color: $quality-common-color !important;
+}
+
+.quality-uncommon {
+  border-color: $quality-uncommon-color !important;
+  color: $quality-uncommon-color !important;
+}
+
+.quality-rare {
+  border-color: $quality-rare-color !important;
+  color: $quality-rare-color !important;
+}
+
+.quality-epic {
+  border-color: $quality-epic-color !important;
+  color: $quality-epic-color !important;
+}
+
+.quality-legendary {
+  border-color: $quality-legendary-color !important;
+  color: $quality-legendary-color !important;
+}
