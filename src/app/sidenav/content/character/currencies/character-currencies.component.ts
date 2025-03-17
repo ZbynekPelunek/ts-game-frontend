@@ -8,7 +8,7 @@ import { Subject, takeUntil } from 'rxjs';
 @Component({
   selector: 'app-character-currencies',
   templateUrl: './character-currencies.component.html',
-  styleUrls: ['./character-currencies.component.css'],
+  styleUrls: ['./character-currencies.component.css']
 })
 export class CharacterCurrenciesComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
@@ -31,11 +31,11 @@ export class CharacterCurrenciesComponent implements OnInit, OnDestroy {
           console.log('character currencies response: ', response);
           this.characterCurrencies = response;
           this.isLoading = false;
-        },
+        }
       });
     this.characterCurrenciesService.listCharacterCurrencies({
       characterId: this.characterId,
-      populateCurrency: true,
+      populateCurrency: 'true'
     });
   }
   ngOnDestroy(): void {

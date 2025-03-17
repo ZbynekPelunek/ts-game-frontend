@@ -5,8 +5,8 @@ import { Subject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 import {
-  Request_Account_POST_body,
-  Response_Account_POST,
+  CreateAccountRequestBody,
+  CreateAccountResponse
 } from '../../../../shared/src';
 
 const BACKEND_URL = `${environment.apiUrl}`;
@@ -35,14 +35,14 @@ export class AuthService {
   }
 
   signUp(): void {
-    const requestBody: Request_Account_POST_body = {
+    const requestBody: CreateAccountRequestBody = {
       username: 'test',
       email: 'test1@test.test',
-      password: '123',
+      password: '123'
     };
 
     this.http
-      .post<Response_Account_POST>(`${BACKEND_URL}/accounts`, requestBody)
+      .post<CreateAccountResponse>(`${BACKEND_URL}/accounts`, requestBody)
       .subscribe({
         next: (response) => {
           console.log('signed up: ', response);
@@ -52,7 +52,7 @@ export class AuthService {
           this.isAuthenticated = true;
           this.authStatusListener.next(true);
           this.router.navigate(['ui/character-create']);
-        },
+        }
       });
   }
 

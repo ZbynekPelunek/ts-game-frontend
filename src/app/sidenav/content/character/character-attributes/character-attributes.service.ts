@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import {
   ApiRoutes,
   CharacterAttributeDTO,
-  ResponseCharacterAttributeList,
+  ListCharacterAttributesResponse
 } from '../../../../../../../shared/src';
 import { environment } from 'src/environments/environment';
 import { BehaviorSubject } from 'rxjs';
@@ -27,7 +27,7 @@ export class CharacterDetailsService {
       if (event === CharacterEvents.REFRESH_ATTRIBUTES) {
         this.getCharacterAttributes({
           characterId: this.characterId,
-          populateAttribute: true,
+          populateAttribute: true
         });
       }
     });
@@ -50,7 +50,7 @@ export class CharacterDetailsService {
     }
 
     this.http
-      .get<ResponseCharacterAttributeList>(
+      .get<ListCharacterAttributesResponse>(
         `${BACKEND_URL}/${ApiRoutes.CHARACTER_ATTRIBUTES}`,
         { params: queryParams }
       )
@@ -59,7 +59,7 @@ export class CharacterDetailsService {
           if (response.success) {
             this.attributesSubject.next(response.characterAttributes);
           }
-        },
+        }
       });
   }
 }

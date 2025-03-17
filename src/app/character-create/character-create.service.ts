@@ -5,8 +5,8 @@ import { Subject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 import {
-  Request_Character_POST_body,
-  Response_Character_POST
+  CreateCharacterRequestBody,
+  CreateCharacterResponse
 } from '../../../../shared/src';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -33,9 +33,9 @@ export class CharacterCreateService {
     return this.characterId;
   }
 
-  createCharacter(body: Request_Character_POST_body) {
+  createCharacter(body: CreateCharacterRequestBody) {
     this.http
-      .post<Response_Character_POST>(`${BACKEND_URL}/characters`, body)
+      .post<CreateCharacterResponse>(`${BACKEND_URL}/characters`, body)
       .subscribe({
         next: (response) => {
           console.log('character created: ', response);

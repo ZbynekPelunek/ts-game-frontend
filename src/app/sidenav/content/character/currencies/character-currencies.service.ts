@@ -2,11 +2,9 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
   ApiRoutes,
-  CharacterAttributeDTO,
   CharacterCurrencyFrontend,
-  Request_CharacterCurrency_GET_all_query,
-  Response_CharacterCurrency_GET_all,
-  ResponseCharacterAttributeList,
+  ListCharacterCurrenciesQuery,
+  ListCharacterCurrenciesResponse
 } from '../../../../../../../shared/src';
 import { environment } from 'src/environments/environment';
 import { BehaviorSubject } from 'rxjs';
@@ -32,7 +30,7 @@ export class CharacterCurrenciesService {
       if (event === CharacterEvents.REFRESH_CURRENCIES) {
         this.listCharacterCurrencies({
           characterId: this.characterId,
-          populateCurrency: true,
+          populateCurrency: 'true'
         });
       }
     });
@@ -42,7 +40,7 @@ export class CharacterCurrenciesService {
     return this.currenciesSubject.asObservable();
   }
 
-  listCharacterCurrencies(params: Request_CharacterCurrency_GET_all_query) {
+  listCharacterCurrencies(params: ListCharacterCurrenciesQuery) {
     let queryParams = new HttpParams();
 
     for (const key in params) {
@@ -52,7 +50,7 @@ export class CharacterCurrenciesService {
     }
 
     this.http
-      .get<Response_CharacterCurrency_GET_all>(
+      .get<ListCharacterCurrenciesResponse>(
         `${BACKEND_URL}/${ApiRoutes.CHARACTER_CURRENCIES}`,
         { params: queryParams }
       )
@@ -61,7 +59,7 @@ export class CharacterCurrenciesService {
           if (response.success) {
             this.currenciesSubject.next(response.characterCurrencies);
           }
-        },
+        }
       });
   }
 }

@@ -4,8 +4,8 @@ import {
   ApiRoutes,
   CharacterEquipmentFrontend,
   CharacterEquipmentPatchActions,
-  Request_CharacterEquipment_GET_all_query,
-  Response_CharacterEquipment_GET_all,
+  ListCharacterEquipmentsRequestQuery,
+  ListCharacterEquipmentsResponse
 } from '../../../../../../../shared/src';
 import { environment } from 'src/environments/environment';
 import { BehaviorSubject } from 'rxjs';
@@ -31,7 +31,7 @@ export class CharacterEquipmentService {
       if (event === CharacterEvents.REFRESH_EQUIPMENT) {
         this.listCharacterEquipment({
           characterId: this.characterId,
-          populateItem: true,
+          populateItem: 'true'
         });
       }
     });
@@ -41,7 +41,7 @@ export class CharacterEquipmentService {
     return this.equipmentSubject.asObservable();
   }
 
-  listCharacterEquipment(params: Request_CharacterEquipment_GET_all_query) {
+  listCharacterEquipment(params: ListCharacterEquipmentsRequestQuery) {
     let queryParams = new HttpParams();
 
     // Iterate over the object and append the params
@@ -52,16 +52,16 @@ export class CharacterEquipmentService {
     }
 
     this.http
-      .get<Response_CharacterEquipment_GET_all>(
+      .get<ListCharacterEquipmentsResponse>(
         `${BACKEND_URL}/${ApiRoutes.CHARACTER_EQUIPMENT}`,
         { params: queryParams }
       )
       .subscribe({
         next: (response) => {
           if (response.success) {
-            this.equipmentSubject.next(response.characterEquipment);
+            this.equipmentSubject.next(response.characterEquipments);
           }
-        },
+        }
       });
   }
 
@@ -77,9 +77,9 @@ export class CharacterEquipmentService {
           this.eventBus.emitEvent(CharacterEvents.REFRESH_ATTRIBUTES);
           this.listCharacterEquipment({
             characterId: this.characterId,
-            populateItem: true,
+            populateItem: 'true'
           });
-        },
+        }
       });
   }
 
@@ -95,9 +95,9 @@ export class CharacterEquipmentService {
           this.eventBus.emitEvent(CharacterEvents.REFRESH_ATTRIBUTES);
           this.listCharacterEquipment({
             characterId: this.characterId,
-            populateItem: true,
+            populateItem: 'true'
           });
-        },
+        }
       });
   }
 }

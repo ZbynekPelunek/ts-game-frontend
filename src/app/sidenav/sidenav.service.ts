@@ -6,7 +6,7 @@ import { environment } from 'src/environments/environment';
 
 import {
   CharacterFrontend,
-  Response_Character_GET_one,
+  GetCharacterResponse
 } from '../../../../shared/src';
 import { CharacterCreateService } from '../character-create/character-create.service';
 
@@ -48,7 +48,7 @@ export class SidenavService {
     console.log('getCharacter() characterID: ', characterId);
 
     this.http
-      .get<Response_Character_GET_one>(
+      .get<GetCharacterResponse>(
         `${BACKEND_URL}/characters/${characterId}${isQueryString}${queryString}`
       )
       .subscribe({
@@ -58,7 +58,7 @@ export class SidenavService {
             this.character = response.character;
             this.characterUpdated.next({ character: { ...this.character } });
           }
-        },
+        }
       });
   }
 }

@@ -50,7 +50,7 @@ export class CharacterInventoryComponent implements OnInit, OnDestroy {
       });
     this.characterInventoryService.listInventorySlots({
       characterId: this.characterId,
-      populateItem: true
+      populateItem: 'true'
     });
   }
 

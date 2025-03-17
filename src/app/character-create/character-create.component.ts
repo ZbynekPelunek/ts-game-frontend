@@ -6,7 +6,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import {
   CharacterClass,
   CharacterRace,
-  Request_Character_POST_body
+  CreateCharacterRequestBody
 } from '../../../../shared/src';
 
 @Component({
@@ -36,7 +36,7 @@ export class CharacterCreateComponent implements OnInit {
   createCharacter(): void {
     if (this.characterForm.valid) {
       const characterData = this.characterForm.value;
-      const body: Request_Character_POST_body = {
+      const body: CreateCharacterRequestBody = {
         ...characterData,
         accountId: this.authService.getAccountId()
       };

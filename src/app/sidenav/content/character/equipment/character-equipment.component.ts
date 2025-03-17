@@ -43,7 +43,7 @@ export class CharacterEquipmentComponent implements OnInit, OnDestroy {
       });
     this.characterEquipmentService.listCharacterEquipment({
       characterId: this.characterId,
-      populateItem: true
+      populateItem: 'true'
     });
   }
 

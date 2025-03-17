@@ -54,7 +54,7 @@ export class AdventuresComponent implements OnInit, OnDestroy {
           this.adventures = response;
         }
       });
-    this.adventuresService.listAdventures({ populateReward: true });
+    this.adventuresService.listAdventures({ populateReward: 'true' });
   }
 
   private loadAdventuresInProgress(): void {
@@ -90,7 +90,8 @@ export class AdventuresComponent implements OnInit, OnDestroy {
     return (rewardId as Reward)._id !== undefined;
   }
 
-  isCurrency(currencyId: number | Currency): currencyId is Currency {
+  //TODO: currently throws error: 'TypeError: currencyId is null'
+  isCurrency(currencyId: string | Currency): currencyId is Currency {
     return (currencyId as Currency)._id !== undefined;
   }
 

@@ -4,12 +4,12 @@ import { environment } from 'src/environments/environment';
 import {
   Adventure,
   ApiRoutes,
-  Request_Adventure_GET_all_query,
-  Request_Result_GET_all_query,
-  Request_Result_POST_body,
-  Response_Adventure_GET_all,
-  Response_Result_GET_all,
-  Response_Result_POST,
+  ListAdventuresRequestQuery,
+  ListResultsRequestQuery,
+  CreateResultRequestBody,
+  ListAdventuresResponse,
+  ListResultsResponse,
+  CreateResultResponse,
   ResultDTO,
   ResultFrontend,
   ResultGetActions,
@@ -52,7 +52,7 @@ export class AdventuresService implements OnDestroy {
           this.listAdventuresUncollectedRewards();
           break;
         case AdventureEvents.REFRESH_ADVENTURES:
-          this.listAdventures({ populateReward: true });
+          this.listAdventures({ populateReward: 'true' });
       }
     });
   }
@@ -69,7 +69,7 @@ export class AdventuresService implements OnDestroy {
     return this.adventuresUncollectedRewardSubject.asObservable();
   }
 
-  listAdventures(query: Request_Adventure_GET_all_query): void {
+  listAdventures(query: ListAdventuresRequestQuery): void {
     let params = new HttpParams();
 
     for (const key in query) {
@@ -79,12 +79,9 @@ export class AdventuresService implements OnDestroy {
     }
 
     this.http
-      .get<Response_Adventure_GET_all>(
-        `${BACKEND_URL}/${ApiRoutes.ADVENTURES}`,
-        {
-          params
-        }
-      )
+      .get<ListAdventuresResponse>(`${BACKEND_URL}/${ApiRoutes.ADVENTURES}`, {
+        params
+      })
       .subscribe({
         next: (response) => {
           if (response.success) {
@@ -94,7 +91,7 @@ export class AdventuresService implements OnDestroy {
       });
   }
 
-  listResults(query: Request_Result_GET_all_query) {
+  listResults(query: ListResultsRequestQuery) {
     let params = new HttpParams();
     const { characterId, state } = query;
 
@@ -106,7 +103,7 @@ export class AdventuresService implements OnDestroy {
       params = params.append('state', state);
     }
 
-    return this.http.get<Response_Result_GET_all>(
+    return this.http.get<ListResultsResponse>(
       `${BACKEND_URL}/${ApiRoutes.RESULTS}`,
       {
         params
@@ -262,13 +259,13 @@ export class AdventuresService implements OnDestroy {
   }
 
   startAdventure(adventureId: number) {
-    const resultBody: Request_Result_POST_body = {
+    const resultBody: CreateResultRequestBody = {
       adventureId,
       characterId: this.characterId
     };
 
     this.http
-      .post<Response_Result_POST>(
+      .post<CreateResultResponse>(
         `${BACKEND_URL}/${ApiRoutes.RESULTS}`,
         resultBody
       )

@@ -5,8 +5,8 @@ import {
   CharacterEquipmentPostActions,
   InventoryFrontend,
   InventoryPatchActions,
-  Request_Inventory_GET_all_query,
-  Response_Inventory_GET_all,
+  ListInventoriesRequestQuery,
+  ListInventoriesResponse
 } from '../../../../../../../shared/src';
 import { environment } from 'src/environments/environment';
 import { CharacterEvents, EventBusService } from 'src/app/eventBus.service';
@@ -30,7 +30,7 @@ export class CharacterInventoryService {
       if (event === CharacterEvents.REFRESH_INVENTORY) {
         this.listInventorySlots({
           characterId: this.characterId,
-          populateItem: true,
+          populateItem: 'true'
         });
       }
     });
@@ -40,7 +40,7 @@ export class CharacterInventoryService {
     return this.inventorySubject.asObservable();
   }
 
-  listInventorySlots(params: Request_Inventory_GET_all_query) {
+  listInventorySlots(params: ListInventoriesRequestQuery) {
     let queryParams = new HttpParams();
 
     // Iterate over the object and append the params
@@ -51,16 +51,15 @@ export class CharacterInventoryService {
     }
 
     this.http
-      .get<Response_Inventory_GET_all>(
-        `${BACKEND_URL}/${ApiRoutes.INVENTORY}`,
-        { params: queryParams }
-      )
+      .get<ListInventoriesResponse>(`${BACKEND_URL}/${ApiRoutes.INVENTORY}`, {
+        params: queryParams
+      })
       .subscribe({
         next: (response) => {
           if (response.success) {
-            this.inventorySubject.next(response.inventory);
+            this.inventorySubject.next(response.inventories);
           }
-        },
+        }
       });
   }
 
@@ -76,9 +75,9 @@ export class CharacterInventoryService {
           this.eventBus.emitEvent(CharacterEvents.REFRESH_ATTRIBUTES);
           this.listInventorySlots({
             characterId: this.characterId,
-            populateItem: true,
+            populateItem: 'true'
           });
-        },
+        }
       });
   }
 
@@ -93,9 +92,9 @@ export class CharacterInventoryService {
           this.eventBus.emitEvent(CharacterEvents.REFRESH_CURRENCIES);
           this.listInventorySlots({
             characterId: this.characterId,
-            populateItem: true,
+            populateItem: 'true'
           });
-        },
+        }
       });
   }
 }
