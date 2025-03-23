@@ -2,12 +2,14 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { environment } from 'src/environments/environment';
 
 import {
-  CreateAccountRequestBody,
-  CreateAccountResponse
+  CreateAccountRequestDTO,
+  CreateAccountResponseDTO
 } from '../../../../shared/src';
+import { CharacterCreateService } from '../character-create/character-create.service';
 
 const BACKEND_URL = `${environment.apiUrl}`;
 
@@ -19,7 +21,9 @@ export class AuthService {
 
   constructor(
     private router: Router,
-    private http: HttpClient
+    private http: HttpClient,
+    private snackBar: MatSnackBar,
+    private charCreateService: CharacterCreateService
   ) {}
 
   getIsAuth(): boolean {
@@ -35,23 +39,28 @@ export class AuthService {
   }
 
   signUp(): void {
-    const requestBody: CreateAccountRequestBody = {
+    const requestBody: CreateAccountRequestDTO = {
       username: 'test',
       email: 'test1@test.test',
       password: '123'
     };
 
     this.http
-      .post<CreateAccountResponse>(`${BACKEND_URL}/accounts`, requestBody)
+      .post<CreateAccountResponseDTO>(`${BACKEND_URL}/accounts`, requestBody)
       .subscribe({
         next: (response) => {
           console.log('signed up: ', response);
           if (response.success) {
-            this.accountId = response.account.id;
+            this.accountId = response.account._id;
+            this.isAuthenticated = true;
+            this.authStatusListener.next(true);
+            this.charCreateService.setCharCreatingValue(true);
+            this.router.navigate(['ui/character-create']);
           }
-          this.isAuthenticated = true;
-          this.authStatusListener.next(true);
-          this.router.navigate(['ui/character-create']);
+        },
+        error: (err) => {
+          console.log('err: ', err);
+          this.snackBar.open(err.error.error.details.join('\n'), 'OK');
         }
       });
   }
