@@ -9,11 +9,11 @@ import { AppComponent } from './app.component';
 import { AuthModule } from './auth/auth.module';
 import { CharacterCreateComponent } from './character-create/character-create.component';
 import { HeaderComponent } from './header/header.component';
-import { SidenavMenuComponent } from './sidenav/menu/sidenav-menu.component';
 import { SidenavComponent } from './sidenav/sidenav.component';
 import { SidenavModule } from './sidenav/sidenav.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { SidenavMenuComponent } from './sidenav/menu/sidenav-menu.component';
 
 @NgModule({
   declarations: [
@@ -38,4 +38,3 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
   bootstrap: [AppComponent]
 })
 export class AppModule {}
-

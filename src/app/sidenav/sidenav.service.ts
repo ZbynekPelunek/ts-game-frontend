@@ -8,35 +8,19 @@ import {
   CharacterFrontend,
   GetCharacterResponse
 } from '../../../../shared/src';
-import { CharacterCreateService } from '../character-create/character-create.service';
 
 const BACKEND_URL = `${environment.apiUrl}`;
 
 @Injectable({ providedIn: 'root' })
 export class SidenavService {
   private characterUpdated = new Subject<{ character: CharacterFrontend }>();
-  //private inventoryUpdated = new Subject<({ inventory: Inventory[] })>();
-  //private equipmentSlotsUpdated = new Subject<({ equipmentSlots: EquipmentSlotsArr[] })>();
-  //equipmentSlots: EquipmentSlotsArr[] = [];
-  //inventory: Inventory[] = [];
   character: CharacterFrontend;
 
-  constructor(
-    private http: HttpClient,
-    private characterCreateService: CharacterCreateService
-  ) {}
+  constructor(private http: HttpClient) {}
 
   getCharacterUpdateListener(): Observable<{ character: CharacterFrontend }> {
     return this.characterUpdated.asObservable();
   }
-
-  // getInvetoryUpdateListener(): Observable<{ inventory: Inventory[] }> {
-  //   return this.inventoryUpdated.asObservable();
-  // }
-
-  // getEquipmentSlotsUpdateListener(): Observable<{ equipmentSlots: EquipmentSlotsArr[] }> {
-  //   return this.equipmentSlotsUpdated.asObservable();
-  // }
 
   getCharacter(characterId: string, populateInventory: boolean = false) {
     let queryString = '';

@@ -12,6 +12,7 @@ import { environment } from 'src/environments/environment';
 import { CharacterEvents, EventBusService } from 'src/app/eventBus.service';
 import { CharacterCreateService } from 'src/app/character-create/character-create.service';
 import { BehaviorSubject } from 'rxjs';
+import { AuthService } from 'src/app/auth/auth.service';
 
 const BACKEND_URL = `${environment.apiUrl}`;
 
@@ -23,9 +24,9 @@ export class CharacterInventoryService {
   constructor(
     private http: HttpClient,
     private eventBus: EventBusService,
-    private characterCreateService: CharacterCreateService
+    private authService: AuthService
   ) {
-    this.characterId = characterCreateService.getCharacterId();
+    this.characterId = authService.getCharacterId();
     this.eventBus.getEvents().subscribe((event) => {
       if (event === CharacterEvents.REFRESH_INVENTORY) {
         this.listInventorySlots({

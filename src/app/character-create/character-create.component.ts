@@ -8,6 +8,8 @@ import {
   CharacterRace,
   CreateCharacterRequestBody
 } from '../../../../shared/src';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-character-create',
@@ -16,13 +18,15 @@ import {
 })
 export class CharacterCreateComponent implements OnInit {
   characterForm: FormGroup;
-  races = [CharacterRace.HUMAN]; // List of available races (can be extended)
-  classes = [CharacterClass.WARRIOR]; // List of available classes (can be extended)
+  races = [CharacterRace.HUMAN];
+  classes = [CharacterClass.WARRIOR];
 
   constructor(
     private fb: FormBuilder,
     private characterCreateService: CharacterCreateService,
-    private authService: AuthService
+    private authService: AuthService,
+    private snackBar: MatSnackBar,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -40,7 +44,22 @@ export class CharacterCreateComponent implements OnInit {
         ...characterData,
         accountId: this.authService.getAccountId()
       };
-      this.characterCreateService.createCharacter(body);
+      this.characterCreateService.createCharacter(body).subscribe({
+        next: (response) => {
+          console.log('character created: ', response);
+          if (response.success) {
+            // this.authService.setCharacterStatus(true);
+            this.router.navigate(['/ui/menu/character']);
+          }
+        },
+        error: (err) => {
+          this.snackBar.open(err, 'OK', {
+            duration: 30000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top'
+          });
+        }
+      });
     }
   }
 }

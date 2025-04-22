@@ -1,17 +1,21 @@
 <mat-toolbar color="primary" class="rpg-header">
   <span class="logo">
-    <a [routerLink]="isUserAuthenticated ? '/ui/menu/character' : '/'">Game</a>
+    <a [routerLink]="(isUserAuthenticated$ | async) ? '/ui/menu/character' : '/'">Game</a>
   </span>
   <span class="spacer"></span>
   <ul class="nav-links">
-    <li *ngIf="!isUserAuthenticated">
-      <a mat-button routerLink="/ui/auth/login" routerLinkActive="mat-accent">Login</a>
-    </li>
-    <li *ngIf="!isUserAuthenticated">
-      <a mat-button routerLink="/ui/auth/signup" routerLinkActive="mat-accent">Sign Up</a>
-    </li>
-    <li *ngIf="isUserAuthenticated">
-      <button mat-button (click)="onLogout()">Logout</button>
-    </li>
+    <ng-container *ngIf="isUserAuthenticated$ | async; else guestLinks">
+      <li>
+        <button mat-button (click)="onLogout()">Logout</button>
+      </li>
+    </ng-container>
+    <ng-template #guestLinks>
+      <li>
+        <a mat-button routerLink="/ui/auth/login" routerLinkActive="mat-accent">Login</a>
+      </li>
+      <li>
+        <a mat-button routerLink="/ui/auth/signup" routerLinkActive="mat-accent">Sign Up</a>
+      </li>
+    </ng-template>
   </ul>
 </mat-toolbar>

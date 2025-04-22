@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs/internal/Subscription';
 
 import { AuthService } from './auth/auth.service';
-import { CharacterCreateService } from './character-create/character-create.service';
+import { Observable } from 'rxjs/internal/Observable';
 
 @Component({
   selector: 'app-root',
@@ -11,21 +11,15 @@ import { CharacterCreateService } from './character-create/character-create.serv
 })
 export class AppComponent implements OnInit, OnDestroy {
   title = 'Game';
-  userIsAuthenticated = false;
+  isUserAuthenticated$: Observable<boolean>;
   isCreatingCharacter = false;
   private authListenerSubs: Subscription;
   private charCreatingSub: Subscription;
 
-  constructor(private authService: AuthService, private charCreateService: CharacterCreateService) { }
+  constructor(private authService: AuthService) {}
 
   ngOnInit(): void {
-    this.userIsAuthenticated = this.authService.getIsAuth();
-    this.authListenerSubs = this.authService.getAuthStatusListener().subscribe(isAuthenticated => {
-      this.userIsAuthenticated = isAuthenticated;
-    });
-    this.charCreatingSub = this.charCreateService.charCreating$.subscribe(isCreating => {
-      this.isCreatingCharacter = isCreating;
-    })
+    this.isUserAuthenticated$ = this.authService.isAuthenticated$;
   }
 
   ngOnDestroy(): void {
@@ -33,3 +27,4 @@ export class AppComponent implements OnInit, OnDestroy {
     this.charCreatingSub.unsubscribe();
   }
 }
+

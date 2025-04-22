@@ -1,81 +1,112 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
-import { Subject } from 'rxjs';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { BehaviorSubject, map, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 import {
   CreateAccountRequestDTO,
-  CreateAccountResponseDTO
+  CreateAccountResponse,
+  ListCharactersResponse,
+  LoginAccountRequestDTO,
+  LoginAccountResponse
 } from '../../../../shared/src';
-import { CharacterCreateService } from '../character-create/character-create.service';
+import { Router } from '@angular/router';
 
 const BACKEND_URL = `${environment.apiUrl}`;
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private isAuthenticated = false;
-  private authStatusListener = new Subject<boolean>();
+  private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
   private accountId: string;
+  private characterId: string;
+  private hasCharactersSubject = new BehaviorSubject<boolean>(false);
+  isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
+  hasCharacters$ = this.hasCharactersSubject.asObservable();
 
   constructor(
-    private router: Router,
     private http: HttpClient,
-    private snackBar: MatSnackBar,
-    private charCreateService: CharacterCreateService
+    private router: Router
   ) {}
-
-  getIsAuth(): boolean {
-    return this.isAuthenticated;
-  }
-
-  getAuthStatusListener() {
-    return this.authStatusListener.asObservable();
-  }
 
   getAccountId(): string {
     return this.accountId;
   }
 
-  signUp(): void {
-    const requestBody: CreateAccountRequestDTO = {
-      username: 'test',
-      email: 'test1@test.test',
-      password: '123'
-    };
+  setAccountId(accountId: string): void {
+    this.accountId = accountId;
+  }
 
-    this.http
-      .post<CreateAccountResponseDTO>(`${BACKEND_URL}/accounts`, requestBody)
-      .subscribe({
-        next: (response) => {
-          console.log('signed up: ', response);
-          if (response.success) {
-            this.accountId = response.account._id;
-            this.isAuthenticated = true;
-            this.authStatusListener.next(true);
-            this.charCreateService.setCharCreatingValue(true);
-            this.router.navigate(['ui/character-create']);
-          }
-        },
-        error: (err) => {
-          console.log('err: ', err);
-          this.snackBar.open(err.error.error.details.join('\n'), 'OK');
+  getCharacterId(): string {
+    return this.characterId;
+  }
+
+  setCharacterId(characterId: string): void {
+    this.characterId = characterId;
+  }
+
+  setHasCharacters(flag: boolean): void {
+    this.hasCharactersSubject.next(flag);
+  }
+
+  signUp(data: CreateAccountRequestDTO) {
+    return this.http.post<CreateAccountResponse>(
+      `${BACKEND_URL}/accounts`,
+      data,
+      { withCredentials: true }
+    );
+  }
+
+  login(credentials: LoginAccountRequestDTO) {
+    return this.http
+      .post<LoginAccountResponse>(
+        `${BACKEND_URL}/accounts/login`,
+        credentials,
+        {
+          withCredentials: true
         }
-      });
+      )
+      .pipe(
+        tap((response) => {
+          if (response.success) {
+            this.isAuthenticatedSubject.next(true);
+            this.setAccountId(response.account._id);
+            this.getAccountCharacters(this.accountId).subscribe({
+              next: (response) => {
+                if (response.success) {
+                  if (response.characters.length === 0) {
+                    this.hasCharactersSubject.next(false);
+                    this.router.navigate(['/ui/character-create']);
+                  } else {
+                    this.hasCharactersSubject.next(true);
+                    this.characterId = response.characters[0].characterId;
+                    this.router.navigate(['/ui/menu/character']);
+                  }
+                }
+              }
+            });
+          }
+        })
+      );
   }
 
-  login(): void {
-    //console.log('LOGING IN');
-    this.isAuthenticated = true;
-    this.authStatusListener.next(true);
-    this.router.navigate(['/ui/menu/character']);
+  logout() {
+    return this.http
+      .post<{ success: boolean }>(`${BACKEND_URL}/accounts/logout`, {})
+      .pipe(
+        tap((response) => {
+          console.log('authService logout() tap response: ', response);
+          if (response.success) {
+            this.isAuthenticatedSubject.next(false);
+            this.hasCharactersSubject.next(false);
+            //this.router.navigate(['/']);
+          }
+        })
+      );
   }
 
-  logout(): void {
-    //console.log('LOGING OUT');
-    this.isAuthenticated = false;
-    this.authStatusListener.next(false);
-    this.router.navigate(['/']);
+  getAccountCharacters(accountId: string) {
+    return this.http.get<ListCharactersResponse>(`${BACKEND_URL}/characters`, {
+      params: { accountId }
+    });
   }
 }

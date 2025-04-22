@@ -20,6 +20,7 @@ import { BehaviorSubject } from 'rxjs';
 import { CharacterCreateService } from 'src/app/character-create/character-create.service';
 import { AdventureEvents, EventBusService } from 'src/app/eventBus.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { AuthService } from 'src/app/auth/auth.service';
 
 const BACKEND_URL = `${environment.apiUrl}`;
 
@@ -38,11 +39,11 @@ export class AdventuresService implements OnDestroy {
 
   constructor(
     private http: HttpClient,
-    private characterCreateService: CharacterCreateService,
+    private authService: AuthService,
     private eventBus: EventBusService,
     private snackBar: MatSnackBar
   ) {
-    this.characterId = characterCreateService.getCharacterId();
+    this.characterId = authService.getCharacterId();
     this.eventBus.getEvents().subscribe((event) => {
       switch (event) {
         case AdventureEvents.REFRESH_INPROGRESS:

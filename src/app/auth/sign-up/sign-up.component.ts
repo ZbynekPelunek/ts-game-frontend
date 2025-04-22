@@ -5,6 +5,8 @@ import {
   AbstractControl,
   FormBuilder
 } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 import { AuthService } from 'src/app/auth/auth.service';
 
 @Component({
@@ -16,10 +18,13 @@ export class SignUpComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    public authService: AuthService
+    private router: Router,
+    private authService: AuthService,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
+    console.log('SIGN UP component called');
     this.signupForm = this.fb.group(
       {
         email: ['', [Validators.required, Validators.email]],
@@ -39,18 +44,19 @@ export class SignUpComponent implements OnInit {
 
   signup(): void {
     if (this.signupForm.valid) {
-      this.authService.signUp();
-      // const registrationData = this.signupForm.value;
-      // this.authService.signup(registrationData).subscribe(
-      //   (response) => {
-      //     console.log('Sign up successful', response);
-      //     // Additional navigation or messages can go here
-      //   },
-      //   (error) => {
-      //     console.error('Sign up error', error);
-      //     // Handle errors as needed
-      //   }
-      // );
+      const { email, username, password } = this.signupForm.value;
+      this.authService.signUp({ email, password, username }).subscribe({
+        next: (response) => {
+          if (response.success) {
+            this.authService.setAccountId(response.account._id);
+            this.snackBar.open('Registration successful, please log in.', 'OK');
+            this.router.navigate(['/ui/auth/login']);
+          }
+        },
+        error: (err) => {
+          this.snackBar.open(err.error.error.details.join('\n'), 'OK');
+        }
+      });
     }
   }
 }

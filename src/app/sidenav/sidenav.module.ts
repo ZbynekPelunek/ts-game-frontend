@@ -27,7 +27,7 @@ import { ItemDetailsDialogComponent } from '../dialog/item-details/item-details-
     CharacterCurrenciesComponent,
     CharacterEquipmentComponent,
     CharacterInventoryComponent,
-    ItemDetailsDialogComponent,
+    ItemDetailsDialogComponent
   ],
   imports: [
     CommonModule,
@@ -36,7 +36,7 @@ import { ItemDetailsDialogComponent } from '../dialog/item-details/item-details-
     FormsModule,
     DragDropModule,
     ScrollingModule,
-    MatProgressBarModule,
-  ],
+    MatProgressBarModule
+  ]
 })
 export class SidenavModule {}

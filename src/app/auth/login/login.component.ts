@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from 'src/app/auth/auth.service';
-import { CharacterCreateService } from 'src/app/character-create/character-create.service';
 
 @Component({
   selector: 'app-login',
@@ -14,33 +14,29 @@ export class LoginComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private charCreateService: CharacterCreateService
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
     this.loginForm = this.fb.group({
-      emailOrUsername: ['', Validators.required],
+      email: ['', Validators.required],
       password: ['', Validators.required]
     });
   }
 
   login(): void {
-    // TODO remove signUp()
-    this.charCreateService.setCharCreatingValue(true);
-    this.authService.signUp();
     if (this.loginForm.valid) {
-      // this.authService.login();
-      // const credentials = this.loginForm.value;
-      // this.authService.login(credentials).subscribe(
-      //   (response) => {
-      //     console.log('Login successful', response);
-      //     // Further processing, e.g., navigation
-      //   },
-      //   (error) => {
-      //     console.error('Login error', error);
-      //     // Error handling here
-      //   }
-      // );
+      const credentials = this.loginForm.value;
+      this.authService.login(credentials).subscribe({
+        next: (response) => {
+          if (response.success) {
+            this.snackBar.open('Login Successful', 'OK');
+          }
+        },
+        error: (err) => {
+          this.snackBar.open(err.error.error.message, 'OK');
+        }
+      });
     }
   }
 }

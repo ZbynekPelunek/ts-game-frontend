@@ -14,10 +14,6 @@ export class SidenavMenuComponent {
     {
       label: 'Adventures',
       link: '/ui/menu/adventures'
-    },
-    // {
-    //   label: 'Shop',
-    //   link: '/ui/menu/shop'
-    // }
-  ]
+    }
+  ];
 }

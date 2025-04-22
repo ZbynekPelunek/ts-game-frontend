@@ -5,6 +5,7 @@ import { CharacterCreateService } from 'src/app/character-create/character-creat
 
 import { CharacterFrontend } from '../../../../../../shared/src';
 import { SidenavService } from '../../sidenav.service';
+import { AuthService } from 'src/app/auth/auth.service';
 
 interface Tile {
   cols: number;
@@ -42,13 +43,13 @@ export class CharacterComponent implements OnInit, OnDestroy {
   constructor(
     private sidenavService: SidenavService,
     public equipmentDialog: MatDialog,
-    private characterCreateService: CharacterCreateService
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
     this.isLoading = true;
     console.log('Getting character data...');
-    this.characterId = this.characterCreateService.getCharacterId();
+    this.characterId = this.authService.getCharacterId();
     this.sidenavService.getCharacter(this.characterId, true);
     this.charSub = this.sidenavService.getCharacterUpdateListener().subscribe({
       next: (response) => {
