@@ -1,6 +1,10 @@
 // item-details-dialog.component.ts
 import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import {
+  MAT_DIALOG_DATA,
+  MatDialogModule,
+  MatDialogRef
+} from '@angular/material/dialog';
 import {
   Armor,
   ArmorType,
@@ -9,11 +13,14 @@ import {
   Weapon,
   WeaponType
 } from '../../../../../shared/src';
+import { CommonModule } from '@angular/common';
 
 @Component({
+  standalone: true,
   selector: 'app-item-details-dialog',
   templateUrl: './item-details-dialog.component.html',
-  styleUrls: ['./item-details-dialog.component.scss']
+  styleUrls: ['./item-details-dialog.component.scss'],
+  imports: [CommonModule, MatDialogModule]
 })
 export class ItemDetailsDialogComponent {
   constructor(

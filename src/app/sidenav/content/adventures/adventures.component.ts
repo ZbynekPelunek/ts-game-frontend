@@ -11,10 +11,23 @@ import {
 } from '../../../../../../shared/src';
 import { MatDialog } from '@angular/material/dialog';
 import { ItemDetailsDialogComponent } from 'src/app/dialog/item-details/item-details-dialog.component';
+import { CommonModule } from '@angular/common';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatCardModule } from '@angular/material/card';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
 @Component({
+  standalone: true,
   templateUrl: './adventures.component.html',
-  styleUrls: ['./adventures.component.scss']
+  styleUrls: ['./adventures.component.scss'],
+  imports: [
+    CommonModule,
+    MatGridListModule,
+    MatCardModule,
+    MatProgressBarModule,
+    ScrollingModule
+  ]
 })
 export class AdventuresComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();

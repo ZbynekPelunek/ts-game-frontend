@@ -1,11 +1,18 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
-import { CharacterCreateService } from 'src/app/character-create/character-create.service';
 
 import { CharacterFrontend } from '../../../../../../shared/src';
 import { SidenavService } from '../../sidenav.service';
 import { AuthService } from 'src/app/auth/auth.service';
+import { CommonModule } from '@angular/common';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatCardModule } from '@angular/material/card';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { CharacterAttributesComponent } from './character-attributes/character-attributes.component';
+import { CharacterCurrenciesComponent } from './currencies/character-currencies.component';
+import { CharacterEquipmentComponent } from './equipment/character-equipment.component';
+import { CharacterInventoryComponent } from './inventory/character-inventory.component';
 
 interface Tile {
   cols: number;
@@ -13,9 +20,20 @@ interface Tile {
 }
 
 @Component({
+  standalone: true,
   selector: 'app-character',
   templateUrl: './character.component.html',
-  styleUrls: ['./character.component.css']
+  styleUrls: ['./character.component.css'],
+  imports: [
+    CommonModule,
+    MatProgressSpinnerModule,
+    MatCardModule,
+    MatGridListModule,
+    CharacterAttributesComponent,
+    CharacterCurrenciesComponent,
+    CharacterEquipmentComponent,
+    CharacterInventoryComponent
+  ]
 })
 export class CharacterComponent implements OnInit, OnDestroy {
   characterTile: Tile = {

@@ -8,11 +8,16 @@ import { CharacterEquipmentService } from './character-equipment.service';
 import { Subject, takeUntil } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { ItemDetailsDialogComponent } from 'src/app/dialog/item-details/item-details-dialog.component';
+import { CommonModule } from '@angular/common';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
+  standalone: true,
   selector: 'app-character-equipment',
   templateUrl: './character-equipment.component.html',
-  styleUrls: ['./character-equipment.component.scss']
+  styleUrls: ['./character-equipment.component.scss'],
+  imports: [CommonModule, MatProgressSpinnerModule, MatCardModule]
 })
 export class CharacterEquipmentComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();

@@ -14,11 +14,16 @@ import {
 } from '../../../../../../../shared/src';
 import { ItemDetailsDialogComponent } from 'src/app/dialog/item-details/item-details-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { CommonModule } from '@angular/common';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTabsModule } from '@angular/material/tabs';
 
 @Component({
+  standalone: true,
   selector: 'app-character-inventory',
   templateUrl: './character-inventory.component.html',
-  styleUrls: ['./character-inventory.component.scss']
+  styleUrls: ['./character-inventory.component.scss'],
+  imports: [CommonModule, MatProgressSpinnerModule, MatTabsModule]
 })
 export class CharacterInventoryComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();

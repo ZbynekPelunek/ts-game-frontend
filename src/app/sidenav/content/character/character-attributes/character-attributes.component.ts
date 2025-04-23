@@ -10,11 +10,22 @@ import {
   SecondaryAttributeNames
 } from '../../../../../../../shared/src';
 import { CharacterDetailsService } from './character-attributes.service';
+import { CommonModule } from '@angular/common';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTabsModule } from '@angular/material/tabs';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
 @Component({
+  standalone: true,
   selector: 'app-character-attributes',
   templateUrl: './character-attributes.component.html',
-  styleUrls: ['./character-attributes.component.scss']
+  styleUrls: ['./character-attributes.component.scss'],
+  imports: [
+    CommonModule,
+    MatProgressSpinnerModule,
+    MatTabsModule,
+    ScrollingModule
+  ]
 })
 export class CharacterAttributesComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();

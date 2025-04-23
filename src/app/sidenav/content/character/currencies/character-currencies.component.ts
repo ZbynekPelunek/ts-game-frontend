@@ -4,11 +4,22 @@ import { Subscription } from 'rxjs/internal/Subscription';
 import { CharacterCurrencyFrontend } from '../../../../../../../shared/src';
 import { CharacterCurrenciesService } from './character-currencies.service';
 import { Subject, takeUntil } from 'rxjs';
+import { ScrollingModule } from '@angular/cdk/scrolling';
+import { CommonModule } from '@angular/common';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
+  standalone: true,
   selector: 'app-character-currencies',
   templateUrl: './character-currencies.component.html',
-  styleUrls: ['./character-currencies.component.css']
+  styleUrls: ['./character-currencies.component.css'],
+  imports: [
+    CommonModule,
+    MatProgressSpinnerModule,
+    ScrollingModule,
+    MatCardModule
+  ]
 })
 export class CharacterCurrenciesComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();

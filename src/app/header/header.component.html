@@ -1,7 +1,10 @@
 <mat-toolbar color="primary" class="rpg-header">
   <span class="logo">
-    <a [routerLink]="(isUserAuthenticated$ | async) ? '/ui/menu/character' : '/'">Game</a>
+    <a [routerLink]="logoLink$ | async">
+      Game
+    </a>
   </span>
+
   <span class="spacer"></span>
   <ul class="nav-links">
     <ng-container *ngIf="isUserAuthenticated$ | async; else guestLinks">

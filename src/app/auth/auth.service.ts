@@ -98,7 +98,7 @@ export class AuthService {
           if (response.success) {
             this.isAuthenticatedSubject.next(false);
             this.hasCharactersSubject.next(false);
-            //this.router.navigate(['/']);
+            this.router.navigate(['/']);
           }
         })
       );

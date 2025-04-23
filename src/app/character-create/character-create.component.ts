@@ -2,7 +2,13 @@ import { Component, OnInit } from '@angular/core';
 
 import { AuthService } from '../auth/auth.service';
 import { CharacterCreateService } from './character-create.service';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import {
+  FormGroup,
+  FormBuilder,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule
+} from '@angular/forms';
 import {
   CharacterClass,
   CharacterRace,
@@ -10,11 +16,14 @@ import {
 } from '../../../../shared/src';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
+  standalone: true,
   selector: 'app-character-create',
   templateUrl: './character-create.component.html',
-  styleUrls: ['./character-create.component.css']
+  styleUrls: ['./character-create.component.css'],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule]
 })
 export class CharacterCreateComponent implements OnInit {
   characterForm: FormGroup;

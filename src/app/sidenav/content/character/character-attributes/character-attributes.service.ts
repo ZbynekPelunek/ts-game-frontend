@@ -7,7 +7,6 @@ import {
 } from '../../../../../../../shared/src';
 import { environment } from 'src/environments/environment';
 import { BehaviorSubject } from 'rxjs';
-import { CharacterCreateService } from 'src/app/character-create/character-create.service';
 import { CharacterEvents, EventBusService } from 'src/app/eventBus.service';
 import { AuthService } from 'src/app/auth/auth.service';
 
