@@ -13,6 +13,7 @@ import { CharacterAttributesComponent } from './character-attributes/character-a
 import { CharacterCurrenciesComponent } from './currencies/character-currencies.component';
 import { CharacterEquipmentComponent } from './equipment/character-equipment.component';
 import { CharacterInventoryComponent } from './inventory/character-inventory.component';
+import { CharacterService } from './character.service';
 
 interface Tile {
   cols: number;
@@ -61,19 +62,27 @@ export class CharacterComponent implements OnInit, OnDestroy {
   constructor(
     private sidenavService: SidenavService,
     public equipmentDialog: MatDialog,
-    private authService: AuthService
+    private authService: AuthService,
+    private characterService: CharacterService
   ) {}
 
   ngOnInit(): void {
     this.isLoading = true;
-    console.log('Getting character data...');
-    this.characterId = this.authService.getCharacterId();
-    this.sidenavService.getCharacter(this.characterId, true);
-    this.charSub = this.sidenavService.getCharacterUpdateListener().subscribe({
-      next: (response) => {
-        this.playerCharacter = { ...response.character };
-        this.isLoading = false;
-        console.log('...character data fetched.: ', response);
+    this.characterService.currentCharacterId$.subscribe({
+      next: (id) => {
+        this.characterId = id;
+
+        if (id) {
+          this.sidenavService.getCharacter(this.characterId, true);
+          this.charSub = this.sidenavService
+            .getCharacterUpdateListener()
+            .subscribe({
+              next: (response) => {
+                this.playerCharacter = { ...response.character };
+                this.isLoading = false;
+              }
+            });
+        }
       }
     });
   }

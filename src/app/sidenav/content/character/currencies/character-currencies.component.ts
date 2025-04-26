@@ -34,20 +34,23 @@ export class CharacterCurrenciesComponent implements OnInit, OnDestroy {
   constructor(private characterCurrenciesService: CharacterCurrenciesService) {}
 
   ngOnInit(): void {
+    this.characterCurrenciesService.setCharacterId(this.characterId);
     this.characterCurrenciesService
       .getCurrencies()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
-          console.log('character currencies response: ', response);
           this.characterCurrencies = response;
           this.isLoading = false;
         }
       });
-    this.characterCurrenciesService.listCharacterCurrencies({
-      characterId: this.characterId,
-      populateCurrency: 'true'
-    });
+    this.characterCurrenciesService.listCharacterCurrencies(
+      {
+        characterId: this.characterId,
+        populateCurrency: 'true'
+      },
+      true
+    );
   }
   ngOnDestroy(): void {
     this.destroy$.next();

@@ -29,7 +29,7 @@ export class SidenavService {
     }
     const isQueryString = queryString === '' ? '' : '?';
 
-    console.log('getCharacter() characterID: ', characterId);
+    //console.log('getCharacter() characterID: ', characterId);
 
     this.http
       .get<GetCharacterResponse>(
@@ -37,7 +37,7 @@ export class SidenavService {
       )
       .subscribe({
         next: (response) => {
-          console.log('getCharacter() response: ', response);
+          //console.log('getCharacter() response: ', response);
           if (response.success) {
             this.character = response.character;
             this.characterUpdated.next({ character: { ...this.character } });

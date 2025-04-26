@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, map, tap } from 'rxjs';
+import { BehaviorSubject, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 import {
@@ -11,6 +11,7 @@ import {
   LoginAccountResponse
 } from '../../../../shared/src';
 import { Router } from '@angular/router';
+import { CharacterService } from '../sidenav/content/character/character.service';
 
 const BACKEND_URL = `${environment.apiUrl}`;
 
@@ -18,14 +19,14 @@ const BACKEND_URL = `${environment.apiUrl}`;
 export class AuthService {
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
   private accountId: string;
-  private characterId: string;
   private hasCharactersSubject = new BehaviorSubject<boolean>(false);
   isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
   hasCharacters$ = this.hasCharactersSubject.asObservable();
 
   constructor(
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private characterService: CharacterService
   ) {}
 
   getAccountId(): string {
@@ -34,14 +35,6 @@ export class AuthService {
 
   setAccountId(accountId: string): void {
     this.accountId = accountId;
-  }
-
-  getCharacterId(): string {
-    return this.characterId;
-  }
-
-  setCharacterId(characterId: string): void {
-    this.characterId = characterId;
   }
 
   setHasCharacters(flag: boolean): void {
@@ -73,12 +66,15 @@ export class AuthService {
             this.getAccountCharacters(this.accountId).subscribe({
               next: (response) => {
                 if (response.success) {
+                  console.log('Account Characters: ', response.characters);
                   if (response.characters.length === 0) {
                     this.hasCharactersSubject.next(false);
                     this.router.navigate(['/ui/character-create']);
                   } else {
                     this.hasCharactersSubject.next(true);
-                    this.characterId = response.characters[0].characterId;
+                    this.characterService.setCharacterId(
+                      response.characters[0].characterId
+                    );
                     this.router.navigate(['/ui/menu/character']);
                   }
                 }
@@ -94,10 +90,11 @@ export class AuthService {
       .post<{ success: boolean }>(`${BACKEND_URL}/accounts/logout`, {})
       .pipe(
         tap((response) => {
-          console.log('authService logout() tap response: ', response);
+          //console.log('authService logout() tap response: ', response);
           if (response.success) {
             this.isAuthenticatedSubject.next(false);
             this.hasCharactersSubject.next(false);
+            this.characterService.clearCharacterId();
             this.router.navigate(['/']);
           }
         })

@@ -3,6 +3,8 @@ import { Injectable } from '@angular/core';
 import {
   ApiRoutes,
   CharacterCurrencyFrontend,
+  CurrencyDTO,
+  CurrencyId,
   ListCharacterCurrenciesQuery,
   ListCharacterCurrenciesResponse
 } from '../../../../../../../shared/src';
@@ -20,13 +22,13 @@ export class CharacterCurrenciesService {
     []
   );
   private characterId: string;
+  private cachedCurrencies: CharacterCurrencyFrontend[] = [];
 
   constructor(
     private http: HttpClient,
     private eventBus: EventBusService,
     private authService: AuthService
   ) {
-    this.characterId = authService.getCharacterId();
     this.eventBus.getEvents().subscribe((event) => {
       if (event === CharacterEvents.REFRESH_CURRENCIES) {
         this.listCharacterCurrencies({
@@ -41,7 +43,14 @@ export class CharacterCurrenciesService {
     return this.currenciesSubject.asObservable();
   }
 
-  listCharacterCurrencies(params: ListCharacterCurrenciesQuery) {
+  setCharacterId(characterId: string) {
+    this.characterId = characterId;
+  }
+
+  listCharacterCurrencies(
+    params: ListCharacterCurrenciesQuery,
+    cache?: boolean
+  ) {
     let queryParams = new HttpParams();
 
     for (const key in params) {
@@ -59,8 +68,22 @@ export class CharacterCurrenciesService {
         next: (response) => {
           if (response.success) {
             this.currenciesSubject.next(response.characterCurrencies);
+            if (cache) {
+              this.cachedCurrencies = response.characterCurrencies;
+            }
           }
         }
       });
+  }
+
+  getCachedCurrency(currencyId: CurrencyId): CurrencyDTO | undefined {
+    const response = this.cachedCurrencies.find((c) => {
+      if (typeof c.currencyId === 'object' && c.currencyId !== null) {
+        return c.currencyId._id === currencyId;
+      }
+      return false;
+    })?.currencyId as CurrencyDTO;
+
+    return response;
   }
 }

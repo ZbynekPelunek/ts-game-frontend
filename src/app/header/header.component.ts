@@ -79,7 +79,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
         //this.router.navigate(['']);
       },
       error: (err) => {
-        console.log('LOGOUT error: ', err);
+        //console.log('LOGOUT error: ', err);
       }
     });
   }

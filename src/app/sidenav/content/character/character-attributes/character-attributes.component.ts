@@ -63,13 +63,12 @@ export class CharacterAttributesComponent implements OnInit, OnDestroy {
   constructor(private characterDetailsService: CharacterDetailsService) {}
 
   ngOnInit(): void {
+    this.characterDetailsService.setCharacterId(this.characterId);
     this.characterDetailsService
       .getAttributes()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
-          console.log('character attributes response: ', response);
-
           this.characterAttributes = response;
           this.isLoading = false;
           this.generateStats();

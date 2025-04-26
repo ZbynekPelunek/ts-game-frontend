@@ -41,14 +41,12 @@ export class CharacterInventoryComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.isLoading = true;
-    console.log('Getting inventory data...');
+    this.characterInventoryService.setCharacterId(this.characterId);
     this.characterInventoryService
       .getInventory()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
-          console.log('...inventory data fetched.: ', response);
-
           this.inventorySlots = response;
           this.isLoading = false;
         }

@@ -35,13 +35,12 @@ export class CharacterEquipmentComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    this.characterEquipmentService.setCharacterId(this.characterId);
     this.characterEquipmentService
       .getEquipment()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
-          console.log('character equipment response: ', response);
-
           this.characterEquipment = response;
           this.isLoading = false;
         }
@@ -72,7 +71,6 @@ export class CharacterEquipmentComponent implements OnInit, OnDestroy {
   }
 
   onSell(characterEquipmentId: string) {
-    console.log('Selling char equip with ID: ', characterEquipmentId);
     this.characterEquipmentService.sellEquipmentItem({ characterEquipmentId });
   }
 

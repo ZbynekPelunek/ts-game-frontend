@@ -28,7 +28,7 @@
                     <span *ngIf="reward.rewardId.currencies.length > 0">
                       <span *ngFor="let currency of reward.rewardId.currencies">
                         <span *ngIf="isCurrency(currency.currencyId)">
-                          {{ currency.amount }} {{ currency.currencyId.label }}
+                          {{ currency.amount }} {{ currency.currencyId.label }}<br />
                         </span>
                       </span>
                     </span>
@@ -97,33 +97,29 @@
             <mat-card-content>
               Completed: {{ result.timeFinish | date: 'short' }}
               <br>
-              <ng-container *ngFor="let reward of result.reward">
-                <ng-container *ngIf="isReward(reward)">
-                  <div>
-                    <span *ngIf="reward.experience > 0">
-                      {{ reward.experience }} XP<br />
+              <div>
+                <span *ngIf="result.reward.experience > 0">
+                  {{ result.reward.experience }} XP<br />
+                </span>
+                <span *ngIf="result.reward.currencies.length > 0">
+                  <span *ngFor="let currency of result.reward.currencies">
+                    <span *ngIf="isCurrency(currency.currencyId)">
+                      {{ currency.amount }} {{ currency.currencyId.label }}<br />
                     </span>
-                    <span *ngIf="reward.currencies.length > 0">
-                      <span *ngFor="let currency of reward.currencies">
-                        <span *ngIf="isCurrency(currency.currencyId)">
-                          {{ currency.amount }} {{ currency.currencyId.label }}
-                        </span>
+                  </span>
+                </span>
+                <span *ngIf="result.reward.items.length > 0">
+                  <span *ngFor="let item of result.reward.items">
+                    <!-- TODO: itemId is just ID, should check cache for the item details -->
+                    <span *ngIf="isItem(item.itemId)">
+                      <span class="clickable-item" [ngClass]="'quality-' + item.itemId.quality.toLowerCase()"
+                            (click)="openItemDetailsDialog(item.itemId)">
+                        <strong>[{{ item.itemId.name }}]</strong>
                       </span>
                     </span>
-                    <span *ngIf="reward.items.length > 0">
-                      <span *ngFor="let item of reward.items">
-                        <!-- TODO: itemId is just ID, should chceck cache for the item details -->
-                        <span *ngIf="isItem(item.itemId)">
-                          <span class="clickable-item" [ngClass]="'quality-' + item.itemId.quality.toLowerCase()"
-                                (click)="openItemDetailsDialog(item.itemId)">
-                            <strong>[{{ item.itemId.name }}]</strong>
-                          </span>
-                        </span>
-                      </span>
-                    </span>
-                  </div>
-                </ng-container>
-              </ng-container>
+                  </span>
+                </span>
+              </div>
             </mat-card-content>
             <mat-card-actions>
               <button mat-button color="primary" class="adventure-action-buttons" (click)="onCollectReward(result)">

@@ -10,7 +10,7 @@ export const authGuard = () => {
 
   return authService.isAuthenticated$.pipe(
     map((isAuth) => {
-      console.log('authGuard called with: ', isAuth);
+      //console.log('authGuard called with: ', isAuth);
       if (!isAuth) {
         router.navigate(['/ui/auth/login']);
         return false;

@@ -8,6 +8,7 @@ import {
 } from '../../../../shared/src';
 import { AuthService } from '../auth/auth.service';
 import { tap } from 'rxjs';
+import { CharacterService } from '../sidenav/content/character/character.service';
 
 const BACKEND_URL = `${environment.apiUrl}`;
 
@@ -15,7 +16,8 @@ const BACKEND_URL = `${environment.apiUrl}`;
 export class CharacterCreateService {
   constructor(
     private http: HttpClient,
-    private authService: AuthService
+    private authService: AuthService,
+    private characterService: CharacterService
   ) {}
 
   createCharacter(body: CreateCharacterRequestBody) {
@@ -25,7 +27,9 @@ export class CharacterCreateService {
         tap((response) => {
           if (response.success) {
             this.authService.setHasCharacters(true);
-            this.authService.setCharacterId(response.character.characterId);
+            this.characterService.setCharacterId(
+              response.character.characterId
+            );
           }
         })
       );

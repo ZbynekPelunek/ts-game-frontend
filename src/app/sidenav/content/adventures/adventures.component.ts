@@ -5,7 +5,8 @@ import { AdventuresService } from './adventures.service';
 import {
   Adventure,
   CommonItemsEquipmenParams,
-  Currency,
+  CurrencyDTO,
+  CurrencyId,
   ResultFrontend,
   Reward
 } from '../../../../../../shared/src';
@@ -104,8 +105,8 @@ export class AdventuresComponent implements OnInit, OnDestroy {
   }
 
   //TODO: currently throws error: 'TypeError: currencyId is null'
-  isCurrency(currencyId: string | Currency): currencyId is Currency {
-    return (currencyId as Currency)._id !== undefined;
+  isCurrency(currencyId: CurrencyId | CurrencyDTO): currencyId is CurrencyDTO {
+    return (currencyId as CurrencyDTO)._id !== undefined;
   }
 
   isItem(
@@ -117,7 +118,6 @@ export class AdventuresComponent implements OnInit, OnDestroy {
   onStartAdventure(adventureId: number) {
     //console.log(`Starting adventure: ${adventureId}`);
     this.adventuresService.startAdventure(adventureId);
-    console.log('progressMap ', this.adventuresService.progressMap);
   }
 
   onCancelAdventure(resultId: string) {
@@ -163,7 +163,7 @@ export class AdventuresComponent implements OnInit, OnDestroy {
   }
 
   getProgressMapValue(resultId: string): number {
-    console.log('getProgressMapValue() called');
+    //console.log('getProgressMapValue() called');
     return this.adventuresService.progressMap.get(resultId);
   }
 

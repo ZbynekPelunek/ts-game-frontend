@@ -26,7 +26,6 @@ export class CharacterInventoryService {
     private eventBus: EventBusService,
     private authService: AuthService
   ) {
-    this.characterId = authService.getCharacterId();
     this.eventBus.getEvents().subscribe((event) => {
       if (event === CharacterEvents.REFRESH_INVENTORY) {
         this.listInventorySlots({
@@ -39,6 +38,10 @@ export class CharacterInventoryService {
 
   getInventory() {
     return this.inventorySubject.asObservable();
+  }
+
+  setCharacterId(characterId: string) {
+    this.characterId = characterId;
   }
 
   listInventorySlots(params: ListInventoriesRequestQuery) {

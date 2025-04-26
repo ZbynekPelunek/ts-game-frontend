@@ -22,7 +22,6 @@ export class CharacterDetailsService {
     private eventBus: EventBusService,
     private authService: AuthService
   ) {
-    this.characterId = authService.getCharacterId();
     this.eventBus.getEvents().subscribe((event) => {
       if (event === CharacterEvents.REFRESH_ATTRIBUTES) {
         this.getCharacterAttributes({
@@ -35,6 +34,10 @@ export class CharacterDetailsService {
 
   getAttributes() {
     return this.attributesSubject.asObservable();
+  }
+
+  setCharacterId(characterId: string) {
+    this.characterId = characterId;
   }
 
   getCharacterAttributes(params: {

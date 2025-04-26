@@ -55,7 +55,7 @@ export class CharacterCreateComponent implements OnInit {
       };
       this.characterCreateService.createCharacter(body).subscribe({
         next: (response) => {
-          console.log('character created: ', response);
+          //console.log('character created: ', response);
           if (response.success) {
             // this.authService.setCharacterStatus(true);
             this.router.navigate(['/ui/menu/character']);

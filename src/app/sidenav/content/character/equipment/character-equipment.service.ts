@@ -26,7 +26,6 @@ export class CharacterEquipmentService {
     private eventBus: EventBusService,
     private authService: AuthService
   ) {
-    this.characterId = authService.getCharacterId();
     this.eventBus.getEvents().subscribe((event) => {
       if (event === CharacterEvents.REFRESH_EQUIPMENT) {
         this.listCharacterEquipment({
@@ -39,6 +38,10 @@ export class CharacterEquipmentService {
 
   getEquipment() {
     return this.equipmentSubject.asObservable();
+  }
+
+  setCharacterId(characterId: string) {
+    this.characterId = characterId;
   }
 
   listCharacterEquipment(params: ListCharacterEquipmentsRequestQuery) {

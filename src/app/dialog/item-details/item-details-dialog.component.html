@@ -28,7 +28,7 @@
   </ng-container>
 
   <div class="item-info">
-    <p *ngIf="data.item.sell"><strong>Sell Value:</strong> {{ data.item.sell.value }} {{ data.item.sell.currencyId }}
+    <p *ngIf="data.item.sell"><strong>Sell Value:</strong> {{ data.item.sell.value }} {{ currencyLabel }}
     </p>
     <p *ngIf="data.item.levelReq"><strong>Level Required:</strong> {{ data.item.levelReq }}</p>
   </div>

@@ -21,6 +21,7 @@ import { CharacterCreateService } from 'src/app/character-create/character-creat
 import { AdventureEvents, EventBusService } from 'src/app/eventBus.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from 'src/app/auth/auth.service';
+import { CharacterService } from '../character/character.service';
 
 const BACKEND_URL = `${environment.apiUrl}`;
 
@@ -41,19 +42,27 @@ export class AdventuresService implements OnDestroy {
     private http: HttpClient,
     private authService: AuthService,
     private eventBus: EventBusService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private characterService: CharacterService
   ) {
-    this.characterId = authService.getCharacterId();
-    this.eventBus.getEvents().subscribe((event) => {
-      switch (event) {
-        case AdventureEvents.REFRESH_INPROGRESS:
-          this.listAdventuresInProgress();
-          break;
-        case AdventureEvents.REFRESH_UNCOLLECTED_REWARDS:
-          this.listAdventuresUncollectedRewards();
-          break;
-        case AdventureEvents.REFRESH_ADVENTURES:
-          this.listAdventures({ populateReward: 'true' });
+    this.characterService.currentCharacterId$.subscribe({
+      next: (id) => {
+        this.characterId = id;
+
+        if (id) {
+          this.eventBus.getEvents().subscribe((event) => {
+            switch (event) {
+              case AdventureEvents.REFRESH_INPROGRESS:
+                this.listAdventuresInProgress();
+                break;
+              case AdventureEvents.REFRESH_UNCOLLECTED_REWARDS:
+                this.listAdventuresUncollectedRewards();
+                break;
+              case AdventureEvents.REFRESH_ADVENTURES:
+                this.listAdventures({ populateReward: 'true' });
+            }
+          });
+        }
       }
     });
   }
@@ -133,10 +142,6 @@ export class AdventuresService implements OnDestroy {
     }).subscribe({
       next: (response) => {
         if (response.success) {
-          console.log(
-            'listAdventuresUncollectedRewards response: ',
-            response.results
-          );
           this.adventuresUncollectedRewardSubject.next(response.results);
         }
       }
@@ -299,9 +304,6 @@ export class AdventuresService implements OnDestroy {
     }
 
     if (timeoutDuration > 0) {
-      console.log(
-        `Setting timer for adventure: ${resultId}, duration: ${timeoutDuration}ms`
-      );
       const timer = setTimeout(() => {
         this.finishResult(resultId);
         this.timers.delete(resultId);
@@ -329,6 +331,7 @@ export class AdventuresService implements OnDestroy {
   }
 
   characterExists(): boolean {
+    console.log('Adventure Tab character ID: ', this.characterId);
     return this.characterId ? true : false;
   }
 
