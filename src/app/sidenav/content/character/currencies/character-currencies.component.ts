@@ -1,13 +1,13 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs/internal/Subscription';
 
-import { CharacterCurrencyFrontend } from '../../../../../../../shared/src';
 import { CharacterCurrenciesService } from './character-currencies.service';
 import { Subject, takeUntil } from 'rxjs';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { CommonModule } from '@angular/common';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCardModule } from '@angular/material/card';
+import { CharacterCurrencyDTO } from '../../../../../../../shared/src';
 
 @Component({
   standalone: true,
@@ -27,7 +27,7 @@ export class CharacterCurrenciesComponent implements OnInit, OnDestroy {
 
   isLoading = true;
 
-  characterCurrencies: CharacterCurrencyFrontend[];
+  characterCurrencies: CharacterCurrencyDTO[];
 
   getAllCharCurrenciesSub: Subscription;
 

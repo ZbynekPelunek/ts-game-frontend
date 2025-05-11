@@ -64,7 +64,6 @@ export class AdventuresComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
-          //console.log('Called adventures: ', response);
           this.adventures = response;
         }
       });
@@ -77,8 +76,6 @@ export class AdventuresComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
-          //console.log('List Adventures in progress response: ', response);
-
           this.adventuresInProgress = response;
         }
       });
@@ -92,8 +89,6 @@ export class AdventuresComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
-          //console.log('loadAdventuresRewardNotCollected response: ', response);
-
           this.adventureResultsWithoutCollectedRewards = response;
         }
       });
@@ -116,7 +111,6 @@ export class AdventuresComponent implements OnInit, OnDestroy {
   }
 
   onStartAdventure(adventureId: number) {
-    //console.log(`Starting adventure: ${adventureId}`);
     this.adventuresService.startAdventure(adventureId);
   }
 
@@ -129,7 +123,6 @@ export class AdventuresComponent implements OnInit, OnDestroy {
   }
 
   onCollectReward(result: ResultFrontend) {
-    //console.log('Collecting reward: ', result);
     this.adventuresService.collectReward(result._id);
   }
 
@@ -163,7 +156,6 @@ export class AdventuresComponent implements OnInit, OnDestroy {
   }
 
   getProgressMapValue(resultId: string): number {
-    //console.log('getProgressMapValue() called');
     return this.adventuresService.progressMap.get(resultId);
   }
 

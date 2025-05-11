@@ -34,7 +34,6 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 })
 export class HeaderComponent implements OnInit, OnDestroy {
   isUserAuthenticated$: Observable<boolean>;
-  hasCharacters$: Observable<boolean>;
   private authListenerSubs!: Subscription;
   logoLink$: Observable<'/ui/character-create' | '/ui/menu/character' | '/'>;
 
@@ -46,24 +45,22 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.isUserAuthenticated$ = this.authService.isAuthenticated$;
-    this.hasCharacters$ = this.authService.hasCharacters$;
 
     this.logoLink$ = combineLatest([
       this.isUserAuthenticated$,
-      this.hasCharacters$,
       this.router.events.pipe(
         filter((e) => e instanceof NavigationEnd),
         map(() => this.router.url),
         startWith(this.router.url)
       )
     ]).pipe(
-      map(([isAuth, hasChars, url]) => {
+      map(([isAuth, url]) => {
         // If we’re on character-create, stay there
         if (url.startsWith('/ui/character-create')) {
           return '/ui/character-create';
         }
         // Otherwise if fully authed + has chars, go to character page
-        if (isAuth && hasChars) {
+        if (isAuth) {
           return '/ui/menu/character';
         }
         // Fallback to starter page
@@ -77,9 +74,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
       next: () => {
         this.snackBar.open('Log out successful.', '', { duration: 5000 });
         //this.router.navigate(['']);
-      },
-      error: (err) => {
-        //console.log('LOGOUT error: ', err);
       }
     });
   }

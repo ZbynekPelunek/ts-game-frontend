@@ -1,8 +1,7 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 
-import { CharacterFrontend } from '../../../../../../shared/src';
 import { SidenavService } from '../../sidenav.service';
 import { AuthService } from 'src/app/auth/auth.service';
 import { CommonModule } from '@angular/common';
@@ -14,6 +13,8 @@ import { CharacterCurrenciesComponent } from './currencies/character-currencies.
 import { CharacterEquipmentComponent } from './equipment/character-equipment.component';
 import { CharacterInventoryComponent } from './inventory/character-inventory.component';
 import { CharacterService } from './character.service';
+import { Router } from '@angular/router';
+import { Character, CharacterDTO } from '../../../../../../shared/src';
 
 interface Tile {
   cols: number;
@@ -37,6 +38,7 @@ interface Tile {
   ]
 })
 export class CharacterComponent implements OnInit, OnDestroy {
+  private router = inject(Router);
   characterTile: Tile = {
     cols: 2,
     rows: 1
@@ -57,13 +59,12 @@ export class CharacterComponent implements OnInit, OnDestroy {
   characterId: string;
 
   isLoading = true;
-  playerCharacter: CharacterFrontend;
+  playerCharacter: CharacterDTO;
 
   constructor(
-    private sidenavService: SidenavService,
     public equipmentDialog: MatDialog,
-    private authService: AuthService,
-    private characterService: CharacterService
+    private characterService: CharacterService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -73,8 +74,8 @@ export class CharacterComponent implements OnInit, OnDestroy {
         this.characterId = id;
 
         if (id) {
-          this.sidenavService.getCharacter(this.characterId, true);
-          this.charSub = this.sidenavService
+          this.characterService.getCharacter(this.characterId, true);
+          this.charSub = this.characterService
             .getCharacterUpdateListener()
             .subscribe({
               next: (response) => {
@@ -82,6 +83,14 @@ export class CharacterComponent implements OnInit, OnDestroy {
                 this.isLoading = false;
               }
             });
+        } else {
+          const accountId = this.authService.getAccountId();
+          if (accountId) {
+            this.characterService.getAccountCharacters(accountId);
+          } else {
+            // TODO: Maybe allow getting character using accountID from token?
+            this.router.navigate(['/ui/auth/login']);
+          }
         }
       }
     });

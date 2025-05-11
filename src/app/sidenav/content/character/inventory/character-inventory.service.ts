@@ -10,7 +10,6 @@ import {
 } from '../../../../../../../shared/src';
 import { environment } from 'src/environments/environment';
 import { CharacterEvents, EventBusService } from 'src/app/eventBus.service';
-import { CharacterCreateService } from 'src/app/character-create/character-create.service';
 import { BehaviorSubject } from 'rxjs';
 import { AuthService } from 'src/app/auth/auth.service';
 
@@ -56,7 +55,8 @@ export class CharacterInventoryService {
 
     this.http
       .get<ListInventoriesResponse>(`${BACKEND_URL}/${ApiRoutes.INVENTORY}`, {
-        params: queryParams
+        params: queryParams,
+        withCredentials: true
       })
       .subscribe({
         next: (response) => {
@@ -71,7 +71,8 @@ export class CharacterInventoryService {
     this.http
       .post(
         `${BACKEND_URL}/${ApiRoutes.CHARACTER_EQUIPMENT}/${CharacterEquipmentPostActions.EQUIP_ITEM}`,
-        body
+        body,
+        { withCredentials: true }
       )
       .subscribe({
         next: () => {
@@ -89,7 +90,8 @@ export class CharacterInventoryService {
     this.http
       .patch(
         `${BACKEND_URL}/${ApiRoutes.INVENTORY}/${params.inventorySlotId}/${InventoryPatchActions.SELL_ITEM}`,
-        null
+        null,
+        { withCredentials: true }
       )
       .subscribe({
         next: () => {

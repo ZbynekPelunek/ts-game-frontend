@@ -41,10 +41,10 @@ export class ItemDetailsDialogComponent implements OnInit {
   }
 
   setCurrencyLabel() {
-    const currencyId = this.characterCurrenciesService.getCachedCurrency(
+    const currency = this.characterCurrenciesService.getCachedCurrency(
       this.data.item.sell.currencyId
     );
-    this.currencyLabel = currencyId.label;
+    this.currencyLabel = currency.label;
   }
 
   isEquipment(item: CommonItemParams): item is Armor | Weapon {

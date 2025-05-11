@@ -8,7 +8,7 @@
         <mat-card-subtitle>[{{ playerCharacter.currentExperience }}/{{
           playerCharacter.maxExperience}}]</mat-card-subtitle>
         <mat-card-content>
-          <app-character-attributes [characterId]="playerCharacter.characterId">
+          <app-character-attributes [characterId]="playerCharacter._id">
           </app-character-attributes>
         </mat-card-content>
       </mat-card>
@@ -16,17 +16,17 @@
     </mat-grid-tile>
     <mat-grid-tile [colspan]="currencyTile.cols" [rowspan]="currencyTile.rows">
       <div class="character-currency">
-        <app-character-currencies [characterId]="playerCharacter.characterId"></app-character-currencies>
+        <app-character-currencies [characterId]="playerCharacter._id"></app-character-currencies>
       </div>
     </mat-grid-tile>
     <mat-grid-tile [colspan]="equipmentTile.cols" [rowspan]="equipmentTile.rows">
       <div class="character-equipment">
-        <app-character-equipment [characterId]="playerCharacter.characterId"></app-character-equipment>
+        <app-character-equipment [characterId]="playerCharacter._id"></app-character-equipment>
       </div>
     </mat-grid-tile>
     <mat-grid-tile [colspan]="inventoryTile.cols" [rowspan]="inventoryTile.rows">
       <div class="character-inventory">
-        <app-character-inventory [characterId]="playerCharacter.characterId"></app-character-inventory>
+        <app-character-inventory [characterId]="playerCharacter._id"></app-character-inventory>
       </div>
     </mat-grid-tile>
   </mat-grid-list>

@@ -3,7 +3,7 @@
   <mat-tab label="Main" class="main-label">
     <cdk-virtual-scroll-viewport itemSize="30" class="character-stats">
       <div *cdkVirtualFor="let attribute of mainAttributes" class="attribute-item">
-        <span>{{ attribute.attributeName }}: {{ attribute.totalValue }}</span>
+        <span>{{ attribute.attribute.label }}: {{ attribute.totalValue }}</span>
       </div>
     </cdk-virtual-scroll-viewport>
   </mat-tab>
@@ -11,7 +11,7 @@
   <mat-tab label="Primary">
     <cdk-virtual-scroll-viewport itemSize="30" class="character-stats">
       <div *cdkVirtualFor="let attribute of primaryAttributes" class="attribute-item">
-        <span>{{ attribute.attributeName }}: {{ attribute.totalValue }}</span>
+        <span>{{ attribute.attribute.label }}: {{ attribute.totalValue }}</span>
       </div>
     </cdk-virtual-scroll-viewport>
   </mat-tab>
@@ -19,7 +19,7 @@
   <mat-tab label="Secondary">
     <cdk-virtual-scroll-viewport itemSize="30" class="character-stats">
       <div *cdkVirtualFor="let attribute of secondaryAttributes" class="attribute-item">
-        <span>{{ attribute.attributeName }}: {{ attribute.totalValue }}</span>
+        <span>{{ attribute.attribute.label }}: {{ attribute.totalValue }}</span>
       </div>
     </cdk-virtual-scroll-viewport>
   </mat-tab>
@@ -27,7 +27,7 @@
   <mat-tab label="Misc">
     <cdk-virtual-scroll-viewport itemSize="30" class="character-stats">
       <div *cdkVirtualFor="let attribute of miscAttributes" class="attribute-item">
-        <span>{{ attribute.attributeName }}: {{ attribute.totalValue }}</span>
+        <span>{{ attribute.attribute.label }}: {{ attribute.totalValue }}</span>
       </div>
     </cdk-virtual-scroll-viewport>
   </mat-tab>

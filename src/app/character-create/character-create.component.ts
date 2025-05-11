@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 
-import { AuthService } from '../auth/auth.service';
 import { CharacterCreateService } from './character-create.service';
 import {
   FormGroup,
@@ -12,7 +11,7 @@ import {
 import {
   CharacterClass,
   CharacterRace,
-  CreateCharacterRequestBody
+  CreateCharacterRequestDTO
 } from '../../../../shared/src';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
@@ -33,7 +32,6 @@ export class CharacterCreateComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private characterCreateService: CharacterCreateService,
-    private authService: AuthService,
     private snackBar: MatSnackBar,
     private router: Router
   ) {}
@@ -49,15 +47,12 @@ export class CharacterCreateComponent implements OnInit {
   createCharacter(): void {
     if (this.characterForm.valid) {
       const characterData = this.characterForm.value;
-      const body: CreateCharacterRequestBody = {
-        ...characterData,
-        accountId: this.authService.getAccountId()
+      const body: CreateCharacterRequestDTO = {
+        ...characterData
       };
       this.characterCreateService.createCharacter(body).subscribe({
         next: (response) => {
-          //console.log('character created: ', response);
           if (response.success) {
-            // this.authService.setCharacterStatus(true);
             this.router.navigate(['/ui/menu/character']);
           }
         },

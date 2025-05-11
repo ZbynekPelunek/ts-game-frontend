@@ -57,7 +57,7 @@ export class CharacterEquipmentService {
     this.http
       .get<ListCharacterEquipmentsResponse>(
         `${BACKEND_URL}/${ApiRoutes.CHARACTER_EQUIPMENT}`,
-        { params: queryParams }
+        { params: queryParams, withCredentials: true }
       )
       .subscribe({
         next: (response) => {
@@ -72,7 +72,8 @@ export class CharacterEquipmentService {
     this.http
       .patch(
         `${BACKEND_URL}/${ApiRoutes.CHARACTER_EQUIPMENT}/${params.characterEquipmentId}/${CharacterEquipmentPatchActions.UNEQUIP_ITEM}`,
-        null
+        null,
+        { withCredentials: true }
       )
       .subscribe({
         next: () => {
@@ -90,7 +91,8 @@ export class CharacterEquipmentService {
     this.http
       .patch(
         `${BACKEND_URL}/${ApiRoutes.CHARACTER_EQUIPMENT}/${params.characterEquipmentId}/${CharacterEquipmentPatchActions.SELL_ITEM}`,
-        null
+        null,
+        { withCredentials: true }
       )
       .subscribe({
         next: () => {

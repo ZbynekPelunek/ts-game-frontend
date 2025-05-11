@@ -55,7 +55,7 @@ export class CharacterDetailsService {
     this.http
       .get<ListCharacterAttributesResponse>(
         `${BACKEND_URL}/${ApiRoutes.CHARACTER_ATTRIBUTES}`,
-        { params: queryParams }
+        { params: queryParams, withCredentials: true }
       )
       .subscribe({
         next: (response) => {

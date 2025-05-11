@@ -4,7 +4,7 @@
   <mat-card-content>
     <cdk-virtual-scroll-viewport itemSize="30" class="currency-viewport">
       <div *cdkVirtualFor="let cc of characterCurrencies" class="currency-item">
-        <span>{{ cc.currencyId.label }}: {{ cc.amount }}</span>
+        <span>{{ cc.currency.label }}: {{ cc.amount }}</span>
       </div>
     </cdk-virtual-scroll-viewport>
   </mat-card-content>

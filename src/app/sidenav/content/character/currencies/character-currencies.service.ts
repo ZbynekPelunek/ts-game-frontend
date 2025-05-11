@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
   ApiRoutes,
-  CharacterCurrencyFrontend,
+  CharacterCurrencyDTO,
   CurrencyDTO,
   CurrencyId,
   ListCharacterCurrenciesQuery,
@@ -10,7 +10,6 @@ import {
 } from '../../../../../../../shared/src';
 import { environment } from 'src/environments/environment';
 import { BehaviorSubject } from 'rxjs';
-import { CharacterCreateService } from 'src/app/character-create/character-create.service';
 import { CharacterEvents, EventBusService } from 'src/app/eventBus.service';
 import { AuthService } from 'src/app/auth/auth.service';
 
@@ -18,11 +17,9 @@ const BACKEND_URL = `${environment.apiUrl}`;
 
 @Injectable({ providedIn: 'root' })
 export class CharacterCurrenciesService {
-  private currenciesSubject = new BehaviorSubject<CharacterCurrencyFrontend[]>(
-    []
-  );
+  private currenciesSubject = new BehaviorSubject<CharacterCurrencyDTO[]>([]);
   private characterId: string;
-  private cachedCurrencies: CharacterCurrencyFrontend[] = [];
+  private cachedCurrencies: CurrencyDTO[] = [];
 
   constructor(
     private http: HttpClient,
@@ -62,27 +59,26 @@ export class CharacterCurrenciesService {
     this.http
       .get<ListCharacterCurrenciesResponse>(
         `${BACKEND_URL}/${ApiRoutes.CHARACTER_CURRENCIES}`,
-        { params: queryParams }
+        { params: queryParams, withCredentials: true }
       )
       .subscribe({
         next: (response) => {
           if (response.success) {
             this.currenciesSubject.next(response.characterCurrencies);
             if (cache) {
-              this.cachedCurrencies = response.characterCurrencies;
+              this.cachedCurrencies = response.characterCurrencies.map(
+                (charCurr) => charCurr.currency
+              );
             }
           }
         }
       });
   }
 
-  getCachedCurrency(currencyId: CurrencyId): CurrencyDTO | undefined {
+  getCachedCurrency(currencyId: CurrencyId): CurrencyDTO {
     const response = this.cachedCurrencies.find((c) => {
-      if (typeof c.currencyId === 'object' && c.currencyId !== null) {
-        return c.currencyId._id === currencyId;
-      }
-      return false;
-    })?.currencyId as CurrencyDTO;
+      return c._id === currencyId;
+    });
 
     return response;
   }

@@ -2,7 +2,7 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 
 import {
-  BasicAttribute,
+  Attribute,
   CharacterAttributeDTO,
   MainAttributeNames,
   MiscAttributeNames,
@@ -35,7 +35,7 @@ export class CharacterAttributesComponent implements OnInit, OnDestroy {
 
   characterAttributes: CharacterAttributeDTO[];
 
-  allAttributes: BasicAttribute[] = [];
+  allAttributes: Attribute[] = [];
 
   mainAttributes: CharacterAttributeDTO[];
   primaryAttributes: CharacterAttributeDTO[];

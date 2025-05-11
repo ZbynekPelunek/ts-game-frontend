@@ -90,7 +90,8 @@ export class AdventuresService implements OnDestroy {
 
     this.http
       .get<ListAdventuresResponse>(`${BACKEND_URL}/${ApiRoutes.ADVENTURES}`, {
-        params
+        params,
+        withCredentials: true
       })
       .subscribe({
         next: (response) => {
@@ -116,7 +117,8 @@ export class AdventuresService implements OnDestroy {
     return this.http.get<ListResultsResponse>(
       `${BACKEND_URL}/${ApiRoutes.RESULTS}`,
       {
-        params
+        params,
+        withCredentials: true
       }
     );
   }
@@ -128,7 +130,6 @@ export class AdventuresService implements OnDestroy {
     }).subscribe({
       next: (response) => {
         if (response.success) {
-          //console.log('listAdventuresInProgress response: ', response.results);
           this.adventuresInProgressSubject.next(response.results);
         }
       }
@@ -154,7 +155,10 @@ export class AdventuresService implements OnDestroy {
         success: boolean;
       }>(
         `${BACKEND_URL}/${ApiRoutes.RESULTS}/${resultId}/${ResultPatchActions.FINISH_RESULT}`,
-        null
+        null,
+        {
+          withCredentials: true
+        }
       )
       .subscribe({
         next: (response) => {
@@ -175,11 +179,13 @@ export class AdventuresService implements OnDestroy {
         success: boolean;
       }>(
         `${BACKEND_URL}/${ApiRoutes.RESULTS}/${resultId}/${ResultPatchActions.CANCEL_ADVENTURE}`,
-        null
+        null,
+        {
+          withCredentials: true
+        }
       )
       .subscribe({
         next: (response) => {
-          //console.log('Collect Reward response: ', response);
           if (response.success) {
             this.eventBus.emitEvent(AdventureEvents.REFRESH_INPROGRESS);
             this.eventBus.emitEvent(
@@ -207,11 +213,13 @@ export class AdventuresService implements OnDestroy {
         success: boolean;
       }>(
         `${BACKEND_URL}/${ApiRoutes.RESULTS}/${resultId}/${ResultPatchActions.SKIP_ADVENTURE}`,
-        null
+        null,
+        {
+          withCredentials: true
+        }
       )
       .subscribe({
         next: (response) => {
-          //console.log('Collect Reward response: ', response);
           if (response.success) {
             this.eventBus.emitEvent(AdventureEvents.REFRESH_INPROGRESS);
             if (this.timers.has(resultId)) {
@@ -231,6 +239,9 @@ export class AdventuresService implements OnDestroy {
         `${BACKEND_URL}/${ApiRoutes.RESULTS}/${ResultGetActions.CHECK_IN_PROGRESS}`,
         {
           characterId: this.characterId
+        },
+        {
+          withCredentials: true
         }
       )
       .subscribe({
@@ -247,11 +258,13 @@ export class AdventuresService implements OnDestroy {
         success: boolean;
       }>(
         `${BACKEND_URL}/${ApiRoutes.RESULTS}/${resultId}/${ResultPatchActions.COLLECT_REWARD}`,
-        null
+        null,
+        {
+          withCredentials: true
+        }
       )
       .subscribe({
         next: (response) => {
-          //console.log('Collect Reward response: ', response);
           if (response.success) {
             this.eventBus.emitEvent(
               AdventureEvents.REFRESH_UNCOLLECTED_REWARDS
@@ -273,11 +286,13 @@ export class AdventuresService implements OnDestroy {
     this.http
       .post<CreateResultResponse>(
         `${BACKEND_URL}/${ApiRoutes.RESULTS}`,
-        resultBody
+        resultBody,
+        {
+          withCredentials: true
+        }
       )
       .subscribe({
         next: (response) => {
-          //console.log('POST Result response: ', response);
           if (response.success) {
             this.startAdventureTimer(response.result);
           }
@@ -331,7 +346,6 @@ export class AdventuresService implements OnDestroy {
   }
 
   characterExists(): boolean {
-    console.log('Adventure Tab character ID: ', this.characterId);
     return this.characterId ? true : false;
   }
 
